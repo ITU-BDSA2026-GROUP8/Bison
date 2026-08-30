@@ -1,1 +1,25 @@
-﻿Console.WriteLine("Heron at DRByen");
+﻿using System.Globalization;
+
+if (args.Length > 0 && args[0] == "read")
+{
+
+    var lines = File.ReadAllLines("bison_observe_cli_db.csv");
+    foreach (var line in lines)
+    {
+        var parts = line.Split(',');
+        var author = parts[0];
+        var message = parts[1].Trim('"');
+        var time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(parts[2]));
+        Console.WriteLine($"{author} @ {time.ToString ("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {message}");
+    }
+}
+
+if (args[0] == "observe" && args.Length >= 2)
+{
+    var author = Environment.UserName;
+    var message = args[1];
+    var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    var csvLine = $"{author},\"{message}\",{time}";
+    File.AppendAllText("bison_observe_cli_db.csv", csvLine + Environment.NewLine);
+}
+

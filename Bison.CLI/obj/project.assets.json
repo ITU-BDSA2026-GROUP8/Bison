@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {}
   },
@@ -8,19 +8,19 @@
     "net10.0": []
   },
   "packageFolders": {
-    "/Users/johansantiagosejrbecht/.nuget/packages/": {}
+    "/Users/jacobmejdaljensen/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/johansantiagosejrbecht/Documents/GitHub/Bison/Bison.CLI/Bison.CLI.csproj",
+      "projectUniqueName": "/Users/jacobmejdaljensen/Bison/Bison.CLI/Bison.CLI.csproj",
       "projectName": "Bison.CLI",
-      "projectPath": "/Users/johansantiagosejrbecht/Documents/GitHub/Bison/Bison.CLI/Bison.CLI.csproj",
-      "packagesPath": "/Users/johansantiagosejrbecht/.nuget/packages/",
-      "outputPath": "/Users/johansantiagosejrbecht/Documents/GitHub/Bison/Bison.CLI/obj/",
+      "projectPath": "/Users/jacobmejdaljensen/Bison/Bison.CLI/Bison.CLI.csproj",
+      "packagesPath": "/Users/jacobmejdaljensen/.nuget/packages/",
+      "outputPath": "/Users/jacobmejdaljensen/Bison/Bison.CLI/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/johansantiagosejrbecht/.nuget/NuGet/NuGet.Config"
+        "/Users/jacobmejdaljensen/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -30,6 +30,7 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -44,10 +45,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.200"
+      "SdkAnalysisLevel": "10.0.400"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "imports": [
           "net461",
@@ -65,7 +67,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.203/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/10.0.400/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
