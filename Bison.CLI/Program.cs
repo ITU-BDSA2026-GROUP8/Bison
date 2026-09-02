@@ -33,6 +33,7 @@ static void Main(string[] args)
             Console.WriteLine(records);
         }
     }
+    
 
     if (args[0] == "observe" && args.Length >= 2)
     {
