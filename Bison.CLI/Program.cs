@@ -5,39 +5,26 @@ using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper;
 
-//[Index(0)]
-
 
 public class Program
 {
     public record Cheep([property: Index(0)] string Author, [property: Index(1)] string Message, [property: Index(2)] long Timestamp);
     static void Main(string[] args)
     {
-
         if (args.Length > 0 && args[0] == "read")
         {
-
-            /* var lines = File.ReadAllLines("bison_observe_cli_db.csv");
-             foreach (var line in lines)
-             {
-                 var parts = line.Split(',');
-                 var author = parts[0];
-                 var message = parts[1].Trim('"');
-                 var time = DateTimeOffset.FromUnixTimeSeconds(long.Parse(parts[2]));
-                 Console.WriteLine($"{author} @ {time.ToString ("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {message}");
-             }*/
 
             var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = false,
             };
-            using (var reader = new StreamReader("bison_observe_cli_db.csv"))
-            using (var csv = new CsvReader(reader, config))
+            using (var reader = new StreamReader("bison_observe_cli_db.csv")) using (var csv = new CsvReader(reader, config))
             {
                 var records = csv.GetRecords<Cheep>();
                 foreach(var record in records)
                 {
-                    Console.WriteLine(record.Author);
+                    var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
+                    Console.WriteLine($"{record.Author} @ {time.ToString ("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
                 }
             }
         }
@@ -51,6 +38,4 @@ public class Program
             File.AppendAllText("bison_observe_cli_db.csv", csvLine + Environment.NewLine);
         }
     }
-
-    
 }
