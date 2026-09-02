@@ -1,5 +1,5 @@
 ﻿using System.Globalization;
-using CsvHelper;
+using CsvHelper.Configuration;
 
 
 public record Cheep(
@@ -9,7 +9,7 @@ public record Cheep(
     string Message, 
     [index(2)]
     long Timestamp
-    );
+    );  
 static void Main(string[] args){
     
 if (args.Length > 0 && args[0] == "read")
