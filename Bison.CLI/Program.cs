@@ -2,13 +2,15 @@
 
 using System.Globalization;
 using CsvHelper.Configuration;
+using CsvHelper.Configuration.Attributes;
 using CsvHelper;
 
 //[Index(0)]
-public record Cheep(string Author, string Message, long Timestamp);
+
 
 public class Program
 {
+    public record Cheep([property: Index(0)] string Author, [property: Index(1)] string Message, [property: Index(2)] long Timestamp);
     static void Main(string[] args)
     {
 
@@ -33,7 +35,10 @@ public class Program
             using (var csv = new CsvReader(reader, config))
             {
                 var records = csv.GetRecords<Cheep>();
-                Console.WriteLine(records);
+                foreach(var record in records)
+                {
+                    Console.WriteLine(record.Author);
+                }
             }
         }
 
@@ -47,4 +52,5 @@ public class Program
         }
     }
 
+    
 }
