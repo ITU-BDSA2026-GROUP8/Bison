@@ -5,11 +5,15 @@ using System.Globalization;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper;
+using System.Runtime.CompilerServices;
+using SimpleDB;
 
 public class Program
 {
     static async Task<int> Main(string[] args)
     {
+        CSVDataBase<Cheep> cheeps = new CSVDataBase<Cheep>();
+
         var readCommand = new Command("read", "Read messages from the CSV file");
         readCommand.SetHandler(() => Interface1.PrintObservations());
 
@@ -20,8 +24,8 @@ public class Program
             var message = context.ParseResult.GetValueForArgument(messageArgument);
             var author = Environment.UserName;
             var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var csvLine = $"{author},\"{message}\",{time}";
-            File.AppendAllText("bison_observe_cli_db.csv", csvLine + Environment.NewLine);
+            var cheep = new Cheep(author, message,time);
+            cheeps.Store(cheep);
         });
 
         var rootCommand = new RootCommand("Bison Observe CLI");
