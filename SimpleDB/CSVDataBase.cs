@@ -13,7 +13,7 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
         {
             HasHeaderRecord = false,
         };
-        using var writer = new StreamWriter("..\\Bison.CLI\\bison_observe_cli_db.csv",true);
+        using var writer = new StreamWriter("bison_observe_cli_db.csv",true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         {
             csv.WriteRecord(record);
