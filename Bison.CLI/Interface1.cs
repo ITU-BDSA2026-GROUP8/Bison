@@ -15,7 +15,7 @@ public interface Interface1
         CSVDataBase<Cheep> cheeps = new CSVDataBase<Cheep>();
 
         var readCommand = new Command("read", "Read messages from the CSV file");
-        readCommand.SetHandler(() => PrintObservations());
+        readCommand.SetHandler(() => PrintObservations(cheeps));
 
         var messageArgument = new Argument<string>("message");
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument };
@@ -35,20 +35,12 @@ public interface Interface1
         var cheep = new Cheep(author, message, time);
         cheeps.Store(cheep);
     }
-    static void PrintObservations()
+    static void PrintObservations(CSVDataBase<Cheep> cheeps)
     {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        foreach (var record in cheeps.Read())
         {
-            HasHeaderRecord = false,
-        };
-        using (var reader = new StreamReader("bison_observe_cli_db.csv")) using (var csv = new CsvReader(reader, config))
-        {
-            var records = csv.GetRecords<Cheep>();
-            foreach (var record in records)
-            {
-                var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
-                Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
-            }
+            var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
+            Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
         }
     }
 }
