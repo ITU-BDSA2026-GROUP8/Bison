@@ -4,6 +4,7 @@ using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper.Configuration;
 using System.Globalization;
+using Microsoft.VisualBasic;
 
 public sealed class CSVDataBase<T> : IDatabaseRepository<T>
 {
@@ -13,7 +14,7 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
         {
             HasHeaderRecord = false,
         };
-        using var writer = new StreamWriter("bison_observe_cli_db.csv",true);
+        using var writer = new StreamWriter("bison_observe_cli_db.csv", true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         {
             csv.WriteRecord(record);
@@ -25,14 +26,27 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
-                HasHeaderRecord = false,
+            HasHeaderRecord = false,
         };
-        using (var reader = new StreamReader("..\\Bison.CLI\\bison_observe_cli_db.csv")) 
+        using (var reader = new StreamReader("..\\Bison.CLI\\bison_observe_cli_db.csv"))
         using (var csv = new CsvReader(reader, config))
         {
-             var records = csv.GetRecords<T>().ToList<T>();
-             return records;
-             
+            var records = csv.GetRecords<T>().ToList<T>();
+            return records;
+
         }
+    }
+
+    public int GetCount()
+    {
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = false
+        };
+
+        using var reader = new StreamReader("..\\Bison.CLI\\bison_observe_cli_db.csv");
+        using var csv = new CsvReader(reader, config);
+
+        return csv.GetRecords<T>().Count();
     }
 }
