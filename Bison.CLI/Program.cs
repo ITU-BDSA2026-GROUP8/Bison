@@ -10,11 +10,10 @@ using SimpleDB;
 
 public class Program
 {
-    static void Main(string[] args)
-    {// async Task<int>
+    static async Task<int> Main(string[] args)
+    {
         
-        Interface1.readCommands(args);
-        //return await 
+        return await Interface1.readCommands(args);
     }
 }
 

@@ -10,9 +10,8 @@ using System.CommandLine;
 public interface Interface1
 {
 
-    static void readCommands(string[] args)
+    static async Task<int> readCommands(string[] args)
     {
-        // async Task<int>
         CSVDataBase<Cheep> cheeps = new CSVDataBase<Cheep>();
 
         var readCommand = new Command("read", "Read messages from the CSV file");
@@ -26,7 +25,7 @@ public interface Interface1
         rootCommand.Add(readCommand);
         rootCommand.Add(observeCommand);
 
-        //return await rootCommand.InvokeAsync(args);
+        return await rootCommand.InvokeAsync(args);
     }
 
     static void StoreObservation(string message, CSVDataBase<Cheep> cheeps)
