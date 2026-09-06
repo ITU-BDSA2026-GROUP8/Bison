@@ -1,4 +1,5 @@
 ﻿namespace Bison.CLI;
+
 using System.Globalization;
 using CsvHelper.Configuration;
 using CsvHelper;
@@ -9,44 +10,46 @@ using System.CommandLine;
 public interface Interface1
 {
 
-    static async Task<int> readCommands(string[] args)
+    static void readCommands(string[] args)
     {
+        // async Task<int>
         CSVDataBase<Cheep> cheeps = new CSVDataBase<Cheep>();
 
         var readCommand = new Command("read", "Read messages from the CSV file");
-        readCommand.SetHandler(() => Interface1.PrintObservations());
+        readCommand.SetHandler(() => PrintObservations());
 
         var messageArgument = new Argument<string>("message");
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument };
-        observeCommand.SetHandler(context =>
-        {
-            var message = context.ParseResult.GetValueForArgument(messageArgument);
-            var author = Environment.UserName;
-            var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var cheep = new Cheep(author, message,time);
-            cheeps.Store(cheep);
-        });
+        observeCommand.SetHandler((string message) => { StoreObservation(message, cheeps); }, messageArgument);
 
         var rootCommand = new RootCommand("Bison Observe CLI");
         rootCommand.Add(readCommand);
         rootCommand.Add(observeCommand);
 
-        return await rootCommand.InvokeAsync(args);
+        //return await rootCommand.InvokeAsync(args);
+    }
+
+    static void StoreObservation(string message, CSVDataBase<Cheep> cheeps)
+    {
+        var author = Environment.UserName;
+        var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var cheep = new Cheep(author, message, time);
+        cheeps.Store(cheep);
     }
     static void PrintObservations()
     {
         var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = false,
+        };
+        using (var reader = new StreamReader("bison_observe_cli_db.csv")) using (var csv = new CsvReader(reader, config))
+        {
+            var records = csv.GetRecords<Cheep>();
+            foreach (var record in records)
             {
-                HasHeaderRecord = false,
-            };
-            using (var reader = new StreamReader("bison_observe_cli_db.csv")) using (var csv = new CsvReader(reader, config))
-            {
-                var records = csv.GetRecords<Cheep>();
-                foreach(var record in records)
-                {
-                    var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
-                    Console.WriteLine($"{record.Author} @ {time.ToString ("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
-                }
+                var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
+                Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
             }
+        }
     }
 }
