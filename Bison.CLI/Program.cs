@@ -1,41 +1,39 @@
-﻿namespace Bison.CLI;
+namespace Bison.CLI;
 
+using System.CommandLine;
 using System.Globalization;
 using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using CsvHelper;
-
+using System.Runtime.CompilerServices;
+using SimpleDB;
 
 public class Program
 {
-    public record Cheep([property: Index(0)] string Author, [property: Index(1)] string Message, [property: Index(2)] long Timestamp);
-    static void Main(string[] args)
+    static async Task<int> Main(string[] args)
     {
-        if (args.Length > 0 && args[0] == "read")
-        {
+        CSVDataBase<Cheep> cheeps = new CSVDataBase<Cheep>();
 
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                HasHeaderRecord = false,
-            };
-            using (var reader = new StreamReader("bison_observe_cli_db.csv")) using (var csv = new CsvReader(reader, config))
-            {
-                var records = csv.GetRecords<Cheep>();
-                foreach(var record in records)
-                {
-                    var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
-                    Console.WriteLine($"{record.Author} @ {time.ToString ("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
-                }
-            }
-        }
+        var readCommand = new Command("read", "Read messages from the CSV file");
+        readCommand.SetHandler(() => Interface1.PrintObservations());
 
-        if (args[0] == "observe" && args.Length >= 2)
+        var messageArgument = new Argument<string>("message");
+        var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument };
+        observeCommand.SetHandler(context =>
         {
+            var message = context.ParseResult.GetValueForArgument(messageArgument);
             var author = Environment.UserName;
-            var message = args[1];
             var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            var csvLine = $"{author},\"{message}\",{time}";
-            File.AppendAllText("bison_observe_cli_db.csv", csvLine + Environment.NewLine);
-        }
+            var cheep = new Cheep(author, message,time);
+            cheeps.Store(cheep);
+        });
+
+        var rootCommand = new RootCommand("Bison Observe CLI");
+        rootCommand.Add(readCommand);
+        rootCommand.Add(observeCommand);
+
+        return await rootCommand.InvokeAsync(args);
     }
 }
+
+public record Cheep([property: Index(0)] string Author, [property: Index(1)] string Message, [property: Index(2)] long Timestamp);
