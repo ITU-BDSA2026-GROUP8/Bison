@@ -5,13 +5,18 @@ using CsvHelper.Configuration;
 using CsvHelper;
 using SimpleDB;
 using System.CommandLine;
-
+using System.Collections.Immutable;
 
 public interface Interface1
 {
 
     static async Task<int> readCommands(string[] args)
     {
+        if(args.Length == 0)
+        {
+            throw new ArgumentNullException();
+        }
+        
         CSVDataBase<Observation> observations = new CSVDataBase<Observation>("observation");
         CSVDataBase<Comment> comments = new CSVDataBase<Comment>("comment");
 
@@ -35,7 +40,6 @@ public interface Interface1
         rootCommand.Add(observeCommand);
         rootCommand.Add(commentCommand);
         rootCommand.Add(discussionCommand);
-
         return await rootCommand.InvokeAsync(args);
     }
     static void printDiscussion(int id, CSVDataBase<Comment> comments){
