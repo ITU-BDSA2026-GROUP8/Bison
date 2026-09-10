@@ -9,11 +9,17 @@ using System.Runtime.CompilerServices;
 using SimpleDB;
 
 public class Program
-{
-    static async Task<int> Main(string[] args)
+{   static async Task<int> Main(string[] args)
     {
-        
-        return await Interface1.readCommands(args);
+        try
+        {
+            return await Interface1.readCommands(args);
+        }catch(ArgumentNullException)
+        {
+            Console.WriteLine("Argument can't be null!");
+            return 0;
+        }
+
     }
 }
 
