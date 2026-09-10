@@ -8,74 +8,46 @@ using Microsoft.VisualBasic;
 
 public sealed class CSVDataBase<T> : IDatabaseRepository<T>
 {
-    public void Store(T record)
-    {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = false,
-        };
-        using var writer = new StreamWriter("..//SimpleDB//bison_observe_cli_db.csv", true);
+    CsvReader CSVReader;
+    CsvConfiguration Config;
 
-        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+    string FilePath = "..//SimpleDB//bison_observe_cli_db.csv";
+
+    public CSVDataBase(String identity)
+    {
+        this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, };
+
+        if (identity == "observation")
         {
-            csv.WriteRecord(record);
-            csv.NextRecord();
+            this.FilePath = "..//SimpleDB//bison_observe_cli_db.csv";
+            var ObservationReader = new StreamReader(this.FilePath);
+            this.CSVReader = new CsvReader(ObservationReader, this.Config);
+        }
+        else
+        {
+            this.FilePath = "..//SimpleDB//bison_comment_cli_db.csv";
+            var CommentReader = new StreamReader(this.FilePath);
+            this.CSVReader = new CsvReader(CommentReader, this.Config);
         }
     }
-    public void StoreComment(T record)
-    {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = false,
-        };
-        using var writer = new StreamWriter("..//SimpleDB//bison_comment_cli_db.csv", true);
 
+    public void Store(T record)
+    {
+        using var writer = new StreamWriter(this.FilePath, true);
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         {
             csv.WriteRecord(record);
             csv.NextRecord();
         }
+
     }
 
     public IEnumerable<T> Read(int? limit = null)
     {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = false,
-        };
-        using (var reader = new StreamReader("..//SimpleDB//bison_observe_cli_db.csv"))
-        using (var csv = new CsvReader(reader, config))
-        {
-            var records = csv.GetRecords<T>().ToList<T>();
-            return records;
-
-        }
+        return this.CSVReader.GetRecords<T>().ToList();
     }
-    public IEnumerable<T> CommentsRead(int? limit = null)
-    {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = false,
-        };
-        using (var reader = new StreamReader("..//SimpleDB//bison_comment_cli_db.csv"))
-        using (var csv = new CsvReader(reader, config))
-        {
-            var records = csv.GetRecords<T>().ToList<T>();
-            return records;
-
-        }
-    }
-
     public int GetCount()
     {
-        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
-        {
-            HasHeaderRecord = false
-        };
-
-        using var reader = new StreamReader("..//SimpleDB//bison_observe_cli_db.csv");
-        using var csv = new CsvReader(reader, config);
-
-        return csv.GetRecords<T>().Count();
+        return this.CSVReader.GetRecords<T>().Count();
     }
 }

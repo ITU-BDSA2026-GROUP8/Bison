@@ -23,5 +23,7 @@ public class Program
     }
 }
 
-public record Cheep([property: Index(0)] string Author, [property: Index(1)] string Message, [property: Index(2)] long Timestamp,[property: Index(3)] int Id);
-public record Comment([property: Index(0)] string Message, [property: Index(1)] int Id);
+public record Cheep();
+
+public record Comment([property: Index(0)] string Message, [property: Index(1)] int Id) : Cheep;
+public record Observation([property: Index(0)] string Author, [property: Index(1)] string Message, [property: Index(2)] long Timestamp,[property: Index(3)] int Id) : Cheep;
