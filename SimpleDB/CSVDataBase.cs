@@ -15,6 +15,21 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
             HasHeaderRecord = false,
         };
         using var writer = new StreamWriter("..//SimpleDB//bison_observe_cli_db.csv", true);
+
+        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+        {
+            csv.WriteRecord(record);
+            csv.NextRecord();
+        }
+    }
+    public void StoreComment(T record)
+    {
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = false,
+        };
+        using var writer = new StreamWriter("..//SimpleDB//bison_comment_cli_db.csv", true);
+
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
         {
             csv.WriteRecord(record);
@@ -29,6 +44,20 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
             HasHeaderRecord = false,
         };
         using (var reader = new StreamReader("..//SimpleDB//bison_observe_cli_db.csv"))
+        using (var csv = new CsvReader(reader, config))
+        {
+            var records = csv.GetRecords<T>().ToList<T>();
+            return records;
+
+        }
+    }
+    public IEnumerable<T> CommentsRead(int? limit = null)
+    {
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = false,
+        };
+        using (var reader = new StreamReader("..//SimpleDB//bison_comment_cli_db.csv"))
         using (var csv = new CsvReader(reader, config))
         {
             var records = csv.GetRecords<T>().ToList<T>();
