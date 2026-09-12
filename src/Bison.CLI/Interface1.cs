@@ -17,8 +17,8 @@ public interface Interface1
             throw new ArgumentNullException();
         }
         
-        CSVDataBase<Observation> observations = new CSVDataBase<Observation>("observation");
-        CSVDataBase<Comment> comments = new CSVDataBase<Comment>("comment");
+        CSVDataBase<Observation> observations = new CSVDataBase<Observation>("..//SimpleDB//bison_observe_cli_db.csv");
+        CSVDataBase<Comment> comments = new CSVDataBase<Comment>("..//SimpleDB//bison_comment_cli_db.csv");
 
         var messageArgument = new Argument<string>("message");
         var idArgument = new Argument<int>("id");
