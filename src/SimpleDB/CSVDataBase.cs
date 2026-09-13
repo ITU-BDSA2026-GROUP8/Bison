@@ -16,6 +16,7 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
     {
         this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, };
         this.FilePath = path;
+        using var writer = new StreamWriter(this.FilePath, true);
     }
 
     public void Store(T record)
@@ -31,14 +32,14 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
 
     public IEnumerable<T> Read(int? limit = null)
     {   
-        var Reader = new StreamReader(this.FilePath);
-        var CSVReader = new CsvReader(Reader, this.Config);
+        using var Reader = new StreamReader(this.FilePath);
+        using var CSVReader = new CsvReader(Reader, this.Config);
         return CSVReader.GetRecords<T>().ToList();
     }
     public int GetCount()
     {
-        var Reader = new StreamReader(this.FilePath);
-        var CSVReader = new CsvReader(Reader, this.Config);
+        using var Reader = new StreamReader(this.FilePath);
+        using var CSVReader = new CsvReader(Reader, this.Config);
         return CSVReader.GetRecords<T>().Count();
     }
 }

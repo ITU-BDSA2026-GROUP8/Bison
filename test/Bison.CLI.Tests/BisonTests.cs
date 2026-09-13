@@ -12,7 +12,7 @@ public class BisonTests
         var testObservation = "./Test_Bison_observe_cli_db.csv";
         var testComment = "./Test_Bison_comment_cli_db.csv";
         
-            
+        try{    
         CSVDataBase<Observation> observations = new CSVDataBase<Observation>(testObservation);
         CSVDataBase<Comment> comments = new CSVDataBase<Comment>(testComment);
         var thing = new Observation("","",1,1);
@@ -20,6 +20,11 @@ public class BisonTests
         Interface1.StoreComment("",99, comments,observations);
 
         Assert.Empty(comments.Read());
+        }finally{
+
+        File.Delete(testObservation);
+        File.Delete(testComment);
+        }
     }
     [Fact]
     public void UNIXTimeStampConversion()
@@ -31,5 +36,23 @@ public class BisonTests
         var timeConstant = "09/10/26 20:07:41";
 
         Assert.Equal(timeConstant,timeinput);
+    }
+
+    [Fact]
+    public void ObserveIdIsTheNumberOfPosts()
+    {   
+        var testObservation = "./Test_Bison_observe_cli_db.csv";
+        try{
+        CSVDataBase<Observation> observations = new CSVDataBase<Observation>(testObservation);
+        Interface1.StoreObservation("There is a test at ITU!",observations);
+        
+        var expectedNumberOfPosts = 1;
+        Assert.Equal(expectedNumberOfPosts,observations.GetCount());
+        Assert.True(observations.GetCount()>0);
+        
+        }finally{
+
+        File.Delete(testObservation);
+        }
     }
 }
