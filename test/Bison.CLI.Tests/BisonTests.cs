@@ -13,8 +13,8 @@ public class BisonTests
         var testComment = "./Test_Bison_comment_cli_db.csv";
         
         try{    
-        CSVDataBase<Observation> observations = new CSVDataBase<Observation>(testObservation);
-        CSVDataBase<Comment> comments = new CSVDataBase<Comment>(testComment);
+        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
+        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance(testComment);
         var thing = new Observation("","",1,1);
         observations.Store(thing);
         Interface1.StoreComment("",99, comments,observations);
@@ -43,7 +43,7 @@ public class BisonTests
     {   
         var testObservation = "./Test_Bison_observe_cli_db.csv";
         try{
-        CSVDataBase<Observation> observations = new CSVDataBase<Observation>(testObservation);
+        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
         Interface1.StoreObservation("There is a test at ITU!",observations);
         
         var expectedNumberOfPosts = 1;
