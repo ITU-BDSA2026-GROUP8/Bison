@@ -6,6 +6,7 @@ using CsvHelper;
 using SimpleDB;
 using System.CommandLine;
 using System.Collections.Immutable;
+using System.Linq;
 
 public interface Interface1
 {
@@ -26,9 +27,14 @@ public interface Interface1
         var readCommand = new Command("read", "Read messages from the CSV file");
         readCommand.SetHandler(() => PrintObservations(observations));
 
-        var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument };
-        observeCommand.SetHandler((string message) => { StoreObservation(message, observations); }, messageArgument);
+        var locationArgument = new Argument<string>("location");
 
+        var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument, locationArgument };
+        observeCommand.SetHandler((string message, string location) => { StoreObservation(message, location, observations); }, messageArgument, locationArgument);
+
+        var locationCommand = new Command("location", "Read messages from a specific location") { locationArgument };
+        locationCommand.SetHandler((string location) => { PrintObservationsByLocation(location, observations); }, locationArgument);
+        
         var commentCommand = new Command("comment", "Comment on a message and write to the CSV file"){ messageArgument, idArgument };
         commentCommand.SetHandler((string comment, int id) => { StoreComment(comment, id, comments, observations); }, messageArgument, idArgument);
 
@@ -40,6 +46,7 @@ public interface Interface1
         rootCommand.Add(observeCommand);
         rootCommand.Add(commentCommand);
         rootCommand.Add(discussionCommand);
+        rootCommand.Add(locationCommand);
         return await rootCommand.InvokeAsync(args);
     }
     static void printDiscussion(int id, CSVDataBase<Comment> comments){
@@ -61,12 +68,12 @@ public interface Interface1
         comments.Store(commentRecord);
     }
     
-    static void StoreObservation(string message, CSVDataBase<Observation> observations)
+    static void StoreObservation(string message, string location, CSVDataBase<Observation> observations)
     {
         var author = Environment.UserName;
         var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         var id= observations.GetCount() + 1;
-        var cheep = new Observation(author, message, time, id);
+        var cheep = new Observation(author, message, time, id, location);
         observations.Store(cheep);
     }
 
@@ -78,4 +85,15 @@ public interface Interface1
             Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
         }
     }
+
+
+    static void PrintObservationsByLocation(string location, CSVDataBase<Observation> observations)
+{
+    foreach (var record in observations.Read().Where(o => o.Location == location))
+    {
+        var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
+        Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
+    }
+}  
+
 }

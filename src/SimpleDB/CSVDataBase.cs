@@ -14,7 +14,11 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
 
     public CSVDataBase(String path)
     {
-        this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, };
+        this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) 
+        { 
+            HasHeaderRecord = false, 
+            MissingFieldFound = null,
+        };
         this.FilePath = path;
     }
 
