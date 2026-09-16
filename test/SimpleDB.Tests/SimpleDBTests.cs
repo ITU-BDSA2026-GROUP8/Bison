@@ -14,9 +14,9 @@ public class SimpleDTests
         {
             CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
             CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance(testComment);
-            var case1 = new Observation("noget", "f", 1, 1);
-            var case2 = new Observation("andet", "a", 2, 2);
-            var case3 = new Observation("her", "g", 3, 3);
+            var case1 = new Observation("noget", "f", 1, 1, "somewhere");
+            var case2 = new Observation("andet", "a", 2, 2, "somewhere");
+            var case3 = new Observation("her", "g", 3, 3, "somewhere");
             observations.Store(case1);
             observations.Store(case2);
             observations.Store(case3);
