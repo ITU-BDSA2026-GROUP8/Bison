@@ -41,7 +41,7 @@ public class BisonTests
     [Fact]
     public void ObserveIdIsTheNumberOfPosts()
     {   
-        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_{Guid.NewGuid()}.csv");
+        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
         try{
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
         Interface1.StoreObservation("There is a test at ITU!",observations);
