@@ -10,16 +10,18 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
     private static readonly Lazy<CSVDataBase<T>> Instances = new();
     private readonly CsvConfiguration Config;
     private readonly string FilePath;
- 
+
     private CSVDataBase(string path)
     {
         this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, };
         this.FilePath = path;
+        using var file = File.Open(this.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
     }
 
     public static CSVDataBase<T> GetInstance(string path)
     {
         var lazyInstance = new Lazy<CSVDataBase<T>>(() => new CSVDataBase<T>(path));
+
         return lazyInstance.Value;
     }
 
