@@ -33,15 +33,21 @@ public class SimpleDTests
             Observation[] liste = observations.Read().ToList().ToArray();
 
             Assert.Equal("noget", liste[0].Author);
-            Assert.Equal("noget", liste[0].Author);
+            Assert.Equal("a", liste[1].Message);
+            Assert.Equal(3, liste[2].Timestamp);
 
+            var case4 = new Observation("dom", "jajaja", 3, 4);
+            observations.Store(case4);
+            Assert.Equal(3, case4.Timestamp);
+            Assert.Equal(4, case4.Id);
+            Assert.Equal("jajaja", case4.Message);
         }
         finally
         {
-
             File.Delete(testObservation);
             File.Delete(testComment);
         }
 
     }
+
 }

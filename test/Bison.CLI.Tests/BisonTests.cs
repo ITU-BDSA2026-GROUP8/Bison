@@ -44,8 +44,7 @@ public class BisonTests
         var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
         try{
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
-        Interface1.StoreObservation("There is a test at ITU!",observations);
-        
+        Interface1.StoreObservation("There is a test at ITU!",observations);        
         var expectedNumberOfPosts = 1;
         Assert.Equal(expectedNumberOfPosts,observations.GetCount());
         Assert.True(observations.GetCount()>0);

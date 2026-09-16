@@ -16,6 +16,8 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
         this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = false, };
         this.FilePath = path;
         using var file = File.Open(this.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
+        using var writer = new StreamWriter(this.FilePath, true);
+        using var csv = new CsvWriter(writer, this.Config);
     }
 
     public static CSVDataBase<T> GetInstance(string path)
