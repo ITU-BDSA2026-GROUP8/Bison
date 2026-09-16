@@ -1,18 +1,17 @@
 namespace SimpleDB;
 
 using CsvHelper;
-using CsvHelper.Configuration.Attributes;
 using CsvHelper.Configuration;
+using System.Collections.Concurrent;
 using System.Globalization;
-using Microsoft.VisualBasic;
 
 public sealed class CSVDataBase<T> : IDatabaseRepository<T>
 {
-    CsvConfiguration Config;
+    private static readonly Lazy<CSVDataBase<T>> Instances = new();
+    private readonly CsvConfiguration Config;
+    private readonly string FilePath;
 
-    string FilePath = "..//SimpleDB//bison_observe_cli_db.csv";
-
-    public CSVDataBase(String path)
+    private CSVDataBase(string path)
     {
         this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) 
         { 
@@ -20,29 +19,34 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
             MissingFieldFound = null,
         };
         this.FilePath = path;
+        using var file = File.Open(this.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
+    }
+
+    public static CSVDataBase<T> GetInstance(string path)
+    {
+        var lazyInstance = new Lazy<CSVDataBase<T>>(() => new CSVDataBase<T>(path));
+
+        return lazyInstance.Value;
     }
 
     public void Store(T record)
     {
         using var writer = new StreamWriter(this.FilePath, true);
-        using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
-        {
-            csv.WriteRecord(record);
-            csv.NextRecord();
-        }
-
+        using var csv = new CsvWriter(writer, this.Config);
+        csv.WriteRecord(record);
+        csv.NextRecord();
     }
 
     public IEnumerable<T> Read(int? limit = null)
-    {   
-        var Reader = new StreamReader(this.FilePath);
-        var CSVReader = new CsvReader(Reader, this.Config);
-        return CSVReader.GetRecords<T>().ToList();
+    {
+        using var reader = new StreamReader(this.FilePath);
+        using var csvReader = new CsvReader(reader, this.Config);
+        var records = csvReader.GetRecords<T>();
+        return records.ToList();
     }
+
     public int GetCount()
     {
-        var Reader = new StreamReader(this.FilePath);
-        var CSVReader = new CsvReader(Reader, this.Config);
-        return CSVReader.GetRecords<T>().Count();
+        return this.Read().Count();
     }
 }
