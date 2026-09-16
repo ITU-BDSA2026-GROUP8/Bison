@@ -9,8 +9,8 @@ public class BisonTests
     [Fact]
     public void CommentThatReferenceNonExistingObservation()
     {
-        var testObservation = "./Test_Bison_observe_cli_db.csv";
-        var testComment = "./Test_Bison_comment_cli_db.csv";
+        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
+        var testComment = Path.Combine(Path.GetTempPath(), $"Bison_comment_test.csv");
         
         try{    
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
@@ -41,7 +41,7 @@ public class BisonTests
     [Fact]
     public void ObserveIdIsTheNumberOfPosts()
     {   
-        var testObservation = "./Test_Bison_observe_cli_db.csv";
+        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_{Guid.NewGuid()}.csv");
         try{
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
         Interface1.StoreObservation("There is a test at ITU!",observations);
