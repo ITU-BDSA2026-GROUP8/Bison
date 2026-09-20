@@ -15,9 +15,9 @@ public class BisonTests
         try{    
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
         CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance(testComment);
-        var thing = new Observation("","",1,1);
+        var thing = new Observation("author", "message", 1, 1, "somewhere");
         observations.Store(thing);
-        Interface1.StoreComment("",99, comments,observations);
+        Interface1.StoreComment("", 99, comments, observations);
 
         Assert.Empty(comments.Read());
         }finally{
@@ -44,7 +44,8 @@ public class BisonTests
         var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
         try{
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
-        Interface1.StoreObservation("There is a test at ITU!",observations);        
+        Interface1.StoreObservation("There is a test at ITU!", "ITU", observations);
+        
         var expectedNumberOfPosts = 1;
         Assert.Equal(expectedNumberOfPosts,observations.GetCount());
         Assert.True(observations.GetCount()>0);
