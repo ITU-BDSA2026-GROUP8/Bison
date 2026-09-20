@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 using SimpleDB;
 
 public class Program
-{   static async Task<int> Main(string[] args)
+{   public static async Task<int> Main(string[] args)
     {
         try
         {

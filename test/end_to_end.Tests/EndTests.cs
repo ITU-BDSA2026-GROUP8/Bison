@@ -2,18 +2,15 @@
 
 using System.Globalization;
 using SimpleDB;
+using Bison.CLI;
 
 public class EndTests
 {
     [Fact]
-    public void UNIXTimeStampConversion()
+    public async Task EndToEndTest()
     {
-        var timenumber = DateTimeOffset.FromUnixTimeSeconds(1789070861);
-
-        var timeinput = timenumber.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture);
-
-        var timeConstant = "09/10/26 20:07:41";
-
-        Assert.Equal(timeConstant,timeinput);
+        string[] input = {"read"};
+        var exitCode = await Program.Main(input);
+        Assert.Equal(0, exitCode);
     }
 }
