@@ -11,7 +11,7 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
     private readonly CsvConfiguration Config;
     private readonly string FilePath;
 
-    private CSVDataBase(string path)
+    public CSVDataBase(string path)
     {
         this.Config = new CsvConfiguration(CultureInfo.InvariantCulture) 
         { 
