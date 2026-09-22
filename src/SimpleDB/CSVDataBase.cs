@@ -19,6 +19,11 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
             MissingFieldFound = null,
         };
         this.FilePath = path;
+        var directory = Path.GetDirectoryName(this.FilePath);
+        if (!string.IsNullOrEmpty(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
         using var file = File.Open(this.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
     }
 
