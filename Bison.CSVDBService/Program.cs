@@ -32,7 +32,7 @@ app.MapGet("/observations", () =>
 // GET /comments?id=123
 app.MapGet("/comments", (int id) =>
 {
-    var all = commentDb.Read().Where(c => c.ObservationId == id).ToList();
+    var all = commentDb.Read().Where(c => c.Id == id).ToList();
     return Results.Ok(all);
 });
 
