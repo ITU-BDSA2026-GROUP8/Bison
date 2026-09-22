@@ -7,13 +7,10 @@ public class SimpleDTests
     [Fact]
     public void EntryCanBeRecieved()
     {
-        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
-        var testComment = Path.Combine(Path.GetTempPath(), $"Bison_comment_test.csv");
-
         try
         {
-            CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
-            CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance(testComment);
+            CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//Bison_observe_test.csv");
+            CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//Bison_comment_test.csv");
             var case1 = new Observation("noget", "f", 1, 1, "somewhere");
             var case2 = new Observation("andet", "a", 2, 2, "somewhere");
             var case3 = new Observation("her", "g", 3, 3, "somewhere");
@@ -44,10 +41,8 @@ public class SimpleDTests
         }
         finally
         {
-            File.Delete(testObservation);
-            File.Delete(testComment);
+            File.Delete("..//SimpleDB//Bison_observe_test.csv");
+            File.Delete("..//SimpleDB//Bison_comment_test.csv");
         }
-
     }
-
 }

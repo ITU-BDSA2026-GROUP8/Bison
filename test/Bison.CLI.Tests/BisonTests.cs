@@ -8,13 +8,10 @@ public class BisonTests
 {
     [Fact]
     public void CommentThatReferenceNonExistingObservation()
-    {
-        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
-        var testComment = Path.Combine(Path.GetTempPath(), $"Bison_comment_test.csv");
-        
+    {   
         try{    
-        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
-        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance(testComment);
+        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//Bison_observe_test.csv");
+        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//Bison_comment_test.csv");
         var thing = new Observation("author", "message", 1, 1, "somewhere");
         observations.Store(thing);
         Interface1.StoreComment("", 99, comments, observations);
@@ -22,8 +19,8 @@ public class BisonTests
         Assert.Empty(comments.Read());
         }finally{
 
-        File.Delete(testObservation);
-        File.Delete(testComment);
+        File.Delete("..//SimpleDB//Bison_observe_test.csv");
+        File.Delete("..//SimpleDB//Bison_comment_test.csv");
         }
     }
     [Fact]

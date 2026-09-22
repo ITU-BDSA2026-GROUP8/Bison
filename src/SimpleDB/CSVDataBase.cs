@@ -25,8 +25,6 @@ public sealed class CSVDataBase<T> : IDatabaseRepository<T>
             Directory.CreateDirectory(directory);
         }
         using var file = File.Open(this.FilePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.Read);
-        using var writer = new StreamWriter(this.FilePath, true);
-        using var csv = new CsvWriter(writer, this.Config);
     }
 
     public static CSVDataBase<T> GetInstance(string path)
