@@ -36,7 +36,7 @@ public class SimpleDTests
             Assert.Equal("a", liste[1].Message);
             Assert.Equal(3, liste[2].Timestamp);
 
-            var case4 = new Observation("dom", "jajaja", 3, 4);
+            var case4 = new Observation("dom", "jajaja", 3, 4, "somewhere");
             observations.Store(case4);
             Assert.Equal(3, case4.Timestamp);
             Assert.Equal(4, case4.Id);
