@@ -1,4 +1,5 @@
 using Bison.CLI;
+using SimpleDB;
 
 namespace SimpleDB.Tests;
 
@@ -14,14 +15,15 @@ public class SimpleDTests
             var case1 = new Observation("noget", "f", 1, 1, "somewhere");
             var case2 = new Observation("andet", "a", 2, 2, "somewhere");
             var case3 = new Observation("her", "g", 3, 3, "somewhere");
+            
             observations.Store(case1);
             observations.Store(case2);
             observations.Store(case3);
-            Interface1.StoreComment("damn", 2, comments, observations);
+            comments.Store(new Comment("damn", 1));
 
             foreach (Comment comment in comments.Read())
             {
-                if (comment.Id == 2)
+                if (comment.Id == 1)
                 {
                     Assert.Equal("damn", comment.Message);
                 }
