@@ -22,11 +22,11 @@ public class SimpleDTests
             observations.Store(case1);
             observations.Store(case2);
             observations.Store(case3);
-            comments.Store(new Comment("damn", 2));
+            comments.Store(new Comment("damn", 1));
 
             foreach (Comment comment in comments.Read())
             {
-                if (comment.Id == 2)
+                if (comment.Id == 1)
                 {
                     Assert.Equal("damn", comment.Message);
                 }
