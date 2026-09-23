@@ -9,7 +9,6 @@ var commentDb = new CSVDataBase<Comment>("../SimpleDB/bison_comment_cli_db.csv")
 
 app.MapPost("/observation", ([FromBody] Observation obs) =>
 {
-    
     obs.Id = observationDb.GetCount() + 1;
     observationDb.Store(obs);
     return Results.Ok(new { status = "stored", id = obs.Id });

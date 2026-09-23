@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleDB\SimpleDB.csproj" />
+    <ProjectReference Include="..\Bison.CSVDBService\Bison.CSVDBService.csproj" />
   </ItemGroup>
 
 </Project>

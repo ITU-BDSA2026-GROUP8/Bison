@@ -14,7 +14,7 @@ public class Program
     {
         try
         {
-            return await Interface1.readCommands(args);
+            return await UserInterface.readCommands(args);
         }catch(ArgumentNullException)
         {
             Console.WriteLine("Argument can't be null!");
