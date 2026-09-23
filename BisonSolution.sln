@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bison.CLI.Tests", "test\Bis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleDB.Tests", "test\SimpleDB.Tests\SimpleDB.Tests.csproj", "{F2038F6E-FCF1-4279-B435-A008F97B4DAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bison.CSVDBService", "Bison.CSVDBService\Bison.CSVDBService.csproj", "{E38D7D80-721B-4F41-A0ED-C166EFE10F22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bison.CSVDBService", "src\Bison.CSVDBService\Bison.CSVDBService.csproj", "{E38D7D80-721B-4F41-A0ED-C166EFE10F22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
