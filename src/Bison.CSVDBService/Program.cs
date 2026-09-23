@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var observationDb = new CSVDataBase<Observation>("../src/SimpleDB/bison_observe_cli_db.csv");
-var commentDb = new CSVDataBase<Comment>("../src/SimpleDB/bison_comment_cli_db.csv");
+var observationDb = new CSVDataBase<Observation>("../SimpleDB/bison_observe_cli_db.csv");
+var commentDb = new CSVDataBase<Comment>("../SimpleDB/bison_comment_cli_db.csv");
 
 app.MapPost("/observation", ([FromBody] Observation obs) =>
 {
