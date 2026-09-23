@@ -29,11 +29,7 @@ public interface Interface1
         readCommand.SetHandler(() => PrintObservations(observations));
         var initCommand=new Command("initial", "initialise the taxon data structure and writes to the CSV file");
         initCommand.SetHandler(()=>StoreTaxons(taxons,simpleTaxons));
-        var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument };
-        observeCommand.SetHandler((string message) => { StoreObservation(message, observations); }, messageArgument);
-
         var locationArgument = new Argument<string>("location");
-
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument, locationArgument };
         observeCommand.SetHandler((string message, string location) => { StoreObservation(message, location, observations); }, messageArgument, locationArgument);
 
