@@ -19,13 +19,14 @@ public interface Interface1
         
         CSVDataBase<Observation> observations = new CSVDataBase<Observation>("..//SimpleDB//bison_observe_cli_db.csv");
         CSVDataBase<Comment> comments = new CSVDataBase<Comment>("..//SimpleDB//bison_comment_cli_db.csv");
-
+        CSVDataBase<Taxon> taxons=new CSVDataBase<Taxon>("..//SimpleDB//bison_Taxon_cli_db.csv");
+        CSVDataBase<simpleTaxon> simpleTaxons=new CSVDataBase<simpleTaxon>("..//SimpleDB//bison_simpleTaxon_cli_db.csv");
         var messageArgument = new Argument<string>("message");
         var idArgument = new Argument<int>("id");
-
         var readCommand = new Command("read", "Read messages from the CSV file");
         readCommand.SetHandler(() => PrintObservations(observations));
-
+        var initCommand=new Command("initial", "initialise the taxon data structure and writes to the CSV file");
+        initCommand.SetHandler(()=>StoreTaxons(taxons,simpleTaxons));
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument };
         observeCommand.SetHandler((string message) => { StoreObservation(message, observations); }, messageArgument);
 
@@ -40,6 +41,7 @@ public interface Interface1
         rootCommand.Add(observeCommand);
         rootCommand.Add(commentCommand);
         rootCommand.Add(discussionCommand);
+        rootCommand.Add(initCommand);
         return await rootCommand.InvokeAsync(args);
     }
     static void printDiscussion(int id, CSVDataBase<Comment> comments){
@@ -49,7 +51,33 @@ public interface Interface1
             }
         }
     }
-    
+    static void StoreTaxons(CSVDataBase<Taxon> taxons,CSVDataBase<simpleTaxon> simpleTaxons){
+        List<simpleTaxon> simpleTaxonstoStore=new List<simpleTaxon>();
+        foreach(Taxon taxon in taxons.Read()){
+            List<simpleTaxon> children=new List<simpleTaxon>();
+            if(taxon.taxonRank=="order"){
+                simpleTaxon st=new simpleTaxon(taxon.taxonID,taxon.parentID,taxon.taxonRank,taxon.vernaculareName,children);
+                simpleTaxonstoStore.Add(st);
+
+            }
+            else{
+                if(taxons.Read().Any(t=>t.taxonID==taxon.parentID)){
+                simpleTaxon st=new simpleTaxon(taxon.taxonID,taxon.parentID,taxon.taxonRank,taxon.vernaculareName,children);
+                foreach(simpleTaxon t in simpleTaxonstoStore){
+                    if(t.ID==st.parentID){
+                    t.children.Add(st);
+                }
+                }
+                simpleTaxonstoStore.Add(st);
+
+                }
+            }
+
+        }
+        foreach(simpleTaxon st in simpleTaxonstoStore){
+            simpleTaxons.Store(st);
+        }
+    }
     static void StoreComment(string comment, int id, CSVDataBase<Comment> comments,CSVDataBase<Observation> observations)
     {
         if(!observations.Read().Any(c => c.Id == id))
