@@ -7,6 +7,10 @@ using SimpleDB;
 using System.CommandLine;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 public interface Interface1
 {
@@ -17,6 +21,14 @@ public interface Interface1
         {
             throw new ArgumentNullException();
         }
+        
+        var baseURL = "http://localhost:5212";
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(baseURL);
+
+
         CSVDataBase<Taxon> taxons=new CSVDataBase<Taxon>("..//SimpleDB//bison_Taxon_cli_db.csv");
         CSVDataBase<simpleTaxon> simpleTaxons=new CSVDataBase<simpleTaxon>("..//SimpleDB//bison_simpleTaxon_cli_db.csv");
         //var databaseDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
@@ -26,7 +38,7 @@ public interface Interface1
         var messageArgument = new Argument<string>("message");
         var idArgument = new Argument<int>("id");
         var readCommand = new Command("read", "Read messages from the CSV file");
-        readCommand.SetHandler(() => PrintObservations(observations));
+        readCommand.SetHandler(() => PrintObservations(client));
         var initCommand=new Command("initial", "initialise the taxon data structure and writes to the CSV file");
         initCommand.SetHandler(()=>StoreTaxons(taxons,simpleTaxons));
         var locationArgument = new Argument<string>("location");
@@ -105,13 +117,22 @@ public interface Interface1
         observations.Store(cheep);
     }
 
-    static void PrintObservations(CSVDataBase<Observation> observations)
+    static async Task PrintObservations(HttpClient client)
     {
-        foreach (var record in observations.Read())
+        var ob = await client.GetFromJsonAsync<List<Observation>>("observations");
+
+        foreach (Observation observation in ob)
+        {
+            var time = DateTimeOffset.FromUnixTimeSeconds(observation.Timestamp);
+            Console.WriteLine($"{observation.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {observation.Message}");
+        }
+
+
+        /*foreach (var record in observations.Read())
         {
             var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
             Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
-        }
+        }*/
     }
 
 
