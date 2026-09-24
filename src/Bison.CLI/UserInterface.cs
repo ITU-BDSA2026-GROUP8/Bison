@@ -1,16 +1,15 @@
 ﻿namespace Bison.CLI;
 
 using System.Globalization;
-using CsvHelper.Configuration;
-using CsvHelper;
 using SimpleDB;
 using System.CommandLine;
-using System.Collections.Immutable;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 public interface UserInterface
 {
-
     static async Task<int> readCommands(string[] args)
     {
         if (args.Length == 0)
@@ -18,6 +17,11 @@ public interface UserInterface
             throw new ArgumentNullException();
         }
 
+        var baseURL = "http://localhost:5212";
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(baseURL);  
 
         //var databaseDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
@@ -27,7 +31,7 @@ public interface UserInterface
         var idArgument = new Argument<int>("id");
 
         var readCommand = new Command("read", "Read messages from the CSV file");
-        readCommand.SetHandler(() => PrintObservations(observations));
+        readCommand.SetHandler(() => PrintObservations(client));
 
         var locationArgument = new Argument<string>("location");
 
@@ -82,13 +86,16 @@ public interface UserInterface
         observations.Store(cheep);
     }
 
-    static void PrintObservations(CSVDataBase<Observation> observations)
+    static void PrintObservations(HttpClient client)
     {
-        foreach (var record in observations.Read())
+        var ob = client.GetFromJsonAsync<Observation>("observations");
+        Console.WriteLine(ob);
+
+        /*foreach (var record in observations.Read())
         {
             var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
             Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
-        }
+        }*/
     }
 
 
