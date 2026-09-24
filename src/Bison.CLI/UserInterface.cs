@@ -7,6 +7,10 @@ using SimpleDB;
 using System.CommandLine;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 public interface Interface1
 {
@@ -17,6 +21,14 @@ public interface Interface1
         {
             throw new ArgumentNullException();
         }
+        
+        var baseURL = "http://localhost:5212";
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(baseURL);
+
+
         CSVDataBase<Taxon> taxons=new CSVDataBase<Taxon>("..//SimpleDB//bison_Taxon_cli_db.csv");
         CSVDataBase<simpleTaxon> simpleTaxons=new CSVDataBase<simpleTaxon>("..//SimpleDB//bison_simpleTaxon_cli_db.csv");
         //var databaseDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
@@ -26,12 +38,12 @@ public interface Interface1
         var messageArgument = new Argument<string>("message");
         var idArgument = new Argument<int>("id");
         var readCommand = new Command("read", "Read messages from the CSV file");
-        readCommand.SetHandler(() => PrintObservations(observations));
+        readCommand.SetHandler(() => PrintObservations(client));
         var initCommand=new Command("initial", "initialise the taxon data structure and writes to the CSV file");
         initCommand.SetHandler(()=>StoreTaxons(taxons,simpleTaxons));
         var locationArgument = new Argument<string>("location");
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument, locationArgument };
-        observeCommand.SetHandler((string message, string location) => { StoreObservation(message, location, observations); }, messageArgument, locationArgument);
+        observeCommand.SetHandler(async (string message, string location) => {await StoreObservation(message, location, client); }, messageArgument, locationArgument);
 
         var locationCommand = new Command("location", "Read messages from a specific location") { locationArgument };
         locationCommand.SetHandler((string location) => { PrintObservationsByLocation(location, observations); }, locationArgument);
@@ -96,22 +108,31 @@ public interface Interface1
         comments.Store(commentRecord);
     }
     
-    static void StoreObservation(string message, string location, CSVDataBase<Observation> observations)
+    static async Task StoreObservation(string message, string location, HttpClient client)
     {
         var author = Environment.UserName;
         var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var id= observations.GetCount() + 1;
+        var id= 0;
         var cheep = new Observation(author, message, time, id, location);
-        observations.Store(cheep);
+        var ob = await client.PostAsJsonAsync<Observation>("observation",cheep);
     }
 
-    static void PrintObservations(CSVDataBase<Observation> observations)
+    static async Task PrintObservations(HttpClient client)
     {
-        foreach (var record in observations.Read())
+        var ob = await client.GetFromJsonAsync<List<Observation>>("observations");
+
+        foreach (Observation observation in ob)
+        {
+            var time = DateTimeOffset.FromUnixTimeSeconds(observation.Timestamp);
+            Console.WriteLine($"{observation.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {observation.Message}");
+        }
+
+
+        /*foreach (var record in observations.Read())
         {
             var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
             Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
-        }
+        }*/
     }
 
 
