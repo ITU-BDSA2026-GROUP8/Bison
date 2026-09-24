@@ -43,7 +43,7 @@ public interface Interface1
         initCommand.SetHandler(()=>StoreTaxons(taxons,simpleTaxons));
         var locationArgument = new Argument<string>("location");
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument, locationArgument };
-        observeCommand.SetHandler((string message, string location) => { StoreObservation(message, location, observations); }, messageArgument, locationArgument);
+        observeCommand.SetHandler(async (string message, string location) => {await StoreObservation(message, location, client); }, messageArgument, locationArgument);
 
         var locationCommand = new Command("location", "Read messages from a specific location") { locationArgument };
         locationCommand.SetHandler((string location) => { PrintObservationsByLocation(location, observations); }, locationArgument);
@@ -108,13 +108,13 @@ public interface Interface1
         comments.Store(commentRecord);
     }
     
-    static void StoreObservation(string message, string location, CSVDataBase<Observation> observations)
+    static async Task StoreObservation(string message, string location, HttpClient client)
     {
         var author = Environment.UserName;
         var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var id= observations.GetCount() + 1;
+        var id= 0;
         var cheep = new Observation(author, message, time, id, location);
-        observations.Store(cheep);
+        var ob = await client.PostAsJsonAsync<Observation>("observation",cheep);
     }
 
     static async Task PrintObservations(HttpClient client)
