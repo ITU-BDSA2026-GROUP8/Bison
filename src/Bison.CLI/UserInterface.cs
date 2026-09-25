@@ -49,7 +49,7 @@ public interface Interface1
         locationCommand.SetHandler((string location) => { PrintObservationsByLocation(location, observations); }, locationArgument);
         
         var commentCommand = new Command("comment", "Comment on a message and write to the CSV file"){ messageArgument, idArgument };
-        commentCommand.SetHandler((string comment, int id) => { StoreComment(comment, id, comments, observations); }, messageArgument, idArgument);
+        commentCommand.SetHandler(async (string comment, int id) => {await StoreComment(comment, id, client); }, messageArgument, idArgument);
 
         var discussionCommand = new Command("discussion", "Read comments for a specific message ID") { idArgument };
         discussionCommand.SetHandler((int id) =>{printDiscussion(id, comments);}, idArgument);
@@ -97,18 +97,7 @@ public interface Interface1
             simpleTaxons.Store(st);
         }
     }
-    static void StoreComment(string comment, int id, CSVDataBase<Comment> comments,CSVDataBase<Observation> observations)
-    {
-        if(!observations.Read().Any(c => c.Id == id))
-        {
-            Console.WriteLine($"No observation found with ID {id}. Cannot add comment.");
-            return;
-        }
-        var commentRecord = new Comment(comment,id);
-        comments.Store(commentRecord);
-    }
-    
-    static async Task KStoreComment(string comment, int id, HttpClient client)
+    static async Task StoreComment(string comment, int id, HttpClient client)
     {
         var ob = await client.GetFromJsonAsync<List<Observation>>("observations");
         if(!ob.Any(c => c.Id == id))
@@ -117,7 +106,7 @@ public interface Interface1
             return;
         }
         var commentRecord = new Comment(comment,id);
-        await client.PostAsJsonAsync<Comment>("comment",commentRecord);
+        var com = await client.PostAsJsonAsync<Comment>("comment",commentRecord);
     }    
     static async Task StoreObservation(string message, string location, HttpClient client)
     {
