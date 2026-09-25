@@ -7,6 +7,7 @@ var app = builder.Build();
 var observationDb = new CSVDataBase<Observation>("../SimpleDB/bison_observe_cli_db.csv");
 var commentDb = new CSVDataBase<Comment>("../SimpleDB/bison_comment_cli_db.csv");
 var taxonDb = new CSVDataBase<Taxon>("../SimpleDB/Taxons.csv");
+var simpleTaxonDb = new CSVDataBase<simpleTaxon>("../SimpleDB/bison_simpleTaxon.csv");
 
 app.MapPost("/observation", ([FromBody] Observation obs) =>
 {
@@ -21,9 +22,9 @@ app.MapPost("/comment", ([FromBody] Comment c) =>
     return Results.Ok(new { status = "stored" });
 });
 
-app.MapPost("/taxon", ([FromBody] Taxon t) =>
+app.MapPost("/proposal", ([FromBody] simpleTaxon st) =>
 {
-    taxonDb.Store(t);
+    simpleTaxonDb.Store(st);
     return Results.Ok(new { status = "stored" });
 });
 
@@ -38,6 +39,18 @@ app.MapGet("/observations", () =>
 app.MapGet("/comments", (int id) =>
 {
     var all = commentDb.Read().Where(c => c.Id == id).ToList();
+    return Results.Ok(all);
+});
+
+app.MapGet("/taxons", () =>
+{
+    var all = taxonDb.Read().ToList();
+    return Results.Ok(all);
+});
+
+app.MapGet("/proposals", () =>
+{
+    var all = simpleTaxonDb.Read().ToList();
     return Results.Ok(all);
 });
 

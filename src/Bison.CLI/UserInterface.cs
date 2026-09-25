@@ -37,11 +37,14 @@ public interface Interface1
 
         var messageArgument = new Argument<string>("message");
         var idArgument = new Argument<int>("id");
+        var locationArgument = new Argument<string>("location");
+
         var readCommand = new Command("read", "Read messages from the CSV file");
         readCommand.SetHandler(() => PrintObservations(client));
+
         var initCommand = new Command("initial", "initialise the taxon data structure and writes to the CSV file");
-        initCommand.SetHandler(() => StoreTaxons(taxons, simpleTaxons));
-        var locationArgument = new Argument<string>("location");
+        initCommand.SetHandler(() => StoreTaxons(client));
+
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument, locationArgument };
         observeCommand.SetHandler(async (string message, string location) => { await StoreObservation(message, location, client); }, messageArgument, locationArgument);
 
@@ -80,10 +83,12 @@ public interface Interface1
             }
         }
     }
-    static void StoreTaxons(CSVDataBase<Taxon> taxons, CSVDataBase<simpleTaxon> simpleTaxons)
+    static async Task StoreTaxons(HttpClient client)
     {
+        var taxons = await client.GetFromJsonAsync<List<Taxon>>("taxon");
+
         List<simpleTaxon> simpleTaxonstoStore = new List<simpleTaxon>();
-        foreach (Taxon taxon in taxons.Read())
+        foreach (Taxon taxon in taxons)
         {
             List<simpleTaxon> children = new List<simpleTaxon>();
             if (taxon.taxonRank == "order")
@@ -93,7 +98,7 @@ public interface Interface1
             }
             else
             {
-                if (taxons.Read().Any(t => t.taxonID == taxon.parentID))
+                if (taxons.Any(t => t.taxonID == taxon.parentID))
                 {
                     simpleTaxon st = new simpleTaxon(taxon.taxonID, taxon.parentID, taxon.taxonRank, taxon.vernaculareName, children);
                     foreach (simpleTaxon t in simpleTaxonstoStore)
@@ -109,7 +114,7 @@ public interface Interface1
         }
         foreach (simpleTaxon st in simpleTaxonstoStore)
         {
-            simpleTaxons.Store(st);
+            await client.PostAsJsonAsync<simpleTaxon>("proposal", st);
         }
     }
     static async Task StoreComment(string comment, int id, HttpClient client)
