@@ -6,11 +6,10 @@ var app = builder.Build();
 
 var observationDb = new CSVDataBase<Observation>("../SimpleDB/bison_observe_cli_db.csv");
 var commentDb = new CSVDataBase<Comment>("../SimpleDB/bison_comment_cli_db.csv");
+var taxonDb = new CSVDataBase<Taxon>("../SimpleDB/Taxons.csv");
 
 app.MapPost("/observation", ([FromBody] Observation obs) =>
 {
-    
-    obs.Id = observationDb.GetCount() + 1;
     observationDb.Store(obs);
     return Results.Ok(new { status = "stored", id = obs.Id });
 });
@@ -19,6 +18,12 @@ app.MapPost("/observation", ([FromBody] Observation obs) =>
 app.MapPost("/comment", ([FromBody] Comment c) =>
 {
     commentDb.Store(c);
+    return Results.Ok(new { status = "stored" });
+});
+
+app.MapPost("/taxon", ([FromBody] Taxon t) =>
+{
+    taxonDb.Store(t);
     return Results.Ok(new { status = "stored" });
 });
 

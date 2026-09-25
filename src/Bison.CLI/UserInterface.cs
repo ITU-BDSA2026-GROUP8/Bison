@@ -90,7 +90,6 @@ public interface Interface1
             {
                 simpleTaxon st = new simpleTaxon(taxon.taxonID, taxon.parentID, taxon.taxonRank, taxon.vernaculareName, children);
                 simpleTaxonstoStore.Add(st);
-
             }
             else
             {
@@ -105,10 +104,8 @@ public interface Interface1
                         }
                     }
                     simpleTaxonstoStore.Add(st);
-
                 }
             }
-
         }
         foreach (simpleTaxon st in simpleTaxonstoStore)
         {
