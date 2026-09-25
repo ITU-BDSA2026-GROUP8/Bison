@@ -3,17 +3,17 @@
 using System.Globalization;
 using SimpleDB;
 using Bison.CLI;
+using Bison.CSVDBService;
 
 public class EndTests
 {
 
-    CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
-    CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
+    CSVDataBase<Bison.CLI.Observation> observations = CSVDataBase<Bison.CLI.Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
+    CSVDataBase<Bison.CLI.Comment> comments = CSVDataBase<Bison.CLI.Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
 
     [Fact]
-    public async Task AllEndToEnd()
+    public async Task FirstEndToEnd()
     {
-        string[] input = { "read" };
         var exitCode = await Program.Main(input);
         Assert.Equal(0, exitCode);
     }
