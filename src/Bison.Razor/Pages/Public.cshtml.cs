@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Bison.Razor.Pages;
@@ -15,7 +16,13 @@ public class PublicModel : PageModel
 
     public ActionResult OnGet()
     {
-        Observations = _service.GetObservations();
+        var all = _service.GetObservations();
+        var paged = all.Skip((Page - 1)*32).Take(32).ToList();
+        Observations = paged;
         return Page();
     }
+
+    [BindProperty(SupportsGet = true)]
+    public int Page { get; set; } = 1;
+
 }
