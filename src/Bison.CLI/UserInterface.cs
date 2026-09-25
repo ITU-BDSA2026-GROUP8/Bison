@@ -52,7 +52,7 @@ public interface Interface1
         commentCommand.SetHandler(async (string comment, int id) => {await StoreComment(comment, id, client); }, messageArgument, idArgument);
 
         var discussionCommand = new Command("discussion", "Read comments for a specific message ID") { idArgument };
-        discussionCommand.SetHandler((int id) =>{printDiscussion(id, comments);}, idArgument);
+        discussionCommand.SetHandler(async (int id) =>{await printDiscussion(id, client);}, idArgument);
 
         var rootCommand = new RootCommand("Bison Observe CLI");
         rootCommand.Add(readCommand);
@@ -63,9 +63,18 @@ public interface Interface1
         rootCommand.Add(locationCommand);
         return await rootCommand.InvokeAsync(args);
     }
-    static void printDiscussion(int id, CSVDataBase<Comment> comments){
-        foreach(Comment comment in comments.Read()){
-            if(comment.Id==id){
+    static async Task printDiscussion(int id, HttpClient client){
+        var com = await client.GetFromJsonAsync<List<Comment>>($"comments?id={id}");
+        if (com is null)
+        {
+            Console.WriteLine($"No discussion found for observation ID {id}.");
+            return;
+        }
+
+        foreach(Comment comment in com)
+        {
+            if(comment.Id == id)
+            {
                 Console.WriteLine(comment.Message);
             }
         }
@@ -99,8 +108,8 @@ public interface Interface1
     }
     static async Task StoreComment(string comment, int id, HttpClient client)
     {
-        var ob = await client.GetFromJsonAsync<List<Observation>>("observations");
-        if(!ob.Any(c => c.Id == id))
+        var observations = await client.GetFromJsonAsync<List<Observation>>("observations");
+        if (observations is null || !observations.Any(c => c.Id == id))
         {
             Console.WriteLine($"No observation found with ID {id}. Cannot add comment.");
             return;
