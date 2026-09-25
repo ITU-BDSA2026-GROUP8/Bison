@@ -17,11 +17,11 @@ public interface Interface1
 
     static async Task<int> readCommands(string[] args)
     {
-        if(args.Length == 0)
+        if (args.Length == 0)
         {
             throw new ArgumentNullException();
         }
-        
+
         var baseURL = "http://localhost:5212";
         using HttpClient client = new();
         client.DefaultRequestHeaders.Accept.Clear();
@@ -29,8 +29,8 @@ public interface Interface1
         client.BaseAddress = new Uri(baseURL);
 
 
-        CSVDataBase<Taxon> taxons=new CSVDataBase<Taxon>("..//SimpleDB//bison_Taxon_cli_db.csv");
-        CSVDataBase<simpleTaxon> simpleTaxons=new CSVDataBase<simpleTaxon>("..//SimpleDB//bison_simpleTaxon_cli_db.csv");
+        CSVDataBase<Taxon> taxons = new CSVDataBase<Taxon>("..//SimpleDB//bison_Taxon_cli_db.csv");
+        CSVDataBase<simpleTaxon> simpleTaxons = new CSVDataBase<simpleTaxon>("..//SimpleDB//bison_simpleTaxon_cli_db.csv");
         //var databaseDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
         CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
         CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
@@ -39,20 +39,20 @@ public interface Interface1
         var idArgument = new Argument<int>("id");
         var readCommand = new Command("read", "Read messages from the CSV file");
         readCommand.SetHandler(() => PrintObservations(client));
-        var initCommand=new Command("initial", "initialise the taxon data structure and writes to the CSV file");
-        initCommand.SetHandler(()=>StoreTaxons(taxons,simpleTaxons));
+        var initCommand = new Command("initial", "initialise the taxon data structure and writes to the CSV file");
+        initCommand.SetHandler(() => StoreTaxons(taxons, simpleTaxons));
         var locationArgument = new Argument<string>("location");
         var observeCommand = new Command("observe", "Observe messages and write to the CSV file") { messageArgument, locationArgument };
-        observeCommand.SetHandler(async (string message, string location) => {await StoreObservation(message, location, client); }, messageArgument, locationArgument);
+        observeCommand.SetHandler(async (string message, string location) => { await StoreObservation(message, location, client); }, messageArgument, locationArgument);
 
         var locationCommand = new Command("location", "Read messages from a specific location") { locationArgument };
-        locationCommand.SetHandler((string location) => { PrintObservationsByLocation(location, observations); }, locationArgument);
-        
-        var commentCommand = new Command("comment", "Comment on a message and write to the CSV file"){ messageArgument, idArgument };
-        commentCommand.SetHandler(async (string comment, int id) => {await StoreComment(comment, id, client); }, messageArgument, idArgument);
+        locationCommand.SetHandler(async (string location) => {await PrintObservationsByLocation(location, client); }, locationArgument);
+
+        var commentCommand = new Command("comment", "Comment on a message and write to the CSV file") { messageArgument, idArgument };
+        commentCommand.SetHandler(async (string comment, int id) => { await StoreComment(comment, id, client); }, messageArgument, idArgument);
 
         var discussionCommand = new Command("discussion", "Read comments for a specific message ID") { idArgument };
-        discussionCommand.SetHandler(async (int id) =>{await printDiscussion(id, client);}, idArgument);
+        discussionCommand.SetHandler(async (int id) => { await printDiscussion(id, client); }, idArgument);
 
         var rootCommand = new RootCommand("Bison Observe CLI");
         rootCommand.Add(readCommand);
@@ -63,7 +63,8 @@ public interface Interface1
         rootCommand.Add(locationCommand);
         return await rootCommand.InvokeAsync(args);
     }
-    static async Task printDiscussion(int id, HttpClient client){
+    static async Task printDiscussion(int id, HttpClient client)
+    {
         var com = await client.GetFromJsonAsync<List<Comment>>($"comments?id={id}");
         if (com is null)
         {
@@ -71,38 +72,46 @@ public interface Interface1
             return;
         }
 
-        foreach(Comment comment in com)
+        foreach (Comment comment in com)
         {
-            if(comment.Id == id)
+            if (comment.Id == id)
             {
                 Console.WriteLine(comment.Message);
             }
         }
     }
-    static void StoreTaxons(CSVDataBase<Taxon> taxons,CSVDataBase<simpleTaxon> simpleTaxons){
-        List<simpleTaxon> simpleTaxonstoStore=new List<simpleTaxon>();
-        foreach(Taxon taxon in taxons.Read()){
-            List<simpleTaxon> children=new List<simpleTaxon>();
-            if(taxon.taxonRank=="order"){
-                simpleTaxon st=new simpleTaxon(taxon.taxonID,taxon.parentID,taxon.taxonRank,taxon.vernaculareName,children);
+    static void StoreTaxons(CSVDataBase<Taxon> taxons, CSVDataBase<simpleTaxon> simpleTaxons)
+    {
+        List<simpleTaxon> simpleTaxonstoStore = new List<simpleTaxon>();
+        foreach (Taxon taxon in taxons.Read())
+        {
+            List<simpleTaxon> children = new List<simpleTaxon>();
+            if (taxon.taxonRank == "order")
+            {
+                simpleTaxon st = new simpleTaxon(taxon.taxonID, taxon.parentID, taxon.taxonRank, taxon.vernaculareName, children);
                 simpleTaxonstoStore.Add(st);
 
             }
-            else{
-                if(taxons.Read().Any(t=>t.taxonID==taxon.parentID)){
-                simpleTaxon st=new simpleTaxon(taxon.taxonID,taxon.parentID,taxon.taxonRank,taxon.vernaculareName,children);
-                foreach(simpleTaxon t in simpleTaxonstoStore){
-                    if(t.ID==st.parentID){
-                    t.children.Add(st);
-                }
-                }
-                simpleTaxonstoStore.Add(st);
+            else
+            {
+                if (taxons.Read().Any(t => t.taxonID == taxon.parentID))
+                {
+                    simpleTaxon st = new simpleTaxon(taxon.taxonID, taxon.parentID, taxon.taxonRank, taxon.vernaculareName, children);
+                    foreach (simpleTaxon t in simpleTaxonstoStore)
+                    {
+                        if (t.ID == st.parentID)
+                        {
+                            t.children.Add(st);
+                        }
+                    }
+                    simpleTaxonstoStore.Add(st);
 
                 }
             }
 
         }
-        foreach(simpleTaxon st in simpleTaxonstoStore){
+        foreach (simpleTaxon st in simpleTaxonstoStore)
+        {
             simpleTaxons.Store(st);
         }
     }
@@ -114,16 +123,16 @@ public interface Interface1
             Console.WriteLine($"No observation found with ID {id}. Cannot add comment.");
             return;
         }
-        var commentRecord = new Comment(comment,id);
-        var com = await client.PostAsJsonAsync<Comment>("comment",commentRecord);
-    }    
+        var commentRecord = new Comment(comment, id);
+        var com = await client.PostAsJsonAsync<Comment>("comment", commentRecord);
+    }
     static async Task StoreObservation(string message, string location, HttpClient client)
     {
         var author = Environment.UserName;
         var time = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-        var id= 0;
+        var id = 0;
         var cheep = new Observation(author, message, time, id, location);
-        var ob = await client.PostAsJsonAsync<Observation>("observation",cheep);
+        var ob = await client.PostAsJsonAsync<Observation>("observation", cheep);
     }
 
     static async Task PrintObservations(HttpClient client)
@@ -145,13 +154,14 @@ public interface Interface1
     }
 
 
-    static void PrintObservationsByLocation(string location, CSVDataBase<Observation> observations)
-{
-    foreach (var record in observations.Read().Where(o => o.Location == location))
+    static async Task PrintObservationsByLocation(string location, HttpClient client)
     {
-        var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
-        Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
+        var ob = await client.GetFromJsonAsync<List<Observation>>("observations");
+        foreach (var record in ob.Where(o => o.Location == location))
+        {
+            var time = DateTimeOffset.FromUnixTimeSeconds(record.Timestamp);
+            Console.WriteLine($"{record.Author} @ {time.ToString("MM/dd/yy HH:mm:ss", CultureInfo.InvariantCulture)}: {record.Message}");
+        }
     }
-}  
 
 }
