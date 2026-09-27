@@ -7,8 +7,8 @@ using Bison.CLI;
 public class EndTests
 {
 
-    CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
-    CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
+    CSVDataBase<SimpleDB.Observation> observations = CSVDataBase<SimpleDB.Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
+    CSVDataBase<SimpleDB.Comment> comments = CSVDataBase<SimpleDB.Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
 
     [Fact]
     public async Task AllEndToEnd()
