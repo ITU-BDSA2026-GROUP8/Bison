@@ -2,26 +2,42 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using SimpleDB;
 using Xunit.Sdk;
-
 namespace end_to_end.Tests;
+
+/// <summary>
+/// This test sets up an in-memory instance of the API (via WebApplicationFactory)
+/// and repeatedly sends randomly generated observations and comments to it over HTTP
+/// Keeps track of what we sent (our "oracle") and checks
+// it against what the server reports back at the end.
+// Comments always use a real observation ID so they're not just rejected as invalid.
+/// </summary>
 
 public class FuzzTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient client;
+
+    // Test oracle: keeps track of what was actually stored, so we can
+    // compare it against what the server reports later
     private readonly List<Observation> knownObservations = new();
     private readonly List<Comment> knownComments = new();
     private readonly Random rng = new();
+
+    // Matches the JSON shape returned by POST /observation: { status, id }
     record StoredResponse(string status, int id);
 
     public FuzzTests(WebApplicationFactory<Program> factory)
     {
+        // Starts an in-memory instance of the API so we don't need
+        // to run it manually in a separate terminal
         client = factory.CreateClient();
     }
 
 [Fact]
 public async Task FuzzTest()
 {
-
+    // Randomly post observations and comments 100 times.
+    // Always post an observation first if none exist yet,
+    // since a comment needs a valid observation ID to reference.
     for (int i = 0; i < 100; i++)
         {
             int choice = rng.Next(2);
@@ -35,7 +51,8 @@ public async Task FuzzTest()
                 await FuzzPostComment();
             }
         } 
-
+    
+    // Verify the server's observations match what we sent
     var serverObservations = await client.GetFromJsonAsync<List<Observation>>("/observations");
     if (serverObservations == null)
         {
@@ -76,9 +93,7 @@ public async Task FuzzTest()
     }
 }
         
-
-
-// Helper method to generate a random string of a given length
+// Generates a random string of a random length between minLen and maxLen
 public string RandomString(int minLen, int maxLen) {
         
     const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 æøåÆØÅ!?.,-_'\"";        
@@ -93,8 +108,9 @@ public string RandomString(int minLen, int maxLen) {
     }
 
 
-// Fuzz test for posting observations
-public async Task FuzzPostObservation()
+// Generates a random observation and posts it to the server.
+// Reads the server-assigned ID from the response and adds it to our oracle.
+private async Task FuzzPostObservation()
     {
         var obs = new Observation(
             //Author, Message, Timestamp, Id, Location
@@ -121,8 +137,9 @@ public async Task FuzzPostObservation()
         knownObservations.Add(obs);
     }
 
-
-public async Task FuzzPostComment()
+// Generates a random comment, always referencing a real, known observation ID,
+// so we don't trigger the "fuzz blocker" of only sending invalid IDs.
+private async Task FuzzPostComment()
     {
 
     if (knownObservations.Count == 0)
@@ -134,9 +151,8 @@ public async Task FuzzPostComment()
         var randomObservation = knownObservations[rng.Next(knownObservations.Count)];
 
         var comment = new Comment(
-            //Message, Id
-            RandomString(1, 200),
-            randomObservation.Id
+            RandomString(1, 200), //message
+            randomObservation.Id // Reference to a valid observation
         );
 
         var response = await client.PostAsJsonAsync("/comment", comment);

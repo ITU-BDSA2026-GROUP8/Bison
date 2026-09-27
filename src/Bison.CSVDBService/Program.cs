@@ -41,3 +41,6 @@ app.MapGet("/comments", (int id) =>
 app.Run();
 
 //public record Observation(string Author, string Message, long Timestamp);
+
+
+public partial class Program { }
