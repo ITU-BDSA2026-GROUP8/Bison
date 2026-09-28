@@ -28,13 +28,6 @@ public interface Interface1
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         client.BaseAddress = new Uri(baseURL);
 
-
-        CSVDataBase<Taxon> taxons = new CSVDataBase<Taxon>("..//SimpleDB//bison_Taxon_cli_db.csv");
-        CSVDataBase<simpleTaxon> simpleTaxons = new CSVDataBase<simpleTaxon>("..//SimpleDB//bison_simpleTaxon_cli_db.csv");
-        //var databaseDirectory = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
-        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
-        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
-
         var messageArgument = new Argument<string>("message");
         var idArgument = new Argument<int>("id");
         var locationArgument = new Argument<string>("location");

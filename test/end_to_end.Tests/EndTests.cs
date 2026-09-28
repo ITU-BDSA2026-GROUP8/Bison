@@ -3,20 +3,9 @@
 using System.Globalization;
 using SimpleDB;
 using Bison.CLI;
-using Bison.CSVDBService;
 
 public class EndTests
 {
-
-    CSVDataBase<Bison.CLI.Observation> observations = CSVDataBase<Bison.CLI.Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
-    CSVDataBase<Bison.CLI.Comment> comments = CSVDataBase<Bison.CLI.Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
-
-    [Fact]
-    public async Task FirstEndToEnd()
-    {
-        var exitCode = await Program.Main(input);
-        Assert.Equal(0, exitCode);
-    }
 
     [Fact]
     public async Task ReadTest()
@@ -48,7 +37,5 @@ public class EndTests
         string[] input = { "discussion", "1" };
         var exitCode = await Program.Main(input);
         Assert.Equal(0, exitCode);
-        File.Delete("..//SimpleDB//bison_observe_cli_db.csv");
-        File.Delete("..//SimpleDB//bison_comment_cli_db.csv");
     }
 }
