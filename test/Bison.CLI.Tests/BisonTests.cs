@@ -1,27 +1,30 @@
 using System.Globalization;
 using Newtonsoft.Json.Converters;
 using SimpleDB;
+using Bison.CLI;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 
 namespace Bison.CLI.Tests;
 
 public class BisonTests
 {
     [Fact]
-    public void CommentThatReferenceNonExistingObservation()
+    public async Task CommentThatReferenceNonExistingObservation()
     {   
-        try{    
-        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//Bison_observe_test.csv");
-        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//Bison_comment_test.csv");
-        var thing = new Observation("author", "message", 1, 1, "somewhere");
-        observations.Store(thing);
-        Interface1.StoreComment("", 99, comments, observations);
+        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//bison_comment_cli.db.csv");
+
+        var baseURL = "http://localhost:5212";
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(baseURL);
+
+        await UserInterface.StoreObservation("message", "somewhere", client);
+        await UserInterface.StoreComment("", 99, client);
 
         Assert.Empty(comments.Read());
-        }finally{
-
-        File.Delete("..//SimpleDB//Bison_observe_test.csv");
-        File.Delete("..//SimpleDB//Bison_comment_test.csv");
-        }
     }
     [Fact]
     public void UNIXTimeStampConversion()
@@ -36,20 +39,25 @@ public class BisonTests
     }
 
     [Fact]
-    public void ObserveIdIsTheNumberOfPosts()
+    public async Task ObserveIdIsTheNumberOfPosts()
     {   
-        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
+        var baseURL = "http://localhost:5212";
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(baseURL);
+
         try{
-        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
-        Interface1.StoreObservation("There is a test at ITU!", "ITU", observations);
+        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli.db.csv");
+        await UserInterface.StoreObservation("There is a test at ITU!", "ITU", client);
         
-        var expectedNumberOfPosts = 1;
-        Assert.Equal(expectedNumberOfPosts,observations.GetCount());
-        Assert.True(observations.GetCount()>0);
+        var expectedNumberOfPosts = 13;
+        var obs = await client.GetFromJsonAsync<List<Observation>>("observations");
+        Assert.Equal(expectedNumberOfPosts, obs.Count + 1);
+        Assert.True(obs.Capacity>0);
         
         }finally{
 
-        File.Delete(testObservation);
         }
     }
 }
