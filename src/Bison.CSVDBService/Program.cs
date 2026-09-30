@@ -59,3 +59,6 @@ app.MapGet("/proposals", () =>
 app.Run();
 
 //public record Observation(string Author, string Message, long Timestamp);
+
+
+public partial class Program { }
