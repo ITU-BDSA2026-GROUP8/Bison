@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 public interface UserInterface
 {
@@ -50,6 +51,9 @@ public interface UserInterface
         var discussionCommand = new Command("discussion", "Read comments for a specific message ID") { idArgument };
         discussionCommand.SetHandler(async (int id) => { await printDiscussion(id, client); }, idArgument);
 
+        var proposalCommand=new Command("propose","Propose Taxons to be connected to observations"){messageArgument,idArgument};
+        proposalCommand.SetHandler(async (string Tid,int Oid) => { await Proposals(Oid,Tid, client); }, messageArgument , idArgument);
+
         var rootCommand = new RootCommand("Bison Observe CLI");
         rootCommand.Add(readCommand);
         rootCommand.Add(observeCommand);
@@ -57,6 +61,7 @@ public interface UserInterface
         rootCommand.Add(discussionCommand);
         rootCommand.Add(initCommand);
         rootCommand.Add(locationCommand);
+        rootCommand.Add(proposalCommand);
         return await rootCommand.InvokeAsync(args);
     }
     static async Task printDiscussion(int id, HttpClient client)
@@ -76,10 +81,28 @@ public interface UserInterface
             }
         }
     }
+    static async Task Proposals(int Oid, string Tid, HttpClient client)
+    {
+        var observations = await client.GetFromJsonAsync<List<Observation>>("observations");
+
+        var taxons = await client.GetFromJsonAsync<List<Taxon>>("taxons");
+        if (observations.Any(o=>o.Id==Oid) || taxons.Any(t=>t.taxonID==Tid))
+        {
+            Proposal proposal=new Proposal(Tid,Oid);
+            await client.PostAsJsonAsync<Proposal>("proposal", proposal);
+            return;
+        }
+        else
+        {
+            Console.WriteLine("wrong id");
+            return;
+        }        
+
+
+    }
     static async Task StoreTaxons(HttpClient client)
     {
-        var taxons = await client.GetFromJsonAsync<List<Taxon>>("taxon");
-
+        var taxons = await client.GetFromJsonAsync<List<Taxon>>("taxons");
         List<simpleTaxon> simpleTaxonstoStore = new List<simpleTaxon>();
         foreach (Taxon taxon in taxons)
         {
@@ -107,7 +130,7 @@ public interface UserInterface
         }
         foreach (simpleTaxon st in simpleTaxonstoStore)
         {
-            await client.PostAsJsonAsync<simpleTaxon>("proposal", st);
+            await client.PostAsJsonAsync<simpleTaxon>("simpleTaxon", st);
         }
     }
     static async Task StoreComment(string comment, int id, HttpClient client)
