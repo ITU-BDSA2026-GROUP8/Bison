@@ -15,6 +15,7 @@ namespace end_to_end.Tests;
 public class FuzzTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient client;
+    private readonly string simpleDbDirectory;
 
     // Test oracle: keeps track of what was actually stored, so we can
     // compare it against what the server reports later
@@ -27,6 +28,22 @@ public class FuzzTests : IClassFixture<WebApplicationFactory<Program>>
 
     public FuzzTests(WebApplicationFactory<Program> factory)
     {
+        simpleDbDirectory = Path.Combine(Path.GetTempPath(), $"bison-fuzz-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(simpleDbDirectory);
+
+        foreach (var fileName in new[]
+        {
+            "bison_observe_cli_db.csv",
+            "bison_comment_cli_db.csv",
+            "Taxons.csv",
+            "bison_simpleTaxon.csv"
+        })
+        {
+            File.WriteAllText(Path.Combine(simpleDbDirectory, fileName), string.Empty);
+        }
+
+        Environment.SetEnvironmentVariable("BISON_SIMPLEDB_PATH", simpleDbDirectory);
+
         // Starts an in-memory instance of the API so we don't need
         // to run it manually in a separate terminal
         client = factory.CreateClient();
@@ -133,8 +150,8 @@ private async Task FuzzPostObservation()
             throw new InvalidOperationException("Server did not return a valid response for the stored observation.");
         }
 
-        obs.Id = result.id;
-        knownObservations.Add(obs);
+        var storedObservation = obs with { Id = result.id };
+        knownObservations.Add(storedObservation);
     }
 
 // Generates a random comment, always referencing a real, known observation ID,

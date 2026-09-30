@@ -4,10 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-var observationDb = new CSVDataBase<Observation>("../SimpleDB/bison_observe_cli_db.csv");
-var commentDb = new CSVDataBase<Comment>("../SimpleDB/bison_comment_cli_db.csv");
-var taxonDb = new CSVDataBase<Taxon>("../SimpleDB/Taxons.csv");
-var simpleTaxonDb = new CSVDataBase<simpleTaxon>("../SimpleDB/bison_simpleTaxon.csv");
+var simpleDbPath = Environment.GetEnvironmentVariable("BISON_SIMPLEDB_PATH");
+if (string.IsNullOrWhiteSpace(simpleDbPath))
+{
+    simpleDbPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
+}
+
+var observationDb = new CSVDataBase<Observation>(Path.Combine(simpleDbPath, "bison_observe_cli_db.csv"));
+var commentDb = new CSVDataBase<Comment>(Path.Combine(simpleDbPath, "bison_comment_cli_db.csv"));
+var taxonDb = new CSVDataBase<Taxon>(Path.Combine(simpleDbPath, "Taxons.csv"));
+var simpleTaxonDb = new CSVDataBase<simpleTaxon>(Path.Combine(simpleDbPath, "bison_simpleTaxon.csv"));
 
 app.MapPost("/observation", ([FromBody] Observation obs) =>
 {

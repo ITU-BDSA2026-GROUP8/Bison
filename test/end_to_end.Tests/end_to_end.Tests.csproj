@@ -3,7 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Bison.CLI\Bison.CLI.csproj" />
     <ProjectReference Include="..\..\src\SimpleDB\SimpleDB.csproj" />
-    <ProjectReference Include="..\..\src\Bison.CSVDBService\Bison.CSVDBService.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\..\src\Bison.CSVDBService\Bison.CSVDBService.csproj" />
     <ProjectReference Include="..\TestInfrastructure\TestInfrastructure.csproj" />
   </ItemGroup>
 

@@ -23,12 +23,25 @@ public sealed class CsvDbServiceFixture : IAsyncLifetime
             var configuration = new DirectoryInfo(AppContext.BaseDirectory).Parent?.Name ?? "Debug";
             var serviceAssembly = Path.Combine(repositoryRoot, "src/Bison.CSVDBService/bin", configuration, "net8.0/Bison.CSVDBService.dll");
 
-            BaseUrl = $"http://127.0.0.1:7858";
-            
+            var port = GetAvailablePort();
+            BaseUrl = $"http://127.0.0.1:{port}";
+
             _temporaryDirectory = Path.Combine(Path.GetTempPath(), $"bison-tests-{Guid.NewGuid():N}");
             var workingDirectory = Path.Combine(_temporaryDirectory, "src/Bison.CSVDBService");
+            var simpleDbDirectory = Path.Combine(_temporaryDirectory, "SimpleDB");
             Directory.CreateDirectory(workingDirectory);
-            Directory.CreateDirectory(Path.Combine(_temporaryDirectory, "SimpleDB"));
+            Directory.CreateDirectory(simpleDbDirectory);
+
+            foreach (var fileName in new[]
+            {
+                "bison_observe_cli_db.csv",
+                "bison_comment_cli_db.csv",
+                "Taxons.csv",
+                "bison_simpleTaxon.csv"
+            })
+            {
+                File.WriteAllText(Path.Combine(simpleDbDirectory, fileName), string.Empty);
+            }
 
             var startInfo = new ProcessStartInfo("dotnet")
             {
@@ -37,6 +50,7 @@ public sealed class CsvDbServiceFixture : IAsyncLifetime
             };
             startInfo.ArgumentList.Add(serviceAssembly);
             startInfo.Environment["ASPNETCORE_URLS"] = BaseUrl;
+            startInfo.Environment["BISON_SIMPLEDB_PATH"] = simpleDbDirectory;
 
             _serviceProcess = Process.Start(startInfo);
 
@@ -104,7 +118,12 @@ public sealed class CsvDbServiceFixture : IAsyncLifetime
             _temporaryDirectory = null;
         }
     }
-
+    private static int GetAvailablePort()
+    {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        return ((IPEndPoint)listener.LocalEndpoint).Port;
+    }
     private static string FindRepositoryRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)
