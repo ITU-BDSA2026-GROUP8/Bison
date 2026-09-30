@@ -3,20 +3,14 @@
 using System.Globalization;
 using SimpleDB;
 using Bison.CLI;
+using Bison.TestInfrastructure;
 
-public class EndTests
+public class EndTests : IClassFixture<CsvDbServiceFixture>
 {
-
-    CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli_db.csv");
-    CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//bison_comment_cli_db.csv");
-
-    [Fact]
-    public async Task AllEndToEnd()
+    public EndTests(CsvDbServiceFixture service)
     {
-        string[] input = { "read" };
-        var exitCode = await Program.Main(input);
-        Assert.Equal(0, exitCode);
     }
+
 
     [Fact]
     public async Task ReadTest()
@@ -48,7 +42,5 @@ public class EndTests
         string[] input = { "discussion", "1" };
         var exitCode = await Program.Main(input);
         Assert.Equal(0, exitCode);
-        File.Delete("..//SimpleDB//bison_observe_cli_db.csv");
-        File.Delete("..//SimpleDB//bison_comment_cli_db.csv");
     }
 }

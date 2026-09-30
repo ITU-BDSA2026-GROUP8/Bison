@@ -1,27 +1,34 @@
 using System.Globalization;
-using Newtonsoft.Json.Converters;
-using SimpleDB;
+using Bison.CLI;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Bison.TestInfrastructure;
 
 namespace Bison.CLI.Tests;
 
-public class BisonTests
+public class BisonTests : IClassFixture<CsvDbServiceFixture>
 {
+    private readonly CsvDbServiceFixture _service;
+
+    public BisonTests(CsvDbServiceFixture service)
+    {
+        _service = service;
+    }
+
     [Fact]
-    public void CommentThatReferenceNonExistingObservation()
-    {   
-        try{    
-        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//Bison_observe_test.csv");
-        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//Bison_comment_test.csv");
-        var thing = new Observation("author", "message", 1, 1, "somewhere");
-        observations.Store(thing);
-        Interface1.StoreComment("", 99, comments, observations);
+    public async Task CommentThatReferenceNonExistingObservation()
+    {
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(_service.BaseUrl);
 
-        Assert.Empty(comments.Read());
-        }finally{
+        await UserInterface.StoreObservation("message", "somewhere", client);
+        await UserInterface.StoreComment("", 99, client);
 
-        File.Delete("..//SimpleDB//Bison_observe_test.csv");
-        File.Delete("..//SimpleDB//Bison_comment_test.csv");
-        }
+        var comments = await client.GetFromJsonAsync<List<Comment>>("comments?id=99");
+        Assert.NotNull(comments);
+        Assert.Empty(comments);
     }
     [Fact]
     public void UNIXTimeStampConversion()
@@ -36,20 +43,21 @@ public class BisonTests
     }
 
     [Fact]
-    public void ObserveIdIsTheNumberOfPosts()
-    {   
-        var testObservation = Path.Combine(Path.GetTempPath(), $"Bison_observe_test.csv");
-        try{
-        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance(testObservation);
-        Interface1.StoreObservation("There is a test at ITU!", "ITU", observations);
-        
-        var expectedNumberOfPosts = 1;
-        Assert.Equal(expectedNumberOfPosts,observations.GetCount());
-        Assert.True(observations.GetCount()>0);
-        
-        }finally{
+    public async Task ObserveAddsAPost()
+    {
+        using HttpClient client = new();
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        client.BaseAddress = new Uri(_service.BaseUrl);
 
-        File.Delete(testObservation);
-        }
+        var observationsBefore = await client.GetFromJsonAsync<List<Observation>>("observations");
+        Assert.NotNull(observationsBefore);
+
+        await UserInterface.StoreObservation("There is a test at ITU!", "ITU", client);
+
+        var observationsAfter = await client.GetFromJsonAsync<List<Observation>>("observations");
+        Assert.NotNull(observationsAfter);
+        Assert.Equal(observationsBefore.Count + 1, observationsAfter.Count);
+        Assert.Contains(observationsAfter, observation => observation.Message == "There is a test at ITU!");
     }
 }
