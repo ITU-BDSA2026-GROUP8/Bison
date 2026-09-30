@@ -38,7 +38,7 @@ app.MapPost("/proposal",([FromBody] Proposal p)=>
    proposalsDB.Store(p);
    return Results.Ok(new{ status = "stored"}); 
 });
-
+//d
 // GET /observations
 app.MapGet("/observations", () =>
 {
