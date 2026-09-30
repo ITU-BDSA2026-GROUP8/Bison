@@ -1,30 +1,34 @@
 using System.Globalization;
-using Newtonsoft.Json.Converters;
-using SimpleDB;
 using Bison.CLI;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
+using Bison.TestInfrastructure;
 
 namespace Bison.CLI.Tests;
 
-public class BisonTests
+public class BisonTests : IClassFixture<CsvDbServiceFixture>
 {
+    private readonly CsvDbServiceFixture _service;
+
+    public BisonTests(CsvDbServiceFixture service)
+    {
+        _service = service;
+    }
+
     [Fact]
     public async Task CommentThatReferenceNonExistingObservation()
-    {   
-        CSVDataBase<Comment> comments = CSVDataBase<Comment>.GetInstance("..//SimpleDB//bison_comment_cli.db.csv");
-
-        var baseURL = "http://localhost:5212";
+    {
         using HttpClient client = new();
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        client.BaseAddress = new Uri(baseURL);
+        client.BaseAddress = new Uri(_service.BaseUrl);
 
         await UserInterface.StoreObservation("message", "somewhere", client);
         await UserInterface.StoreComment("", 99, client);
 
-        Assert.Empty(comments.Read());
+        var comments = await client.GetFromJsonAsync<List<Comment>>("comments?id=99");
+        Assert.NotNull(comments);
+        Assert.Empty(comments);
     }
     [Fact]
     public void UNIXTimeStampConversion()
@@ -39,25 +43,21 @@ public class BisonTests
     }
 
     [Fact]
-    public async Task ObserveIdIsTheNumberOfPosts()
-    {   
-        var baseURL = "http://localhost:5212";
+    public async Task ObserveAddsAPost()
+    {
         using HttpClient client = new();
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        client.BaseAddress = new Uri(baseURL);
+        client.BaseAddress = new Uri(_service.BaseUrl);
 
-        try{
-        CSVDataBase<Observation> observations = CSVDataBase<Observation>.GetInstance("..//SimpleDB//bison_observe_cli.db.csv");
+        var observationsBefore = await client.GetFromJsonAsync<List<Observation>>("observations");
+        Assert.NotNull(observationsBefore);
+
         await UserInterface.StoreObservation("There is a test at ITU!", "ITU", client);
-        
-        var expectedNumberOfPosts = 13;
-        var obs = await client.GetFromJsonAsync<List<Observation>>("observations");
-        Assert.Equal(expectedNumberOfPosts, obs.Count + 1);
-        Assert.True(obs.Capacity>0);
-        
-        }finally{
 
-        }
+        var observationsAfter = await client.GetFromJsonAsync<List<Observation>>("observations");
+        Assert.NotNull(observationsAfter);
+        Assert.Equal(observationsBefore.Count + 1, observationsAfter.Count);
+        Assert.Contains(observationsAfter, observation => observation.Message == "There is a test at ITU!");
     }
 }

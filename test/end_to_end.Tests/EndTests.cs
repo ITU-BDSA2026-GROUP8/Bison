@@ -3,9 +3,14 @@
 using System.Globalization;
 using SimpleDB;
 using Bison.CLI;
+using Bison.TestInfrastructure;
 
-public class EndTests
+public class EndTests : IClassFixture<CsvDbServiceFixture>
 {
+    public EndTests(CsvDbServiceFixture service)
+    {
+    }
+
 
     [Fact]
     public async Task ReadTest()

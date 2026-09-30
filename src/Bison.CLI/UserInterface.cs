@@ -22,7 +22,7 @@ public interface UserInterface
             throw new ArgumentNullException();
         }
 
-        var baseURL = "http://localhost:5212";
+        var baseURL = Environment.GetEnvironmentVariable("BISON_CSVDB_URL") ?? "http://localhost:5212";
         using HttpClient client = new();
         client.DefaultRequestHeaders.Accept.Clear();
         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
