@@ -1,7 +1,15 @@
+using SimpleDB;
 var builder = WebApplication.CreateBuilder(args);
+
+var simpleDbPath = Environment.GetEnvironmentVariable("BISON_SIMPLEDB_PATH");
+if (string.IsNullOrWhiteSpace(simpleDbPath))
+{
+    simpleDbPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
+}
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton(new CSVDataBase<Observation>(Path.Combine(simpleDbPath, "bison_observe_cli_db.csv")));
 builder.Services.AddSingleton<IObservationService, ObservationService>();
 
 

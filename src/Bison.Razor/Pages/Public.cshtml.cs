@@ -9,6 +9,10 @@ public class PublicModel : PageModel
     private readonly IObservationService _service;
     public List<ObservationViewModel> Observations { get; set; }
 
+    public string Message { get; set; } = string.Empty;
+
+    public string Location { get; set; } = string.Empty;
+
     public PublicModel(IObservationService service)
     {
         _service = service;
@@ -17,8 +21,14 @@ public class PublicModel : PageModel
     public ActionResult OnGet()
     {
         var all = _service.GetObservations();
-        var paged = all.Skip((Page - 1)*32).Take(32).ToList();
+        var paged = all.Skip((Page - 1) * 32).Take(32).ToList();
         Observations = paged;
+        return Page();
+    }
+
+    public IActionResult OnPost()
+    {
+        Observations = _service.GetObservations().Take(32).ToList();
         return Page();
     }
 
