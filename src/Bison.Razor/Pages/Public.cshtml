@@ -8,6 +8,15 @@
 <div>
     <h2> Public Timeline </h2>
 
+    <form method="post">
+        <div asp-validation-summary="ModelOnly"></div>
+        <label asp-for="Message"></label>
+        <input asp-for="Message" required />
+        <label asp-for="Location"></label>
+        <input asp-for="Location" required />
+        <button type="submit">Post observation</button>
+    </form>
+
     @if (Model.Observations.Any())
     {
         <ul id="messagelist" class="observations">
