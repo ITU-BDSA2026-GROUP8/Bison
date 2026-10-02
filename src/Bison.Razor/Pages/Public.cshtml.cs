@@ -18,7 +18,7 @@ public class PublicModel : PageModel
         _service = service;
     }
 
-    public ActionResult OnGet()
+    public ActionResult OnGet([FromQuery] int page)
     {
         var all = _service.GetObservations();
         var paged = all.Skip((Page - 1) * 32).Take(32).ToList();
