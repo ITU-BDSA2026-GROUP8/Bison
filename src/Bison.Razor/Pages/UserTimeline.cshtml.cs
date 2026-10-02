@@ -14,10 +14,10 @@ public class UserTimelineModel : PageModel
     }
     
 
-    public ActionResult OnGet(string author)
+    public ActionResult OnGet(string author,[FromQuery] int page)
     {
         var all = _service.GetObservationsFromAuthor(author);
-        var aut = all.Skip((Page - 1)*32).Take(32).ToList(); 
+        var aut = all.Skip((page - 1)*32).Take(32).ToList(); 
         Observations = aut;
         return Page();
     }
