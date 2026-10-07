@@ -1,34 +1,62 @@
+using Bison.Razor.Models;
+using Microsoft.EntityFrameworkCore;
 using SimpleDB;
+
 public class ObservationService
 {
-    private readonly CSVDataBase<Observation> _observationDb;
+    private readonly BisonDBContext _context;
 
-    public ObservationService(CSVDataBase<Observation> observationDb) {_observationDb = observationDb;}
+    public ObservationService(BisonDBContext context) => _context = context;
 
-    public List<Observation> GetObservations(){return _observationDb.Read().ToList();}
+    public List<Bison.Razor.Models.Observation> GetObservations(int page)
+    {
+        var skip = (Math.Max(page, 1) - 1) * 32;
+        return _context.Observations
+            .Include(observation => observation.Author)
+            .Skip(skip)
+            .Take(32)
+            .ToList();
+    }
 
-    public Observation? GetObservation(int id){return GetObservations().FirstOrDefault(observation => observation.Id == id);}
+    public Bison.Razor.Models.Observation? GetObservation(int id)
+    {
+        return _context.Observations
+            .Include(observation => observation.Author)
+            .FirstOrDefault(observation => observation.Id == id);
+    }
 
-    public List<Observation> GetObservationsFromAuthor(string author){return GetObservations().Where(observation => observation.Author == author).ToList();}
+    public List<Bison.Razor.Models.Observation> GetObservationsFromAuthor(string author, int page)
+    {
+        var skip = (Math.Max(page, 1) - 1) * 32;
+        return _context.Observations
+            .Include(observation => observation.Author)
+            .Where(observation => observation.Author.Name == author)
+            .Skip(skip)
+            .Take(32)
+            .ToList();
+    }
 
     public void StoreObservation(string author, string message, string location)
     {
-        var id = GetObservations().Select(observation => observation.Id).DefaultIfEmpty(0).Max() + 1;
-        var observation = new Observation(
-            author,
-            message,
-            DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            id,
-            location);
-        _observationDb.Store(observation);
+        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.Name == author);
+        if (postAuthor is null)
+        {
+            postAuthor = new Author { Name = author, Email = string.Empty };
+            _context.Authors.Add(postAuthor);
+        }
+        _context.Observations.Add(new Bison.Razor.Models.Observation
+        {
+            Author = postAuthor,
+            Text = message,
+            Timestamp = DateTime.UtcNow,
+            Location = location
+        });
+        _context.SaveChanges();
     }
-
-    private static string UnixTimeStampToDateTimeString(long unixTimeStamp){return DateTimeOffset.FromUnixTimeSeconds(unixTimeStamp).ToString("MM/dd/yy H:mm:ss");}
 }
 public class CommentService
 {
-    private readonly CSVDataBase<Comment> _commentDb;
-    public CommentService(CSVDataBase<Comment> commentDb){_commentDb = commentDb;}
-
-    public List<Comment> GetCommentsForObservation(int id){return _commentDb.Read().Where(comment => comment.Id == id).ToList();}
+    private readonly CSVDataBase<SimpleDB.Comment> _commentDb;
+    public CommentService(CSVDataBase<SimpleDB.Comment> commentDb){_commentDb = commentDb;}
+    public List<SimpleDB.Comment> GetCommentsForObservation(int id){return _commentDb.Read().Where(comment => comment.Id == id).ToList();}
 }

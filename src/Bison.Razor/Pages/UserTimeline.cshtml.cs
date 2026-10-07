@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SimpleDB;
+using Bison.Razor.Models;
 
 namespace Bison.Razor.Pages;
 
@@ -17,12 +17,7 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author,[FromQuery] int page)
     {
-        var all = _service.GetObservationsFromAuthor(author);
-        var aut = all.Skip((page - 1)*32).Take(32).ToList(); 
-        Observations = aut;
+        Observations = _service.GetObservationsFromAuthor(author, page);
         return Page();
     }
-
-    [BindProperty(SupportsGet = true)]
-    public int Page { get; set; } = 1;
 }
