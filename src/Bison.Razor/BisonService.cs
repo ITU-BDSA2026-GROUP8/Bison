@@ -28,7 +28,26 @@ public class ObservationService
 public class CommentService
 {
     private readonly CSVDataBase<Comment> _commentDb;
+
+
     public CommentService(CSVDataBase<Comment> commentDb){_commentDb = commentDb;}
 
     public List<Comment> GetCommentsForObservation(int id){return _commentDb.Read().Where(comment => comment.Id == id).ToList();}
+
+
+}
+public class ProposalService
+{
+    private readonly CSVDataBase<Proposal> _proposalDB;
+    public ProposalService(CSVDataBase<Proposal> proposalDB){_proposalDB = proposalDB;}
+
+    public List<Proposal> GetProposals()
+    {
+        return _proposalDB.Read().ToList();
+    }
+    
+    public  List<Proposal> GetProposalsForObservation(int id)
+    {
+        return _proposalDB.Read().Where(proposal => proposal.observationId==id).ToList();}
+    
 }

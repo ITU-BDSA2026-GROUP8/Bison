@@ -10,8 +10,8 @@ public class PublicModel : PageModel
 {
     private readonly ObservationService _service;
     private readonly CommentService _commentservice;
+    private readonly ProposalService _proposalservice;
     public List<Observation> Observations { get; set; }
-
     [BindProperty]
     [Required]
     public string Message { get; set; } = string.Empty;
@@ -19,11 +19,15 @@ public class PublicModel : PageModel
     [BindProperty]
     [Required]
     public string Location { get; set; } = string.Empty;
-
-    public PublicModel(ObservationService service, CommentService commentservice)
+    public List<Proposal> Proposals()
+    {
+        return _proposalservice.GetProposals();
+    }
+    public PublicModel(ObservationService service, CommentService commentservice,ProposalService proposalService)
     {
         _service = service;
         _commentservice = commentservice;
+        _proposalservice=proposalService;
     }
 
     public ActionResult OnGet([FromQuery] int page)
