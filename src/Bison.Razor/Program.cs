@@ -24,13 +24,13 @@ if (string.IsNullOrWhiteSpace(connectionString))
     connectionString = $"Data Source={sqliteDbPath}";
 }
 
-builder.Services.AddDbContext<ChatDBContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ChatDBContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
     dbContext.Database.Migrate();
 }
 

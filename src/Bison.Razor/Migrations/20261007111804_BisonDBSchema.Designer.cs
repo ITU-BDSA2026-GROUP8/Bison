@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bison.Razor.Migrations
 {
-    [DbContext(typeof(ChatDBContext))]
+    [DbContext(typeof(BisonDBContext))]
     [Migration("20261007111804_BisonDBSchema")]
     partial class BisonDBSchema
     {
