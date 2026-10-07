@@ -18,7 +18,7 @@ builder.Services.AddSingleton<ObservationService>();
 builder.Services.AddSingleton<CommentService>();
 
 string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ChatDBContext>(options => options.UseSqlite(connectionString));
+builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 
 var app = builder.Build();
 
