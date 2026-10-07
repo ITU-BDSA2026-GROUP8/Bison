@@ -17,10 +17,22 @@ builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath
 builder.Services.AddSingleton<ObservationService>();
 builder.Services.AddSingleton<CommentService>();
 
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    var sqliteDbPath = Path.Combine(builder.Environment.ContentRootPath, "Bison.db");
+    connectionString = $"Data Source={sqliteDbPath}";
+}
+
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
