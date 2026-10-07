@@ -1,3 +1,4 @@
+namespace Bison.Razor.Models;
 public class Taxon
 {
     public string DwcTaxonId { get; set; }

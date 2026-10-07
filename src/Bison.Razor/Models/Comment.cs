@@ -1,3 +1,4 @@
+namespace Bison.Razor.Models;
 public class Comment : Post
 {
 
