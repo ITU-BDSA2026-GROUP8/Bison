@@ -13,7 +13,7 @@ builder.Services.AddSingleton(new CSVDataBase<Observation>(Path.Combine(simpleDb
 builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath, "bison_comment_cli_db.csv")));
 
 builder.Services.AddSingleton<ObservationService>();
-
+builder.Services.AddSingleton<CommentService>();
 
 var app = builder.Build();
 

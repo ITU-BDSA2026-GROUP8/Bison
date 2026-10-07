@@ -9,6 +9,7 @@ namespace Bison.Razor.Pages;
 public class PublicModel : PageModel
 {
     private readonly ObservationService _service;
+    private readonly CommentService _commentservice;
     public List<Observation> Observations { get; set; }
 
     [BindProperty]
@@ -19,14 +20,14 @@ public class PublicModel : PageModel
     [Required]
     public string Location { get; set; } = string.Empty;
 
-    public PublicModel(ObservationService service)
+    public PublicModel(ObservationService service, CommentService commentservice)
     {
         _service = service;
+        _commentservice = commentservice;
     }
 
     public ActionResult OnGet([FromQuery] int page)
-    {
-       
+    {       
         var all = _service.GetObservations();
         var paged = all.Skip((page - 1) * 32).Take(32).ToList();
         Observations = paged;
