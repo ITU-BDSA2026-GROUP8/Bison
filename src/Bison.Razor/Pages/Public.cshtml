@@ -1,4 +1,5 @@
 ﻿@page "/"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bison.Razor.Pages.PublicModel
 @{
     ViewData["Title"] = "Bison";
@@ -9,7 +10,7 @@
     <h2> Public Timeline </h2>
 
     <form method="post">
-        <div asp-validation-summary="ModelOnly"></div>
+        <div asp-validation-summary="All"></div>
         <label asp-for="Message"></label>
         <input asp-for="Message" required />
         <label asp-for="Location"></label>
@@ -29,6 +30,7 @@
                         </strong>
                         @obs.Message
                         <small>&mdash; @obs.Timestamp</small>
+                        <a href="/ob/@obs.Id">View comments</a>
                     </p>
                 </li>
             }

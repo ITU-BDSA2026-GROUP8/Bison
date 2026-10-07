@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SimpleDB;
 
 namespace Bison.Razor.Pages;
 
 public class UserTimelineModel : PageModel
 {
-    private readonly IObservationService _service;
-    public List<ObservationViewModel> Observations { get; set; }
+    private readonly ObservationService _service;
+    public List<Observation> Observations { get; set; }
 
-    public UserTimelineModel(IObservationService service)
+    public UserTimelineModel(ObservationService service)
     {
         _service = service;
     }
     
 
-    public ActionResult OnGet(string author)
+    public ActionResult OnGet(string author,[FromQuery] int page)
     {
         var all = _service.GetObservationsFromAuthor(author);
-        var aut = all.Skip((Page - 1)*32).Take(32).ToList(); 
+        var aut = all.Skip((page - 1)*32).Take(32).ToList(); 
         Observations = aut;
         return Page();
     }
