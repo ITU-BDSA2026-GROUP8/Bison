@@ -1,7 +1,7 @@
 namespace Bison.Razor.Models;
 public class Taxon
 {
-    public string DwcTaxonId { get; set; }
+    public string TaxonId { get; set; }
 
     public string DanishVernacularName { get; set; }    
 

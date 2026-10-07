@@ -1,4 +1,6 @@
 using SimpleDB;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var simpleDbPath = Environment.GetEnvironmentVariable("BISON_SIMPLEDB_PATH");
@@ -14,6 +16,9 @@ builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath
 
 builder.Services.AddSingleton<ObservationService>();
 builder.Services.AddSingleton<CommentService>();
+
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<ChatDBContext>(options => options.UseSqlite(connectionString));
 
 var app = builder.Build();
 
