@@ -1,15 +1,5 @@
 using SimpleDB;
-
-public record ObservationViewModel(string Author, string Message, string Timestamp);
-
-public interface IObservationService
-{
-    public List<ObservationViewModel> GetObservations();
-    public List<ObservationViewModel> GetObservationsFromAuthor(string author);
-    public void StoreObservation(string author, string message, string location);
-}
-
-public class ObservationService : IObservationService
+public class ObservationService
 {
     private readonly CSVDataBase<Observation> _observationDb;
 
@@ -18,17 +8,12 @@ public class ObservationService : IObservationService
         _observationDb = observationDb;
     }
 
-    public List<ObservationViewModel> GetObservations()
+    public List<Observation> GetObservations()
     {
-        return _observationDb.Read()
-            .Select(observation => new ObservationViewModel(
-                observation.Author,
-                observation.Message,
-                UnixTimeStampToDateTimeString(observation.Timestamp)))
-            .ToList();
+        return _observationDb.Read().ToList();
     }
 
-    public List<ObservationViewModel> GetObservationsFromAuthor(string author)
+    public List<Observation> GetObservationsFromAuthor(string author)
     {
         return GetObservations().Where(observation => observation.Author == author).ToList();
     }
@@ -47,5 +32,23 @@ public class ObservationService : IObservationService
     private static string UnixTimeStampToDateTimeString(long unixTimeStamp)
     {
         return DateTimeOffset.FromUnixTimeSeconds(unixTimeStamp).ToString("MM/dd/yy H:mm:ss");
+    }
+}
+public class CommentService
+{
+    private readonly CSVDataBase<Comment> _commentDb;
+    public CommentService(CSVDataBase<Comment> commentDb)
+    {
+        _commentDb = commentDb;
+    }
+
+    public List<Comment> GetObservations()
+    {
+        return _commentDb.Read().ToList();
+    }
+
+    public List<Comment> GetObservationsFromAuthor(int Id)
+    {
+        return GetObservations().Where(comment => comment.Id == Id).ToList();
     }
 }

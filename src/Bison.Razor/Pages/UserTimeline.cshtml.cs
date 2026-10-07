@@ -1,14 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SimpleDB;
 
 namespace Bison.Razor.Pages;
 
 public class UserTimelineModel : PageModel
 {
-    private readonly IObservationService _service;
-    public List<ObservationViewModel> Observations { get; set; }
+    private readonly ObservationService _service;
+    public List<Observation> Observations { get; set; }
 
-    public UserTimelineModel(IObservationService service)
+    public UserTimelineModel(ObservationService service)
     {
         _service = service;
     }

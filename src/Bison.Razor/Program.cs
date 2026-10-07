@@ -10,7 +10,9 @@ if (string.IsNullOrWhiteSpace(simpleDbPath))
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton(new CSVDataBase<Observation>(Path.Combine(simpleDbPath, "bison_observe_cli_db.csv")));
-builder.Services.AddSingleton<IObservationService, ObservationService>();
+builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath, "bison_comment_cli_db.csv")));
+
+builder.Services.AddSingleton<ObservationService>();
 
 
 var app = builder.Build();
