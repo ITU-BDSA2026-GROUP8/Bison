@@ -16,10 +16,4 @@ public DbSet<Comment> Comments { get; set; }
         
 
     }
-    
-        
-
-    
-
 }
-
