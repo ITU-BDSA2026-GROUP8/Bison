@@ -11,10 +11,9 @@ if (string.IsNullOrWhiteSpace(simpleDbPath))
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton(new CSVDataBase<Observation>(Path.Combine(simpleDbPath, "bison_observe_cli_db.csv")));
 builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath, "bison_comment_cli_db.csv")));
 
-builder.Services.AddSingleton<ObservationService>();
+builder.Services.AddScoped<ObservationService>();
 builder.Services.AddSingleton<CommentService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -32,6 +31,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
     dbContext.Database.Migrate();
+    //DbInitializer.SeedDatabase(dbContext); //hvor den tager data fra 1.d uge 6
 }
 
 // Configure the HTTP request pipeline.

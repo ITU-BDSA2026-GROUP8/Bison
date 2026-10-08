@@ -102,6 +102,10 @@ namespace Bison.Razor.Migrations
                 {
                     b.HasBaseType("Bison.Razor.Models.Post");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("TaxonId")
                         .HasColumnType("TEXT");
 
