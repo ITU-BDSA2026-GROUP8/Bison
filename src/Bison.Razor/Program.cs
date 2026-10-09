@@ -1,4 +1,6 @@
 using SimpleDB;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var simpleDbPath = Environment.GetEnvironmentVariable("BISON_SIMPLEDB_PATH");
@@ -9,16 +11,32 @@ if (string.IsNullOrWhiteSpace(simpleDbPath))
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton(new CSVDataBase<Observation>(Path.Combine(simpleDbPath, "bison_observe_cli_db.csv")));
 builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath, "bison_comment_cli_db.csv")));
 builder.Services.AddSingleton(new CSVDataBase<Proposal>(Path.Combine(simpleDbPath, "bison_proposal_cli_db.csv")));
 builder.Services.AddSingleton(new CSVDataBase<Taxon>(Path.Combine(simpleDbPath, "bison_taxon_cli_db.csv")));
 
-builder.Services.AddSingleton<ObservationService>();
+builder.Services.AddScoped<ObservationService>();
 builder.Services.AddSingleton<CommentService>();
 builder.Services.AddSingleton<ProposalService>();
 builder.Services.AddSingleton<TaxonService>();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    var sqliteDbPath = Path.Combine(builder.Environment.ContentRootPath, "Bison.db");
+    connectionString = $"Data Source={sqliteDbPath}";
+}
+
+builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
+    dbContext.Database.Migrate();
+    //DbInitializer.SeedDatabase(dbContext); //hvor den tager data fra 1.d uge 6
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

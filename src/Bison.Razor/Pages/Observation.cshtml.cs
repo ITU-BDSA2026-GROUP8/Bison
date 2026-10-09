@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SimpleDB;
+using Bison.Razor.Models;
 
 namespace Bison.Razor.Pages;
 
@@ -12,9 +12,9 @@ public class ObservationModel : PageModel
 
     private readonly TaxonService _taxonService;
     public Observation Observation { get; private set; } = null!;
-    public List<Comment> Comments { get; private set; } = [];
-    public List <Taxon> Taxons;
-    public List<Proposal> Proposals{get;private set;}=[];
+    public List<SimpleDB.Comment> Comments { get; private set; } = [];
+    public List <SimpleDB.Taxon> Taxons;
+    public List<SimpleDB.Proposal> Proposals{get;private set;}=[];
 
     public ObservationModel(ObservationService observationService, CommentService commentService,ProposalService proposalService,TaxonService taxonService)
     {
