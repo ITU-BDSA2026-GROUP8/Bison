@@ -53,17 +53,13 @@ public class ObservationService
         });
         _context.SaveChanges();
     }
-}
-public class CommentService
-{
-    private readonly CSVDataBase<SimpleDB.Comment> _commentDb;
 
+    public List<Bison.Razor.Models.Comment> GetCommentsForObservation(int id){
 
-    public CommentService(CSVDataBase<SimpleDB.Comment> commentDb){_commentDb = commentDb;}
-
-    public List<SimpleDB.Comment> GetCommentsForObservation(int id){return _commentDb.Read().Where(comment => comment.Id == id).ToList();}
-    //
-
+        return _context.Comments
+            .Where(comment => comment.Observation.Id == id)
+            .ToList();
+        }
 }
 public class TaxonService{
     private readonly CSVDataBase<SimpleDB.Taxon> _taxondb;
