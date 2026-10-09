@@ -9,6 +9,8 @@ public interface IPostRepository
     public PostDTO GetObservation(int id);
 
     public List<PostDTO> GetObservationsFromAuthor(string author,int page);
+
+    public void StoreObservation(string author, string message, string location);
 }
 
 public class PostDTO
@@ -81,5 +83,23 @@ public class PostRepository : IPostRepository
         return DTOList;
     }
 
-
+    public void StoreObservation(string author, string message, string location)
+    {
+        
+        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.Name == author);
+        if (postAuthor is null)
+        {
+            postAuthor = new Author { Name = author, Email = string.Empty };
+            _context.Authors.Add(postAuthor);
+        }
+        _context.Observations.Add(new Bison.Razor.Models.Observation
+        {
+            Author = postAuthor,
+            Text = message,
+            Timestamp = DateTime.UtcNow,
+            Location = location
+        });
+        _context.SaveChanges();
+    
+    }
 }

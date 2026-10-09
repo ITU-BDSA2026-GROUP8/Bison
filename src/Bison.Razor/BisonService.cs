@@ -25,20 +25,7 @@ public class ObservationService
 
     public void StoreObservation(string author, string message, string location)
     {
-        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.Name == author);
-        if (postAuthor is null)
-        {
-            postAuthor = new Author { Name = author, Email = string.Empty };
-            _context.Authors.Add(postAuthor);
-        }
-        _context.Observations.Add(new Bison.Razor.Models.Observation
-        {
-            Author = postAuthor,
-            Text = message,
-            Timestamp = DateTime.UtcNow,
-            Location = location
-        });
-        _context.SaveChanges();
+        _repo.StoreObservation(author,message,location);
     }
 }
 public class CommentService
