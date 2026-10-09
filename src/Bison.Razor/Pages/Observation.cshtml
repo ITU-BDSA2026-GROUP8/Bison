@@ -14,22 +14,13 @@
         <small>&mdash; @Model.Observation.Timestamp</small>
     </p>
     <h4>Taxonomies</h4>
-@if (Model.Proposals.Count > 0)
+@if (Model._Taxon!=null)
     {
         <ul>
-            @foreach(var proposal in Model.Proposals)
-            {
-                <li>
-
-                    @foreach (var taxon in Model.Taxons){
-                        if (taxon.taxonID == proposal.taxonID)
-                        {
-                            @taxon.ScientificName
-                        }
-                    }
-                </li>
+            <li>
+                @Model._Taxon.DanishVernacularName
+            </li>
                 
-            }
         </ul>
     }
     
@@ -40,7 +31,7 @@
         <ul>
             @foreach (var comment in Model.Comments)
             {
-                <li>@comment.Message</li>
+                <li>@comment.Text</li>
             }
         </ul>
     }
