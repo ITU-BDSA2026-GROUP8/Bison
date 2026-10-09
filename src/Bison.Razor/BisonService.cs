@@ -41,25 +41,13 @@ public class ObservationService : IObservationService
 
     public List<CommentDTO> GetCommentsForObservation(int id)
     {
-        return GetCommentsForObservation(id);
+        return _repo.GetCommentsForObservation(id);
     }
 
-    public List<SimpleDB.Taxon> GetTaxons()
+    public TaxonDTO GetTaxonForObservation(int Id)
     {
-        return _taxondb.Read().ToList();
+        return _repo.GetTaxonForObservation(Id);
     }
-}
-public class TaxonService
-{
-    private readonly CSVDataBase<SimpleDB.Taxon> _taxondb;
-    public TaxonService(CSVDataBase<SimpleDB.Taxon> taxondb) { _taxondb = taxondb; }
-
-    public List<SimpleDB.Taxon> GetTaxons()
-    {
-        return _taxondb.Read().ToList();
-    }
-
-
 }
 public class ProposalService
 {

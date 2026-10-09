@@ -11,6 +11,8 @@ public interface IPostRepository
     public List<PostDTO> GetObservationsFromAuthor(string author, int page);
 
     public void StoreObservation(string author, string message, string location);
+    public List<CommentDTO> GetCommentsForObservation(int Id);
+    public TaxonDTO GetTaxonForObservation(int Id);
 }
 
 public class PostDTO
@@ -118,12 +120,12 @@ public class PostRepository : IPostRepository
         _context.SaveChanges();
 
     }
-    public List<CommentDTO> GetCommentsForObservation(int id)
+    public List<CommentDTO> GetCommentsForObservation(int Id)
     {
         var DTOList = new List<CommentDTO>();
         var obs = _context.Observations
            .Include(observation => observation.Author)
-           .FirstOrDefault(observation => observation.Id == id);
+           .FirstOrDefault(observation => observation.Id == Id);
            foreach(Comment comment in obs.Comments)
         {
             var temp = new CommentDTO();
@@ -134,9 +136,14 @@ public class PostRepository : IPostRepository
         return DTOList;
     }
 
-    public List<TaxonDTO> GetTaxons()
+    public TaxonDTO GetTaxonForObservation(int Id)
     {
+        var obs = _context.Observations
+           .Include(observation => observation.Author)
+           .FirstOrDefault(observation => observation.Id == Id);
         var temp = new TaxonDTO();
-        return _taxondb.Read().ToList();
+        temp.DanishVernacularName = obs.Taxon.DanishVernacularName;
+        temp.TaxonId = obs.Taxon.TaxonId;
+        return temp;
     }
 }
