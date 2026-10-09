@@ -8,6 +8,7 @@ public interface IPostRepository
     
     public PostDTO GetObservation(int id);
 
+    public List<PostDTO> GetObservationsFromAuthor(string author,int page);
 }
 
 public class PostDTO
@@ -30,13 +31,13 @@ public class PostRepository : IPostRepository
         var DTOList = new List<PostDTO>();
 
         var skip = (Math.Max(page, 1) - 1) * 32;
-          var postlist = _context.Observations
+          var obs = _context.Observations
             .Include(observation => observation.Author)
             .Skip(skip)
             .Take(32)
             .ToList();
 
-        foreach (Observation observation in postlist)
+        foreach (Observation observation in obs)
         {
             var temp = new PostDTO();
             temp.Author = observation.Author;
@@ -59,7 +60,26 @@ public class PostRepository : IPostRepository
         return temp;
     }
 
-    
+    public List<PostDTO> GetObservationsFromAuthor(string author,int page)
+    {
+        var DTOList = new List<PostDTO>();
+        var skip = (Math.Max(page, 1) - 1) * 32;
+        var obs = _context.Observations
+            .Include(observation => observation.Author)
+            .Where(observation => observation.Author.Name == author)
+            .Skip(skip)
+            .Take(32)
+            .ToList();
+        foreach(Observation observation in obs)
+        {
+            var temp = new PostDTO();
+            temp.Author = observation.Author;
+            temp.Text = observation.Text;
+            temp.Timestamp = observation.Timestamp;
+            DTOList.Add(temp);
+        }
+        return DTOList;
+    }
 
 
 }

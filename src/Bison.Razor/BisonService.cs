@@ -20,13 +20,7 @@ public class ObservationService
 
     public List<PostDTO> GetObservationsFromAuthor(string author, int page)
     {
-        var skip = (Math.Max(page, 1) - 1) * 32;
-        return _context.Observations
-            .Include(observation => observation.Author)
-            .Where(observation => observation.Author.Name == author)
-            .Skip(skip)
-            .Take(32)
-            .ToList();
+        return _repo.GetObservationsFromAuthor(author,page);
     }
 
     public void StoreObservation(string author, string message, string location)
