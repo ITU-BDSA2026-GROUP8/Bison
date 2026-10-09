@@ -4,18 +4,13 @@ using SimpleDB;
 
 public class ObservationService
 {
-    private readonly BisonDBContext _context;
+    private readonly IPostRepository _repo;
 
-    public ObservationService(BisonDBContext context) => _context = context;
+    private ObservationService(IPostRepository postRepository) {_repo = postRepository;}
 
-    public List<Bison.Razor.Models.Observation> GetObservations(int page)
+    public  List<PostDTO> GetObservations(int page)
     {
-        var skip = (Math.Max(page, 1) - 1) * 32;
-        return _context.Observations
-            .Include(observation => observation.Author)
-            .Skip(skip)
-            .Take(32)
-            .ToList();
+        return _repo.GetObservations(page);
     }
 
     public Bison.Razor.Models.Observation? GetObservation(int id)

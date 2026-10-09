@@ -4,33 +4,46 @@ using Microsoft.EntityFrameworkCore;
 
 public interface IPostRepository
 {
-    public PostDTO findPost(int id);
+    public List<PostDTO> GetObservations(int page);
+    
     
 }
 
 public class PostDTO
 {
-    
-    public string Message {get; set;}
+    public string Text {get; set;}
 
     public Author Author {get; set;}
 
-    public int id {get; set;}
-
-    public DateTime date {get; set;}
-    
+    public DateTime Timestamp {get; set;}   
 }
 
-public class postRepository : IPostRepository
+public class PostRepository : IPostRepository
 {
     
     private readonly BisonDBContext _context;
 
-    public postRepository(BisonDBContext context) => _context = context;
-    public async Task<PostDTO> findPost(int id)
+    public PostRepository(BisonDBContext context) => _context = context;
+    public List<PostDTO> GetObservations(int page)
     {
-        var query = _context.Observations.Select(observation => observation.Text)
-        .FirstOrDefault(observation => observation.Id == id);
-        return new PostDTO();
+        var DTOList = new List<PostDTO>();
+
+        var skip = (Math.Max(page, 1) - 1) * 32;
+          var postlist = _context.Observations
+            .Include(observation => observation.Author)
+            .Skip(skip)
+            .Take(32)
+            .ToList();
+
+        foreach (Observation observation in postlist)
+        {
+            var temp = new PostDTO();
+            temp.Author = observation.Author;
+            temp.Text = observation.Text;
+            temp.Timestamp = observation.Timestamp;
+            DTOList.Add(temp);
+        }
+
+        return DTOList;
     }
 }
