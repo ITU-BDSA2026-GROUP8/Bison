@@ -13,8 +13,9 @@ if (string.IsNullOrWhiteSpace(simpleDbPath))
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath, "bison_comment_cli_db.csv")));
 
-builder.Services.AddScoped<ObservationService>();
-builder.Services.AddSingleton<CommentService>();
+builder.Services.AddScoped<IObservationService,ObservationService>();
+builder.Services.AddScoped<IPostRepository,PostRepository>();
+builder.Services.AddScoped<CommentService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))

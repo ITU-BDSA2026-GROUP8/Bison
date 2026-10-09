@@ -20,6 +20,8 @@ public class PostDTO
     public Author Author {get; set;}
 
     public DateTime Timestamp {get; set;}   
+
+    public int Id {get; set;}
 }
 
 public class PostRepository : IPostRepository
@@ -45,6 +47,7 @@ public class PostRepository : IPostRepository
             temp.Author = observation.Author;
             temp.Text = observation.Text;
             temp.Timestamp = observation.Timestamp;
+            temp.Id = observation.Id;
             DTOList.Add(temp);
         }
 
@@ -78,6 +81,7 @@ public class PostRepository : IPostRepository
             temp.Author = observation.Author;
             temp.Text = observation.Text;
             temp.Timestamp = observation.Timestamp;
+            temp.Id = observation.Id;
             DTOList.Add(temp);
         }
         return DTOList;

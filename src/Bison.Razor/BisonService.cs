@@ -2,11 +2,22 @@ using Bison.Razor.Models;
 using Microsoft.EntityFrameworkCore;
 using SimpleDB;
 
-public class ObservationService
+
+public interface IObservationService
+{
+    public  List<PostDTO> GetObservations(int page);
+
+    public PostDTO? GetObservation(int id);
+
+    public List<PostDTO> GetObservationsFromAuthor(string author, int page);
+
+    public void StoreObservation(string author, string message, string location);
+}
+public class ObservationService : IObservationService
 {
     private readonly IPostRepository _repo;
 
-    private ObservationService(IPostRepository postRepository) {_repo = postRepository;}
+    public ObservationService(IPostRepository postRepository) {_repo = postRepository;}
 
     public  List<PostDTO> GetObservations(int page)
     {
