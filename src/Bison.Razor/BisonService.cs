@@ -62,7 +62,7 @@ public class CommentService
     public CommentService(CSVDataBase<SimpleDB.Comment> commentDb){_commentDb = commentDb;}
 
     public List<SimpleDB.Comment> GetCommentsForObservation(int id){return _commentDb.Read().Where(comment => comment.Id == id).ToList();}
-
+    //
 
 }
 public class TaxonService{
