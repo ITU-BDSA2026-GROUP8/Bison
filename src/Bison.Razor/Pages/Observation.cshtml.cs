@@ -6,17 +6,16 @@ namespace Bison.Razor.Pages;
 
 public class ObservationModel : PageModel
 {
-    private readonly ObservationService _observationService;
+    private readonly IObservationService _observationService;
     private readonly CommentService _commentService;
     private readonly ProposalService _proposalService;
 
-    private readonly TaxonService _taxonService;
-    public Observation Observation { get; private set; } = null!;
+    public PostDTO Observation { get; private set; } = null!;
     public List<SimpleDB.Comment> Comments { get; private set; } = [];
     public List <SimpleDB.Taxon> Taxons;
     public List<SimpleDB.Proposal> Proposals{get;private set;}=[];
 
-    public ObservationModel(ObservationService observationService, CommentService commentService,ProposalService proposalService,TaxonService taxonService)
+    public ObservationModel(IObservationService observationService, CommentService commentService)
     {
         _observationService = observationService;
         _commentService = commentService;

@@ -2,56 +2,41 @@ using Bison.Razor.Models;
 using Microsoft.EntityFrameworkCore;
 using SimpleDB;
 
-public class ObservationService
+
+public interface IObservationService
 {
-    private readonly BisonDBContext _context;
+    public  List<PostDTO> GetObservations(int page);
 
-    public ObservationService(BisonDBContext context) => _context = context;
+    public PostDTO? GetObservation(int id);
 
-    public List<Bison.Razor.Models.Observation> GetObservations(int page)
+    public List<PostDTO> GetObservationsFromAuthor(string author, int page);
+
+    public void StoreObservation(string author, string message, string location);
+}
+public class ObservationService : IObservationService
+{
+    private readonly IPostRepository _repo;
+
+    public ObservationService(IPostRepository postRepository) {_repo = postRepository;}
+
+    public  List<PostDTO> GetObservations(int page)
     {
-        var skip = (Math.Max(page, 1) - 1) * 32;
-        return _context.Observations
-            .Include(observation => observation.Author)
-            .Skip(skip)
-            .Take(32)
-            .ToList();
+        return _repo.GetObservations(page);
     }
 
-    public Bison.Razor.Models.Observation? GetObservation(int id)
+    public PostDTO? GetObservation(int id)
     {
-        return _context.Observations
-            .Include(observation => observation.Author)
-            .FirstOrDefault(observation => observation.Id == id);
+        return _repo.GetObservation(id);
     }
 
-    public List<Bison.Razor.Models.Observation> GetObservationsFromAuthor(string author, int page)
+    public List<PostDTO> GetObservationsFromAuthor(string author, int page)
     {
-        var skip = (Math.Max(page, 1) - 1) * 32;
-        return _context.Observations
-            .Include(observation => observation.Author)
-            .Where(observation => observation.Author.Name == author)
-            .Skip(skip)
-            .Take(32)
-            .ToList();
+        return _repo.GetObservationsFromAuthor(author,page);
     }
 
     public void StoreObservation(string author, string message, string location)
     {
-        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.Name == author);
-        if (postAuthor is null)
-        {
-            postAuthor = new Author { Name = author, Email = string.Empty };
-            _context.Authors.Add(postAuthor);
-        }
-        _context.Observations.Add(new Bison.Razor.Models.Observation
-        {
-            Author = postAuthor,
-            Text = message,
-            Timestamp = DateTime.UtcNow,
-            Location = location
-        });
-        _context.SaveChanges();
+        _repo.StoreObservation(author,message,location);
     }
 
     public List<Bison.Razor.Models.Comment> GetCommentsForObservation(int id){

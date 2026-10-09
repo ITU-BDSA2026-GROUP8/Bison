@@ -15,10 +15,9 @@ builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath
 builder.Services.AddSingleton(new CSVDataBase<Proposal>(Path.Combine(simpleDbPath, "bison_proposal_cli_db.csv")));
 builder.Services.AddSingleton(new CSVDataBase<Taxon>(Path.Combine(simpleDbPath, "bison_taxon_cli_db.csv")));
 
-builder.Services.AddScoped<ObservationService>();
-builder.Services.AddSingleton<CommentService>();
-builder.Services.AddSingleton<ProposalService>();
-builder.Services.AddSingleton<TaxonService>();
+builder.Services.AddScoped<IObservationService,ObservationService>();
+builder.Services.AddScoped<IPostRepository,PostRepository>();
+builder.Services.AddScoped<CommentService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))
