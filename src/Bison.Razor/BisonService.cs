@@ -36,6 +36,17 @@ public class CommentService
 
 
 }
+public class TaxonService{
+    private readonly CSVDataBase<Taxon> _taxondb;
+    public TaxonService(CSVDataBase<Taxon> taxondb){_taxondb = taxondb;}
+
+    public List<Taxon> GetTaxons()
+    {
+        return _taxondb.Read().ToList();
+    }
+    
+ 
+}
 public class ProposalService
 {
     private readonly CSVDataBase<Proposal> _proposalDB;

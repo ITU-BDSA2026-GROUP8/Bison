@@ -12,10 +12,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddSingleton(new CSVDataBase<Observation>(Path.Combine(simpleDbPath, "bison_observe_cli_db.csv")));
 builder.Services.AddSingleton(new CSVDataBase<Comment>(Path.Combine(simpleDbPath, "bison_comment_cli_db.csv")));
 builder.Services.AddSingleton(new CSVDataBase<Proposal>(Path.Combine(simpleDbPath, "bison_proposal_cli_db.csv")));
+builder.Services.AddSingleton(new CSVDataBase<Taxon>(Path.Combine(simpleDbPath, "bison_taxon_cli_db.csv")));
 
 builder.Services.AddSingleton<ObservationService>();
 builder.Services.AddSingleton<CommentService>();
 builder.Services.AddSingleton<ProposalService>();
+builder.Services.AddSingleton<TaxonService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

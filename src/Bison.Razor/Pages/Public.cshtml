@@ -30,15 +30,8 @@
                         </strong>
                         @obs.Message
                         <small>&mdash; @obs.Timestamp</small>
-                        @if(Model.Proposals().Any()){
-                        @foreach(var proposal in Model.Proposals()){
-                            @if (obs.Id == proposal.observationId)
-                            {
-                                @proposal.taxonID
-                            }
-                        }
-                        }
-                        <a href="/ob/@obs.Id">View comments</a>
+                       
+                        <a href="/ob/@obs.Id">View observation details</a>
                         
                     </p>
                 </li>

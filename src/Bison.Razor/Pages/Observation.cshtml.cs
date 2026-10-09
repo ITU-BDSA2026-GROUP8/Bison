@@ -8,18 +8,21 @@ public class ObservationModel : PageModel
 {
     private readonly ObservationService _observationService;
     private readonly CommentService _commentService;
-
     private readonly ProposalService _proposalService;
+
+    private readonly TaxonService _taxonService;
     public Observation Observation { get; private set; } = null!;
     public List<Comment> Comments { get; private set; } = [];
-
+    public List <Taxon> Taxons;
     public List<Proposal> Proposals{get;private set;}=[];
 
-    public ObservationModel(ObservationService observationService, CommentService commentService,ProposalService proposalService)
+    public ObservationModel(ObservationService observationService, CommentService commentService,ProposalService proposalService,TaxonService taxonService)
     {
         _observationService = observationService;
         _commentService = commentService;
         _proposalService = proposalService;
+        _taxonService=taxonService;
+        Taxons=_taxonService.GetTaxons();
     }
 
     public IActionResult OnGet(int id)
