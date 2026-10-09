@@ -9,7 +9,6 @@ namespace Bison.Razor.Pages;
 public class PublicModel : PageModel
 {
     private readonly IObservationService _service;
-    private readonly CommentService _commentservice;
     public List<PostDTO> Observations { get; set; }
 
     [BindProperty]
@@ -20,11 +19,9 @@ public class PublicModel : PageModel
     [Required]
     public string Location { get; set; } = string.Empty;
 
-    public PublicModel(IObservationService service, CommentService commentservice)
+    public PublicModel(IObservationService service)
     {
         _service = service;
-        _commentservice = commentservice;
-        _proposalservice=proposalService;
     }
 
     public ActionResult OnGet([FromQuery] int page)

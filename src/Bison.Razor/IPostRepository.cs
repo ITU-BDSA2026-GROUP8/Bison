@@ -126,7 +126,7 @@ public class PostRepository : IPostRepository
         var obs = _context.Observations
            .Include(observation => observation.Author)
            .FirstOrDefault(observation => observation.Id == Id);
-           foreach(Comment comment in obs.Comments)
+        foreach (Comment comment in obs.Comments)
         {
             var temp = new CommentDTO();
             temp.Text = comment.Text;
@@ -142,8 +142,15 @@ public class PostRepository : IPostRepository
            .Include(observation => observation.Author)
            .FirstOrDefault(observation => observation.Id == Id);
         var temp = new TaxonDTO();
-        temp.DanishVernacularName = obs.Taxon.DanishVernacularName;
-        temp.TaxonId = obs.Taxon.TaxonId;
-        return temp;
+        try
+        {
+            temp.DanishVernacularName = obs.Taxon.DanishVernacularName;
+            temp.TaxonId = obs.Taxon.TaxonId;
+            return temp;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

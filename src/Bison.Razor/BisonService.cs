@@ -12,6 +12,9 @@ public interface IObservationService
     public List<PostDTO> GetObservationsFromAuthor(string author, int page);
 
     public void StoreObservation(string author, string message, string location);
+
+    public List<CommentDTO> GetCommentsForObservation(int id);
+    public TaxonDTO GetTaxonForObservation(int Id);
 }
 public class ObservationService : IObservationService
 {
@@ -48,20 +51,4 @@ public class ObservationService : IObservationService
     {
         return _repo.GetTaxonForObservation(Id);
     }
-}
-public class ProposalService
-{
-    private readonly CSVDataBase<SimpleDB.Proposal> _proposalDB;
-    public ProposalService(CSVDataBase<SimpleDB.Proposal> proposalDB) { _proposalDB = proposalDB; }
-
-    public List<SimpleDB.Proposal> GetProposals()
-    {
-        return _proposalDB.Read().ToList();
-    }
-
-    public List<SimpleDB.Proposal> GetProposalsForObservation(int id)
-    {
-        return _proposalDB.Read().Where(proposal => proposal.observationId == id).ToList();
-    }
-
 }
