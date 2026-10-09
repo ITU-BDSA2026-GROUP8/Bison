@@ -6,7 +6,8 @@ public interface IPostRepository
 {
     public List<PostDTO> GetObservations(int page);
     
-    
+    public PostDTO GetObservation(int id);
+
 }
 
 public class PostDTO
@@ -46,4 +47,19 @@ public class PostRepository : IPostRepository
 
         return DTOList;
     }
+    public PostDTO GetObservation(int id)
+    {
+         var obs =_context.Observations
+            .Include(observation => observation.Author)
+            .FirstOrDefault(observation => observation.Id == id);
+        var temp = new PostDTO();
+        temp.Author = obs.Author;
+        temp.Text = obs.Text;
+        temp.Timestamp = obs.Timestamp;
+        return temp;
+    }
+
+    
+
+
 }

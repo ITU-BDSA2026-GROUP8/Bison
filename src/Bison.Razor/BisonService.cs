@@ -13,14 +13,12 @@ public class ObservationService
         return _repo.GetObservations(page);
     }
 
-    public Bison.Razor.Models.Observation? GetObservation(int id)
+    public PostDTO? GetObservation(int id)
     {
-        return _context.Observations
-            .Include(observation => observation.Author)
-            .FirstOrDefault(observation => observation.Id == id);
+        return _repo.GetObservation(id);
     }
 
-    public List<Bison.Razor.Models.Observation> GetObservationsFromAuthor(string author, int page)
+    public List<PostDTO> GetObservationsFromAuthor(string author, int page)
     {
         var skip = (Math.Max(page, 1) - 1) * 32;
         return _context.Observations
