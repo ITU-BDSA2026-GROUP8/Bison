@@ -5,28 +5,40 @@ using Microsoft.EntityFrameworkCore;
 public interface IPostRepository
 {
     public List<PostDTO> GetObservations(int page);
-    
+
     public PostDTO GetObservation(int id);
 
-    public List<PostDTO> GetObservationsFromAuthor(string author,int page);
+    public List<PostDTO> GetObservationsFromAuthor(string author, int page);
 
     public void StoreObservation(string author, string message, string location);
 }
 
 public class PostDTO
 {
-    public string Text {get; set;}
+    public string Text { get; set; }
 
-    public Author Author {get; set;}
+    public Author Author { get; set; }
 
-    public DateTime Timestamp {get; set;}   
+    public DateTime Timestamp { get; set; }
 
-    public int Id {get; set;}
+    public int Id { get; set; }
+}
+public class CommentDTO
+{
+    public string Text { get; set; }
+
+    public int Id { get; set; }
+}
+public class TaxonDTO
+{
+    public string TaxonId { get; set; }
+
+    public string DanishVernacularName { get; set; }
 }
 
 public class PostRepository : IPostRepository
 {
-    
+
     private readonly BisonDBContext _context;
 
     public PostRepository(BisonDBContext context) => _context = context;
@@ -35,11 +47,11 @@ public class PostRepository : IPostRepository
         var DTOList = new List<PostDTO>();
 
         var skip = (Math.Max(page, 1) - 1) * 32;
-          var obs = _context.Observations
-            .Include(observation => observation.Author)
-            .Skip(skip)
-            .Take(32)
-            .ToList();
+        var obs = _context.Observations
+          .Include(observation => observation.Author)
+          .Skip(skip)
+          .Take(32)
+          .ToList();
 
         foreach (Observation observation in obs)
         {
@@ -55,9 +67,9 @@ public class PostRepository : IPostRepository
     }
     public PostDTO GetObservation(int id)
     {
-         var obs =_context.Observations
-            .Include(observation => observation.Author)
-            .FirstOrDefault(observation => observation.Id == id);
+        var obs = _context.Observations
+           .Include(observation => observation.Author)
+           .FirstOrDefault(observation => observation.Id == id);
         var temp = new PostDTO();
         temp.Author = obs.Author;
         temp.Text = obs.Text;
@@ -65,7 +77,7 @@ public class PostRepository : IPostRepository
         return temp;
     }
 
-    public List<PostDTO> GetObservationsFromAuthor(string author,int page)
+    public List<PostDTO> GetObservationsFromAuthor(string author, int page)
     {
         var DTOList = new List<PostDTO>();
         var skip = (Math.Max(page, 1) - 1) * 32;
@@ -75,7 +87,7 @@ public class PostRepository : IPostRepository
             .Skip(skip)
             .Take(32)
             .ToList();
-        foreach(Observation observation in obs)
+        foreach (Observation observation in obs)
         {
             var temp = new PostDTO();
             temp.Author = observation.Author;
@@ -89,7 +101,7 @@ public class PostRepository : IPostRepository
 
     public void StoreObservation(string author, string message, string location)
     {
-        
+
         var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.Name == author);
         if (postAuthor is null)
         {
@@ -104,6 +116,27 @@ public class PostRepository : IPostRepository
             Location = location
         });
         _context.SaveChanges();
-    
+
+    }
+    public List<CommentDTO> GetCommentsForObservation(int id)
+    {
+        var DTOList = new List<CommentDTO>();
+        var obs = _context.Observations
+           .Include(observation => observation.Author)
+           .FirstOrDefault(observation => observation.Id == id);
+           foreach(Comment comment in obs.Comments)
+        {
+            var temp = new CommentDTO();
+            temp.Text = comment.Text;
+            temp.Id = comment.Id;
+            DTOList.Add(temp);
+        }
+        return DTOList;
+    }
+
+    public List<TaxonDTO> GetTaxons()
+    {
+        var temp = new TaxonDTO();
+        return _taxondb.Read().ToList();
     }
 }
