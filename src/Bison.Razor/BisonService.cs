@@ -57,6 +57,37 @@ public class ObservationService
 public class CommentService
 {
     private readonly CSVDataBase<SimpleDB.Comment> _commentDb;
+
+
     public CommentService(CSVDataBase<SimpleDB.Comment> commentDb){_commentDb = commentDb;}
+
     public List<SimpleDB.Comment> GetCommentsForObservation(int id){return _commentDb.Read().Where(comment => comment.Id == id).ToList();}
+
+
+}
+public class TaxonService{
+    private readonly CSVDataBase<SimpleDB.Taxon> _taxondb;
+    public TaxonService(CSVDataBase<SimpleDB.Taxon> taxondb){_taxondb = taxondb;}
+
+    public List<SimpleDB.Taxon> GetTaxons()
+    {
+        return _taxondb.Read().ToList();
+    }
+    
+ 
+}
+public class ProposalService
+{
+    private readonly CSVDataBase<SimpleDB.Proposal> _proposalDB;
+    public ProposalService(CSVDataBase<SimpleDB.Proposal> proposalDB){_proposalDB = proposalDB;}
+
+    public List<SimpleDB.Proposal> GetProposals()
+    {
+        return _proposalDB.Read().ToList();
+    }
+    
+    public  List<SimpleDB.Proposal> GetProposalsForObservation(int id)
+    {
+        return _proposalDB.Read().Where(proposal => proposal.observationId==id).ToList();}
+    
 }
