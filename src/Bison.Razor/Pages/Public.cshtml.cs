@@ -19,10 +19,7 @@ public class PublicModel : PageModel
     [BindProperty]
     [Required]
     public string Location { get; set; } = string.Empty;
-    public List<Proposal> Proposals()
-    {
-        return _proposalservice.GetProposals();
-    }
+    
     public PublicModel(ObservationService service, CommentService commentservice,ProposalService proposalService)
     {
         _service = service;
