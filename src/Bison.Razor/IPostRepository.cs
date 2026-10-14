@@ -12,14 +12,14 @@ public interface IPostRepository
 
     public void StoreObservation(string author, string message, string location);
     public List<CommentDTO> GetCommentsForObservation(int Id);
-    public TaxonDTO GetTaxonForObservation(int Id);
+    public TaxonDTO? GetTaxonForObservation(int Id);
 }
 
 public class PostDTO
 {
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 
-    public Author Author { get; set; }
+    public Author Author { get; set; } = null!;
 
     public DateTime Timestamp { get; set; }
 
@@ -27,15 +27,15 @@ public class PostDTO
 }
 public class CommentDTO
 {
-    public string Text { get; set; }
+    public string Text { get; set; } = string.Empty;
 
     public int Id { get; set; }
 }
 public class TaxonDTO
 {
-    public string TaxonId { get; set; }
+    public string? TaxonId { get; set; }
 
-    public string DanishVernacularName { get; set; }
+    public string? DanishVernacularName { get; set; }
 }
 
 public class PostRepository : IPostRepository
@@ -67,11 +67,13 @@ public class PostRepository : IPostRepository
 
         return DTOList;
     }
-    public PostDTO GetObservation(int id)
+    public PostDTO? GetObservation(int id)
     {
         var obs = _context.Observations
            .Include(observation => observation.Author)
            .FirstOrDefault(observation => observation.Id == id);
+
+        if (obs == null) return null;
         var temp = new PostDTO();
         temp.Author = obs.Author;
         temp.Text = obs.Text;
@@ -125,7 +127,10 @@ public class PostRepository : IPostRepository
         var DTOList = new List<CommentDTO>();
         var obs = _context.Observations
            .Include(observation => observation.Author)
+           .Include(observation => observation.Comments)
            .FirstOrDefault(observation => observation.Id == Id);
+
+        if (obs == null) return DTOList;
         foreach (Comment comment in obs.Comments)
         {
             var temp = new CommentDTO();
@@ -136,21 +141,17 @@ public class PostRepository : IPostRepository
         return DTOList;
     }
 
-    public TaxonDTO GetTaxonForObservation(int Id)
+    public TaxonDTO? GetTaxonForObservation(int Id)
     {
         var obs = _context.Observations
            .Include(observation => observation.Author)
+           .Include(observation => observation.Taxon)
            .FirstOrDefault(observation => observation.Id == Id);
+
+        if (obs == null || obs.Taxon == null) return null;
         var temp = new TaxonDTO();
-        try
-        {
-            temp.DanishVernacularName = obs.Taxon.DanishVernacularName;
-            temp.TaxonId = obs.Taxon.TaxonId;
-            return temp;
-        }
-        catch
-        {
-            return null;
-        }
+        temp.DanishVernacularName = obs.Taxon.DanishVernacularName;
+        temp.TaxonId = obs.Taxon.TaxonId;
+        return temp;
     }
 }

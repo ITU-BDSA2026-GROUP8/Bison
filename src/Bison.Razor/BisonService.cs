@@ -14,7 +14,7 @@ public interface IObservationService
     public void StoreObservation(string author, string message, string location);
 
     public List<CommentDTO> GetCommentsForObservation(int id);
-    public TaxonDTO GetTaxonForObservation(int Id);
+    public TaxonDTO? GetTaxonForObservation(int Id);
 }
 public class ObservationService : IObservationService
 {
@@ -47,7 +47,7 @@ public class ObservationService : IObservationService
         return _repo.GetCommentsForObservation(id);
     }
 
-    public TaxonDTO GetTaxonForObservation(int Id)
+    public TaxonDTO? GetTaxonForObservation(int Id)
     {
         return _repo.GetTaxonForObservation(Id);
     }
