@@ -9,7 +9,16 @@
 <div>
     <h2>Observation</h2>
     <p>
-        <strong><a href="/@Model.Observation.Author.Name">@Model.Observation.Author.Name</a></strong>
+        <strong>
+            @if (Model.Observation.Author != null)
+            {
+                <a href="/@Model.Observation.Author.Name">@Model.Observation.Author.Name</a>
+            }
+            else
+            {
+                <span>Unknown author</span>
+            }
+        </strong>
         @Model.Observation.Text
         <small>&mdash; @Model.Observation.Timestamp</small>
     </p>
@@ -20,8 +29,11 @@
             <li>
                 @Model._Taxon.DanishVernacularName
             </li>
-                
         </ul>
+    }
+    else
+    {
+        <em>There are no Taxon for this observation yet.</em>
     }
     
     <h3>Comments</h3>

@@ -10,7 +10,7 @@ public class ObservationModel : PageModel
 
     public PostDTO Observation { get; private set; } = null!;
     public List<CommentDTO> Comments { get; private set; } = [];
-    public TaxonDTO _Taxon;
+    public TaxonDTO? _Taxon;
 
     public ObservationModel(IObservationService observationService)
     {
@@ -24,7 +24,8 @@ public class ObservationModel : PageModel
         {
             return NotFound();
         }
-        
+
+        Observation = observation;
         Comments = _observationService.GetCommentsForObservation(id);
         _Taxon = _observationService.GetTaxonForObservation(id);
         return Page();
