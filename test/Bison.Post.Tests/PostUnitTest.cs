@@ -45,6 +45,15 @@ public class PostUnitTest
     [Fact]
     public async Task TaxonDTOGetMadeCorrectly()
     {
-        
+        var DTOhelper = new DTOHelper();
+        var testDTO = new TaxonDTO();
+        testDTO.TaxonId = "This is a TaxonDTO test";
+        testDTO.DanishVernacularName = "Det her er et dansk navn";
+
+        var DTOMadeWithMethod = DTOhelper.createTaxonDTO("This is a TaxonDTO test",
+        "Det her er et dansk navn");
+
+        Assert.Equal(testDTO.TaxonId, DTOMadeWithMethod.TaxonId);
+        Assert.Equal(testDTO.DanishVernacularName, DTOMadeWithMethod.DanishVernacularName);
     }
 }
