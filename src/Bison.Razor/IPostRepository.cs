@@ -154,11 +154,12 @@ public class PostRepository : IPostRepository
         temp.TaxonId = obs.Taxon.TaxonId;
         return temp;
     }
+}
 
-
-    //Private helper classes mostly made to make it easier to run unit tests
-
-    private PostDTO createPostDTO(string text, Author author, DateTime timeStamp, int id)
+//A Helper class containing methods to ensure that DTOs are made correctly
+public class DTOHelper
+{
+    public PostDTO createPostDTO(string text, Author author, DateTime timeStamp, int id)
     {
         var DTO = new PostDTO();
         DTO.Author = author;
@@ -167,5 +168,4 @@ public class PostRepository : IPostRepository
         DTO.Id = id;
         return DTO;
     }
-    
 }
