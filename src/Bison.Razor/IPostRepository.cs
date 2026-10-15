@@ -168,4 +168,20 @@ public class DTOHelper
         DTO.Id = id;
         return DTO;
     }
+
+    public CommentDTO createCommentDTO(string text, int Id)
+    {
+        var CDTO = new CommentDTO();
+        CDTO.Text = text;
+        CDTO.Id = Id;
+        return CDTO;
+    }
+
+    public TaxonDTO createTaxonDTO(string TaxonId, string DanishVernacularName)
+    {
+        var TDTO = new TaxonDTO();
+        TDTO.TaxonId = TaxonId;
+        TDTO.DanishVernacularName = DanishVernacularName;
+        return TDTO;
+    }
 }

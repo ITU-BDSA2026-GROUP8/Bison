@@ -29,4 +29,22 @@ public class PostUnitTest
         Assert.Equal(testDTO.Text,DTOMadeWithMethod.Text);
         Assert.Equal(testDTO.Timestamp,DTOMadeWithMethod.Timestamp);
     }
+    [Fact]
+    public async Task CommentDTOGetsMadeCorrectly()
+    {
+        var DTOhelper = new DTOHelper();
+        var testDTO = new CommentDTO();
+        testDTO.Text = "This is a comment for a test";
+        testDTO.Id = 1;
+
+        var DTOMadeWithMethod = DTOhelper.createCommentDTO("This is a comment for a test",1);
+
+        Assert.Equal(testDTO.Text, DTOMadeWithMethod.Text);
+        Assert.Equal(testDTO.Id,DTOMadeWithMethod.Id);
+    }
+    [Fact]
+    public async Task TaxonDTOGetMadeCorrectly()
+    {
+        
+    }
 }
