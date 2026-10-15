@@ -22,10 +22,11 @@ public class PostUnitTest
         testDTO.Author = testAuthor;
         testDTO.Timestamp = testDate;
 
-        var DTOMadeWithMethod = DTOhelper.createPostDTO("This is a test", testAuthor,
-        new DateTime(2004,9,26),2);
+        var DTOMadeWithMethod = DTOhelper.createPostDTO("This is a test", testAuthor,new DateTime(2004,9,26),2);
 
         Assert.Equal(testDTO.Id, DTOMadeWithMethod.Id);
         Assert.Equal(testDTO.Author,DTOMadeWithMethod.Author);    
+        Assert.Equal(testDTO.Text,DTOMadeWithMethod.Text);
+        Assert.Equal(testDTO.Timestamp,DTOMadeWithMethod.Timestamp);
     }
 }
