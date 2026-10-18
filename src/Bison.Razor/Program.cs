@@ -1,13 +1,6 @@
-using SimpleDB;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var simpleDbPath = Environment.GetEnvironmentVariable("BISON_SIMPLEDB_PATH");
-if (string.IsNullOrWhiteSpace(simpleDbPath))
-{
-    simpleDbPath = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "..", "SimpleDB"));
-}
 
 // Add services to the container.
 builder.Services.AddRazorPages();
