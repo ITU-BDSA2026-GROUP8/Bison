@@ -8,6 +8,6 @@ public static class ObservationFilter
     {
         var input = Dafny.Sequence<Observation>.FromArray(obs.ToArray());
         var result = FilterModule.__default.FilterBy(root, input);
-        return result.Elements.ToList();
-    }
+        return result.CloneAsArray().ToList();    
+        }
 }
