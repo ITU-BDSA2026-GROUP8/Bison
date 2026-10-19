@@ -1,5 +1,4 @@
 @page "/ob/{id:int}"
-@using SimpleDB
 @model Bison.Razor.Pages.ObservationModel
 @{
     ViewData["Title"] = "Observation";
@@ -9,28 +8,31 @@
 <div>
     <h2>Observation</h2>
     <p>
-        <strong><a href="/@Model.Observation.Author.Name">@Model.Observation.Author.Name</a></strong>
+        <strong>
+            @if (Model.Observation.Author != null)
+            {
+                <a href="/@Model.Observation.Author.Name">@Model.Observation.Author.Name</a>
+            }
+            else
+            {
+                <span>Unknown author</span>
+            }
+        </strong>
         @Model.Observation.Text
         <small>&mdash; @Model.Observation.Timestamp</small>
     </p>
     <h4>Taxonomies</h4>
-@if (Model.Proposals.Count > 0)
+@if (Model._Taxon!=null)
     {
         <ul>
-            @foreach(var proposal in Model.Proposals)
-            {
-                <li>
-
-                    @foreach (var taxon in Model.Taxons){
-                        if (taxon.taxonID == proposal.taxonID)
-                        {
-                            @taxon.ScientificName
-                        }
-                    }
-                </li>
-                
-            }
+            <li>
+                @Model._Taxon.DanishVernacularName
+            </li>
         </ul>
+    }
+    else
+    {
+        <em>There are no Taxon for this observation yet.</em>
     }
     
     <h3>Comments</h3>
@@ -40,7 +42,7 @@
         <ul>
             @foreach (var comment in Model.Comments)
             {
-                <li>@comment.Message</li>
+                <li>@comment.Text</li>
             }
         </ul>
     }
