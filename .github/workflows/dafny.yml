@@ -10,16 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Dafny
-        uses: dafny-lang/setup-dafny-action@v1
-
-      - name: Install libssl
-        run: sudo apt-get update && sudo apt-get install -y libssl3
-
-      - name: Verify and compile Dafny
-        run: dafny build src/Bison.Razor/Verified/Filter.dfy --target:cs --include-runtime --allow-external-contracts
-        env:
-          CLR_OPENSSL_VERSION_OVERRIDE: "3"
+      - name: Verify Dafny proof
+        run: |
+          docker run --rm -v "$PWD":/work -w /work \
+            ghcr.io/dafny-lang/dafny:4.10.0 \
+            verify --allow-external-contracts src/Bison.Razor/Verified/Filter.dfy
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
@@ -27,9 +22,6 @@ jobs:
           dotnet-version: |
             8.0.x
             10.0.x
-
-      - name: Remove generated project
-        run: rm -f src/Bison.Razor/Verified/Filter.csproj
 
       - name: Test
         run: dotnet test test/Bison.Razor.Tests
