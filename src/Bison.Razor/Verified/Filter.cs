@@ -9,7 +9,7 @@ using System;
 using System.Numerics;
 using System.Collections;
 [assembly: DafnyAssembly.DafnySourceAttribute(@"// dafny 4.11.0.0
-// Command-line arguments: build src/Bison.Razor/Verified/Filter.dfy --target cs --include-runtime --allow-warnings
+// Command-line arguments: build src/Bison.Razor/Verified/Filter.dfy --target cs --include-runtime --allow-external-contracts
 // Filter.dfy
 
 
@@ -50,6 +50,19 @@ module FilterModule {
   }
 
   import opened Models
+}
+
+module FilterWrapper {
+  method FilterObservations(root: Taxon, obs: seq<Observation>) returns (result: seq<Observation>)
+    ensures result == FilterModule.FilterBy(root, obs)
+    decreases root, obs
+  {
+    result := FilterModule.FilterBy(root, obs);
+  }
+
+  import opened Models
+
+  import FilterModule
 }
 ")]
 
@@ -5761,6 +5774,17 @@ namespace FilterModule {
     }
   }
 } // end of namespace FilterModule
+namespace FilterWrapper {
+
+  public partial class __default {
+    public static Dafny.ISequence<Bison.Razor.Models.Observation> FilterObservations(Bison.Razor.Models.Taxon root, Dafny.ISequence<Bison.Razor.Models.Observation> obs)
+    {
+      Dafny.ISequence<Bison.Razor.Models.Observation> result = Dafny.Sequence<Bison.Razor.Models.Observation>.Empty;
+      result = FilterModule.__default.FilterBy(root, obs);
+      return result;
+    }
+  }
+} // end of namespace FilterWrapper
 namespace _module {
 
 } // end of namespace _module

@@ -30,5 +30,17 @@ reads *
   }
 }
 
+module FilterWrapper {
+  import opened Models
+  import FilterModule
+
+  method FilterObservations(root: Taxon, obs: seq<Observation>) returns (result: seq<Observation>)
+      ensures result == FilterModule.FilterBy(root, obs)
+  {
+      result := FilterModule.FilterBy(root, obs);
+  }
+}
+
+
 
 
