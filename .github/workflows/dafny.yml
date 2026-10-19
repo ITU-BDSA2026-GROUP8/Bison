@@ -6,15 +6,17 @@ on:
 
 jobs:
   verify-and-test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Dafny
+        uses: dafny-lang/setup-dafny-action@v1.9.0
+        with:
+          dafny-version: "4.9.0"
+
       - name: Verify Dafny proof
-        run: |
-          docker run --rm -v "$PWD":/work -w /work \
-            ghcr.io/dafny-lang/dafny:4.10.0 \
-            verify --allow-external-contracts src/Bison.Razor/Verified/Filter.dfy
+        run: dafny verify --allow-external-contracts src/Bison.Razor/Verified/Filter.dfy
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
