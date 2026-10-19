@@ -5,10 +5,9 @@ using Bison.Razor.Models;
 // The Razor pages use this instead of calling the verified Dafny code directly.
 public interface IObservationFilterService
 {
-    // Returns the observations (as PostDTOs) whose taxon is the given taxon or one of its subtaxons.
-    // Observations without a taxon are left out. Returns an empty list if the taxon id is unknown.
-    List<PostDTO> GetObservationsByTaxon(string taxonId);
-
+    // Returns the observations (as PostDTOs) whose taxon has the given Danish name or is a subtaxon of it.
+    // Observations without a taxon are left out. Returns an empty list if no taxon has that name.
+    List<PostDTO> GetObservationsByTaxon(string taxonName);
 }
 
 public class ObservationFilterService : IObservationFilterService
@@ -20,13 +19,22 @@ public class ObservationFilterService : IObservationFilterService
         _context = context;
     }
 
-    public List<PostDTO> GetObservationsByTaxon(string taxonId)
+    public List<PostDTO> GetObservationsByTaxon(string taxonName)
     {
-        // The result is not used. Loading every taxon makes EF Core link each one to its Parent,
-        // which IsSubTaxon needs to walk up the taxon tree. Do not remove.
-        _context.taxons.ToList();
 
-        var root = _context.taxons.Find(taxonId);
+        if (string.IsNullOrWhiteSpace(taxonName))
+        {
+            return new List<PostDTO>();
+        }
+
+        // Load every taxon. This makes EF Core link each one to its Parent,
+        // which IsSubTaxon needs to walk up the taxon tree.
+        var taxons = _context.taxons.ToList();
+
+        var root = taxons.FirstOrDefault(t =>
+            string.Equals(t.DanishVernacularName, taxonName, StringComparison.OrdinalIgnoreCase));
+
+
         if (root == null)
         {
             return new List<PostDTO>();
