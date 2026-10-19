@@ -1,6 +1,5 @@
 using Bison.Razor.Models;
 using Microsoft.EntityFrameworkCore;
-using SimpleDB;
 
 
 public interface IObservationService
