@@ -7,4 +7,12 @@ public class Observation : Post
     public List<Comment> Comments { get; set; } = new();
 
     
+    public Taxon GetTaxon()
+    {
+        if (Taxon == null)
+        {
+            throw new Exception("Observation has no taxon");
+        }
+        return Taxon;
+    }
 }

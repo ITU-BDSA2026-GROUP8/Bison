@@ -7,6 +7,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddScoped<IObservationService,ObservationService>();
 builder.Services.AddScoped<IPostRepository,PostRepository>();
+builder.Services.AddScoped<IObservationFilterService, ObservationFilterService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString))

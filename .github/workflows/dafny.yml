@@ -1,0 +1,29 @@
+name: Dafny
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify-and-test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Dafny
+        uses: dafny-lang/setup-dafny-action@v1.9.0
+        with:
+          dafny-version: "4.9.0"
+
+      - name: Verify Dafny proof
+        run: dafny verify --allow-external-contracts src/Bison.Razor/Verified/Filter.dfy
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+
+      - name: Test
+        run: dotnet test test/Bison.Razor.Tests

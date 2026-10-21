@@ -9,6 +9,7 @@ namespace Bison.Razor.Pages;
 public class PublicModel : PageModel
 {
     private readonly IObservationService _service;
+    private readonly IObservationFilterService _filter;
     public List<PostDTO> Observations { get; set; }
 
     [BindProperty]
@@ -19,14 +20,17 @@ public class PublicModel : PageModel
     [Required]
     public string Location { get; set; } = string.Empty;
 
-    public PublicModel(IObservationService service)
+    public PublicModel(IObservationService service, IObservationFilterService filter)
     {
         _service = service;
+        _filter = filter;
     }
 
-    public ActionResult OnGet([FromQuery] int page)
+    public ActionResult OnGet([FromQuery] int page, [FromQuery] string? taxon)
     {       
-        Observations = _service.GetObservations(page);
+        Observations = string.IsNullOrEmpty(taxon)
+            ? _service.GetObservations(page)
+            : _filter.GetObservationsByTaxon(taxon);
         return Page();
     }
 
