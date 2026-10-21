@@ -40,7 +40,7 @@ public class TaxonDTO
 
 public class PostRepository : IPostRepository
 {
-
+    DTOHelper helper = new DTOHelper();
     private readonly BisonDBContext _context;
 
     public PostRepository(BisonDBContext context) => _context = context;
@@ -57,11 +57,8 @@ public class PostRepository : IPostRepository
 
         foreach (Observation observation in obs)
         {
-            var temp = new PostDTO();
-            temp.Author = observation.Author;
-            temp.Text = observation.Text;
-            temp.Timestamp = observation.Timestamp;
-            temp.Id = observation.Id;
+            var temp = helper.createPostDTO(observation.Text,observation.Author,
+            observation.Timestamp,observation.Id);
             DTOList.Add(temp);
         }
 
@@ -74,10 +71,7 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == id);
 
         if (obs == null) return null;
-        var temp = new PostDTO();
-        temp.Author = obs.Author;
-        temp.Text = obs.Text;
-        temp.Timestamp = obs.Timestamp;
+        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id);
         return temp;
     }
 
@@ -93,11 +87,8 @@ public class PostRepository : IPostRepository
             .ToList();
         foreach (Observation observation in obs)
         {
-            var temp = new PostDTO();
-            temp.Author = observation.Author;
-            temp.Text = observation.Text;
-            temp.Timestamp = observation.Timestamp;
-            temp.Id = observation.Id;
+            var temp = helper.createPostDTO(observation.Text,observation.Author,
+            observation.Timestamp,observation.Id);
             DTOList.Add(temp);
         }
         return DTOList;
@@ -133,9 +124,7 @@ public class PostRepository : IPostRepository
         if (obs == null) return DTOList;
         foreach (Comment comment in obs.Comments)
         {
-            var temp = new CommentDTO();
-            temp.Text = comment.Text;
-            temp.Id = comment.Id;
+            var temp = helper.createCommentDTO(comment.Text,comment.Id);
             DTOList.Add(temp);
         }
         return DTOList;
@@ -149,9 +138,8 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == Id);
 
         if (obs == null || obs.Taxon == null) return null;
-        var temp = new TaxonDTO();
-        temp.DanishVernacularName = obs.Taxon.DanishVernacularName;
-        temp.TaxonId = obs.Taxon.TaxonId;
+        var temp = helper.createTaxonDTO(obs.Taxon.TaxonId,
+        obs.Taxon.DanishVernacularName);
         return temp;
     }
 }
