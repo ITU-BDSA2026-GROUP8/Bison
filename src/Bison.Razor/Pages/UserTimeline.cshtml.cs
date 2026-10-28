@@ -8,6 +8,7 @@ public class UserTimelineModel : PageModel
 {
     private readonly IObservationService _service;
     public List<PostDTO> Observations { get; set; }
+    public int CurrentPage { get; private set; } = 1;
 
     public UserTimelineModel(IObservationService service)
     {
@@ -17,7 +18,8 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author,[FromQuery] int page)
     {
-        Observations = _service.GetObservationsFromAuthor(author, page);
+        CurrentPage = Math.Max(1, page);
+        Observations = _service.GetObservationsFromAuthor(author, CurrentPage);
         return Page();
     }
 }
