@@ -23,6 +23,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
+    //comment line 27 out to run program on Localhost. REMEMBER remove comment after use
     dbContext.Database.Migrate();
     DbInitializer.SeedDatabase(dbContext); //hvor den tager data fra 1.d uge 6
 }
