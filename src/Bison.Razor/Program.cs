@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -30,7 +29,7 @@ using (var scope = app.Services.CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
         dbContext.Database.Migrate();
-        //DbInitializer.SeedDatabase(dbContext); //hvor den tager data fra 1.d uge 6
+        DbInitializer.SeedDatabase(dbContext); //hvor den tager data fra 1.d uge 6
     }
 }
 
