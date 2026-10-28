@@ -11,6 +11,7 @@ public class PublicModel : PageModel
     private readonly IObservationService _service;
     private readonly IObservationFilterService _filter;
     public List<PostDTO> Observations { get; set; }
+    public int CurrentPage { get; private set; } = 1;
 
     [BindProperty]
     [Required]
@@ -27,9 +28,10 @@ public class PublicModel : PageModel
     }
 
     public ActionResult OnGet([FromQuery] int page, [FromQuery] string? taxon)
-    {       
+    {
+        CurrentPage = Math.Max(1, page);
         Observations = string.IsNullOrEmpty(taxon)
-            ? _service.GetObservations(page)
+            ? _service.GetObservations(CurrentPage)
             : _filter.GetObservationsByTaxon(taxon);
         return Page();
     }

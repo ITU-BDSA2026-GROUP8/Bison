@@ -17,6 +17,15 @@
         <input asp-for="Location" required />
         <button type="submit">Post observation</button>
     </form>
+    <form method="get">
+        <input type="hidden" name="page" value="@(Math.Max(1, Model.CurrentPage - 1))" />
+        <button type="submit" disabled="@(Model.CurrentPage <= 1)">previous page</button>
+    </form>
+
+    <form method="get">
+        <input type="hidden" name="page" value="@(Model.CurrentPage + 1)" />
+        <button type="submit">next page</button>
+    </form>
 
     @if (Model.Observations.Any())
     {
