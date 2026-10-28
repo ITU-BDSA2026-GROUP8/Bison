@@ -5,8 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddScoped<IObservationService,ObservationService>();
-builder.Services.AddScoped<IPostRepository,PostRepository>();
+builder.Services.AddScoped<IObservationService, ObservationService>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IObservationFilterService, ObservationFilterService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -22,10 +22,16 @@ var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
-    //comment line 27 out to run program on Localhost. REMEMBER remove comment after use
-    dbContext.Database.Migrate();
-    DbInitializer.SeedDatabase(dbContext); //hvor den tager data fra 1.d uge 6
+    if (args.Length >= 1 & args[0] == "test") //to run program on Localhost
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
+    }
+    else
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<BisonDBContext>();
+        dbContext.Database.Migrate();
+        //DbInitializer.SeedDatabase(dbContext); //hvor den tager data fra 1.d uge 6
+    }
 }
 
 // Configure the HTTP request pipeline.
