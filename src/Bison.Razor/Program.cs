@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,11 @@ if (string.IsNullOrWhiteSpace(connectionString))
 }
 
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+options.SignIn.RequireConfirmedAccount = true)
+.AddEntityFrameworkStores<BisonDBContext>() ;
+
 
 var app = builder.Build();
 
