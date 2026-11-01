@@ -32,7 +32,7 @@ jobs:
 
       - name: Publish Linux x64
         run: |
-         dotnet publish Bison.CLI/Bison.CLI.csproj -c Release -r linux-x64 --self-contained false -p:PublishSingleFile=true -o publish/linux-x64
+         dotnet publish Bison.CLI/Bison.CLI.csproj -c Release -r linux-x64 --self-contained false -p:PublishSingleFile=true -o test_some_stuff
 
       - name: Publish Windows x64
         run: |
