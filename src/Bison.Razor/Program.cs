@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,9 +20,15 @@ if (string.IsNullOrWhiteSpace(connectionString))
 builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(connectionString));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-options.SignIn.RequireConfirmedAccount = true)
+{
+options.SignIn.RequireConfirmedAccount = true;
+options.Password.RequireDigit=false;
+options.Password.RequiredLength=6;
+options.Password.RequireUppercase=false;
+options.Password.RequireNonAlphanumeric=false;
+options.Password.RequireLowercase=false;
+})
 .AddEntityFrameworkStores<BisonDBContext>() ;
-
 
 var app = builder.Build();
 
@@ -45,6 +52,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.MapRazorPages();
 
 app.Run();
