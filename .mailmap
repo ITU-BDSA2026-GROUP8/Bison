@@ -7,3 +7,10 @@ Johannes Rolin Stenberg <rojs@itu.dk> johannesst04 <rojs@itu.dk>
 Jens Martin Bennekou <jmbe@itu.dk> Jens Martin Bennekou <143173278+flopmann@users.noreply.github.com>
 Jens Groenen Sanderhoff <jenss@itu.dk> Jenss <jenss@itu.dk>
 Jens Groenen Sanderhoff <jenss@itu.dk> jssanderhoff <jssanderhoff@gmail.com>
+
+Git commands:
+git pull
+
+git add .
+git commit -m "<message>" -m "Co-authored-by <name+mail>"
+git push
