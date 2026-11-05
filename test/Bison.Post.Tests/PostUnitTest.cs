@@ -12,8 +12,8 @@ public class PostUnitTest
         var DTOhelper = new DTOHelper();
         var testDate = new DateTime(2004,9,26);
         var testAuthor = new Author();
-        testAuthor.AuthorId = 1;
-        testAuthor.Name = "Jens";
+        testAuthor.Id = "1";
+        testAuthor.UserName = "Jens";
         testAuthor.Email = "jmbe@itu.dk";
         testAuthor.Posts = new List<Post>();
         var testDTO = new PostDTO();

@@ -31,7 +31,7 @@ public class ObservationFilterServiceTests
         context.taxons.AddRange(root, hejrer, fiskehejre, skarver, tom);
 
         // Add observations with different taxons and texts
-        var author = new Author { Name = "Test", Email = "t@example.com" };
+        var author = new Author { UserName = "Test", Email = "t@example.com" };
         context.Observations.AddRange(
             Obs(author, "grey heron", fiskehejre),
             Obs(author, "heron family", hejrer),
