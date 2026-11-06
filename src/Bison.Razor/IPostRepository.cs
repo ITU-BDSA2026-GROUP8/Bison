@@ -13,6 +13,7 @@ public interface IPostRepository
     public void StoreObservation(string author, string message, string location);
     public List<CommentDTO> GetCommentsForObservation(int Id);
     public TaxonDTO? GetTaxonForObservation(int Id);
+    public void StoreProposal(int id,string name);
 }
 
 public class PostDTO
@@ -112,6 +113,27 @@ public class PostRepository : IPostRepository
         });
         _context.SaveChanges();
 
+    }
+    public void StoreProposal(int id,string danishVernacularName)
+    {
+        var obs = _context.Observations;
+        var taxons=_context.taxons;
+        Observation observation=null;
+        foreach(Observation ob in obs)
+        {
+            if (ob.Id == id)
+            {
+                observation=ob;
+                break;
+            }
+        }
+        foreach(Taxon tx in taxons){
+            if(tx.DanishVernacularName.Equals(danishVernacularName)){
+        observation.Taxon=tx;
+        break;}
+        _context.SaveChanges();
+
+        }
     }
     public List<CommentDTO> GetCommentsForObservation(int Id)
     {

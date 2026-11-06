@@ -21,7 +21,18 @@
         @Model.Observation.Text
         <small>&mdash; @Model.Observation.Timestamp</small>
     </p>
+@if(Model._Taxon==null){
     <h4>Taxonomies</h4>
+        <div class="observationbox">    
+            <h3>What did you see, @(User.Identity.Name)?</h3>
+            <form method="post">
+                <div asp-validation-summary="All"></div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" required />
+        <button type="submit">Post proposal</button>
+            </form>
+        </div>
+    }
 @if (Model._Taxon!=null)
     {
         <ul>
