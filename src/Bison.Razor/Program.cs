@@ -29,7 +29,13 @@ options.Password.RequireNonAlphanumeric=false;
 options.Password.RequireLowercase=false;
 })
 .AddEntityFrameworkStores<BisonDBContext>() ;
-
+builder.Services.AddAuthentication()
+.AddGitHub(options =>
+ {
+ options.ClientId = builder.Configuration["Authentication:GitHub:ClientId"]!;
+ options.ClientSecret =
+builder.Configuration["Authentication:GitHub:ClientSecret"]!;
+ });
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
