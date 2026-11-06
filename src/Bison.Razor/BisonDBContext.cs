@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Bison.Razor.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 
-public class BisonDBContext : DbContext
-{
+public class BisonDBContext : IdentityDbContext<IdentityUser>{
 
 public DbSet<Observation> Observations { get; set; }
 public DbSet<Author> Authors { get; set; }

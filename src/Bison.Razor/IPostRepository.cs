@@ -81,7 +81,7 @@ public class PostRepository : IPostRepository
         var skip = (Math.Max(page, 1) - 1) * 32;
         var obs = _context.Observations
             .Include(observation => observation.Author)
-            .Where(observation => observation.Author.Name == author)
+            .Where(observation => observation.Author.UserName == author)
             .Skip(skip)
             .Take(32)
             .ToList();
@@ -97,10 +97,10 @@ public class PostRepository : IPostRepository
     public void StoreObservation(string author, string message, string location)
     {
 
-        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.Name == author);
+        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
         if (postAuthor is null)
         {
-            postAuthor = new Author { Name = author, Email = string.Empty };
+            postAuthor = new Author { UserName = author, Email = string.Empty };
             _context.Authors.Add(postAuthor);
         }
         _context.Observations.Add(new Bison.Razor.Models.Observation
