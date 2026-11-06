@@ -16,12 +16,6 @@
       Include="Microsoft.AspNetCore.Identity.UI" Version="7.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Bison.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net8</TargetFramework>
     <Nullable>enable</Nullable>
