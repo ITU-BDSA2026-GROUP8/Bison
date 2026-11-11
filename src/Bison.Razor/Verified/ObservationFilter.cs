@@ -1,5 +1,4 @@
-using Bison.Razor.Models;
-
+using Bison.Core.Models;
 
 // Converts between C# lists and Dafny sequences, so the rest of the app
 // never has to know about the generated Dafny code.

@@ -1,7 +1,7 @@
 ﻿namespace Bison.Post.Tests;
 
 using Bison.Razor;
-using Bison.Razor.Models;
+using Bison.Core.Models;
 
 public class PostUnitTest
 {

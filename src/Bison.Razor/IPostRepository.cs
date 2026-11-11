@@ -1,4 +1,4 @@
-using Bison.Razor.Models;
+using Bison.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -103,7 +103,7 @@ public class PostRepository : IPostRepository
             postAuthor = new Author { UserName = author, Email = string.Empty };
             _context.Authors.Add(postAuthor);
         }
-        _context.Observations.Add(new Bison.Razor.Models.Observation
+        _context.Observations.Add(new Bison.Core.Models.Observation
         {
             Author = postAuthor,
             Text = message,

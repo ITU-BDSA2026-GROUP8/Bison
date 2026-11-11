@@ -1,4 +1,4 @@
-namespace Bison.Razor.Models;
+namespace Bison.Core.Models;
 public class Proposal : Post
 {
     public Observation Observation { get; set; }

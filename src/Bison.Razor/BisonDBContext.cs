@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Bison.Razor.Models;
+using Bison.Core.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Bison.Razor.Models;
+using Bison.Core.Models;
 
 // Service that filters observations by taxon.
 // The Razor pages use this instead of calling the verified Dafny code directly.

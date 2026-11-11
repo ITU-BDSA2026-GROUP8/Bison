@@ -1,4 +1,4 @@
-namespace Bison.Razor.Models;
+namespace Bison.Core.Models;
 public abstract class Post
 {
     public int Id { get; set; }

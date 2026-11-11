@@ -19,7 +19,7 @@ namespace Bison.Razor.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
-            modelBuilder.Entity("Bison.Razor.Models.Post", b =>
+            modelBuilder.Entity("Bison.Core.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace Bison.Razor.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Taxon", b =>
+            modelBuilder.Entity("Bison.Core.Models.Taxon", b =>
                 {
                     b.Property<string>("TaxonId")
                         .HasColumnType("TEXT");
@@ -275,9 +275,9 @@ namespace Bison.Razor.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Comment", b =>
+            modelBuilder.Entity("Bison.Core.Models.Comment", b =>
                 {
-                    b.HasBaseType("Bison.Razor.Models.Post");
+                    b.HasBaseType("Bison.Core.Models.Post");
 
                     b.Property<int>("ObservationId")
                         .HasColumnType("INTEGER");
@@ -287,9 +287,9 @@ namespace Bison.Razor.Migrations
                     b.HasDiscriminator().HasValue("Comment");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Observation", b =>
+            modelBuilder.Entity("Bison.Core.Models.Observation", b =>
                 {
-                    b.HasBaseType("Bison.Razor.Models.Post");
+                    b.HasBaseType("Bison.Core.Models.Post");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -303,9 +303,9 @@ namespace Bison.Razor.Migrations
                     b.HasDiscriminator().HasValue("Observation");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Proposal", b =>
+            modelBuilder.Entity("Bison.Core.Models.Proposal", b =>
                 {
-                    b.HasBaseType("Bison.Razor.Models.Post");
+                    b.HasBaseType("Bison.Core.Models.Post");
 
                     b.Property<int>("ObservationId")
                         .HasColumnType("INTEGER");
@@ -329,25 +329,25 @@ namespace Bison.Razor.Migrations
                     b.HasDiscriminator().HasValue("Proposal");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Author", b =>
+            modelBuilder.Entity("Bison.Core.Models.Author", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.HasDiscriminator().HasValue("Author");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Post", b =>
+            modelBuilder.Entity("Bison.Core.Models.Post", b =>
                 {
-                    b.HasOne("Bison.Razor.Models.Author", "Author")
+                    b.HasOne("Bison.Core.Models.Author", "Author")
                         .WithMany("Posts")
                         .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Taxon", b =>
+            modelBuilder.Entity("Bison.Core.Models.Taxon", b =>
                 {
-                    b.HasOne("Bison.Razor.Models.Taxon", "parent")
+                    b.HasOne("Bison.Core.Models.Taxon", "parent")
                         .WithMany("children")
                         .HasForeignKey("parentTaxonId");
 
@@ -405,9 +405,9 @@ namespace Bison.Razor.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Comment", b =>
+            modelBuilder.Entity("Bison.Core.Models.Comment", b =>
                 {
-                    b.HasOne("Bison.Razor.Models.Observation", "Observation")
+                    b.HasOne("Bison.Core.Models.Observation", "Observation")
                         .WithMany("Comments")
                         .HasForeignKey("ObservationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -416,24 +416,24 @@ namespace Bison.Razor.Migrations
                     b.Navigation("Observation");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Observation", b =>
+            modelBuilder.Entity("Bison.Core.Models.Observation", b =>
                 {
-                    b.HasOne("Bison.Razor.Models.Taxon", "Taxon")
+                    b.HasOne("Bison.Core.Models.Taxon", "Taxon")
                         .WithMany()
                         .HasForeignKey("TaxonId");
 
                     b.Navigation("Taxon");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Proposal", b =>
+            modelBuilder.Entity("Bison.Core.Models.Proposal", b =>
                 {
-                    b.HasOne("Bison.Razor.Models.Observation", "Observation")
+                    b.HasOne("Bison.Core.Models.Observation", "Observation")
                         .WithMany("Proposals")
                         .HasForeignKey("ObservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Bison.Razor.Models.Taxon", "taxon")
+                    b.HasOne("Bison.Core.Models.Taxon", "taxon")
                         .WithMany()
                         .HasForeignKey("TaxonId");
 
@@ -442,19 +442,19 @@ namespace Bison.Razor.Migrations
                     b.Navigation("taxon");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Taxon", b =>
+            modelBuilder.Entity("Bison.Core.Models.Taxon", b =>
                 {
                     b.Navigation("children");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Observation", b =>
+            modelBuilder.Entity("Bison.Core.Models.Observation", b =>
                 {
                     b.Navigation("Comments");
 
                     b.Navigation("Proposals");
                 });
 
-            modelBuilder.Entity("Bison.Razor.Models.Author", b =>
+            modelBuilder.Entity("Bison.Core.Models.Author", b =>
                 {
                     b.Navigation("Posts");
                 });

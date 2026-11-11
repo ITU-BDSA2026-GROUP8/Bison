@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Bison.Razor.Models;
+namespace Bison.Core.Models;
 
 
 public class Author : IdentityUser

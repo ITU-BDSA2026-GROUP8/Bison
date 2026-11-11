@@ -1,4 +1,4 @@
-namespace Bison.Razor.Models;
+namespace Bison.Core.Models;
 public class Observation : Post
 {
     public string Location { get; set; }

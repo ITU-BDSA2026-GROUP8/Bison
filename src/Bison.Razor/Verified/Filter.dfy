@@ -1,6 +1,6 @@
-// The C# classes Taxon and Observation already exist in Bison.Razor.Models.
+// The C# classes Taxon and Observation already exist in Bison.Core.Models.
 // Here we only declare their signatures so Dafny knows which methods it may call.
-module {:extern "Bison.Razor.Models"} Models {
+module {:extern "Bison.Core.Models"} Models {
 class {:extern "Taxon"} Taxon {
     function {:axiom} {:extern "IsSubTaxon"} IsSubTaxon(ancestor: Taxon): bool
     reads *

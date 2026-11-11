@@ -1,4 +1,4 @@
-using Bison.Razor.Models;
+using Bison.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 
