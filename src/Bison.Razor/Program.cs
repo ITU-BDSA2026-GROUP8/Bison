@@ -35,7 +35,6 @@ builder.Services.AddAuthentication()
 {
 o.ClientId = builder.Configuration["authentication:github:clientId"];
 o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
-o.Scope.Add("user:email");
 });
 var app = builder.Build();
 
