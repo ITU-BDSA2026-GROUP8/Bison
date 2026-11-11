@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Bison.Razor.Migrations
+namespace Bison.Infrastructure.Migrations
 {
     [DbContext(typeof(BisonDBContext))]
-    [Migration("20261023111118_AddLocationToPost")]
-    partial class AddLocationToPost
+    [Migration("20261007111804_BisonDBSchema")]
+    partial class BisonDBSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

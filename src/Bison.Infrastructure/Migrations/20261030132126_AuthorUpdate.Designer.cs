@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Bison.Razor.Migrations
+namespace Bison.Infrastructure.Migrations
 {
     [DbContext(typeof(BisonDBContext))]
-    [Migration("20261030130221_AddIdentitySchema")]
-    partial class AddIdentitySchema
+    [Migration("20261030132126_AuthorUpdate")]
+    partial class AuthorUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,33 +19,14 @@ namespace Bison.Razor.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.8");
 
-            modelBuilder.Entity("Bison.Core.Models.Author", b =>
-                {
-                    b.Property<int>("AuthorId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("AuthorId");
-
-                    b.ToTable("Authors");
-                });
-
             modelBuilder.Entity("Bison.Core.Models.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
@@ -150,6 +131,11 @@ namespace Bison.Razor.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -200,6 +186,10 @@ namespace Bison.Razor.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -339,13 +329,18 @@ namespace Bison.Razor.Migrations
                     b.HasDiscriminator().HasValue("Proposal");
                 });
 
+            modelBuilder.Entity("Bison.Core.Models.Author", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.HasDiscriminator().HasValue("Author");
+                });
+
             modelBuilder.Entity("Bison.Core.Models.Post", b =>
                 {
                     b.HasOne("Bison.Core.Models.Author", "Author")
                         .WithMany("Posts")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AuthorId");
 
                     b.Navigation("Author");
                 });
@@ -447,11 +442,6 @@ namespace Bison.Razor.Migrations
                     b.Navigation("taxon");
                 });
 
-            modelBuilder.Entity("Bison.Core.Models.Author", b =>
-                {
-                    b.Navigation("Posts");
-                });
-
             modelBuilder.Entity("Bison.Core.Models.Taxon", b =>
                 {
                     b.Navigation("children");
@@ -462,6 +452,11 @@ namespace Bison.Razor.Migrations
                     b.Navigation("Comments");
 
                     b.Navigation("Proposals");
+                });
+
+            modelBuilder.Entity("Bison.Core.Models.Author", b =>
+                {
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }
