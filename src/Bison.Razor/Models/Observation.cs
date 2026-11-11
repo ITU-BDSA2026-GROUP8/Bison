@@ -15,4 +15,6 @@ public class Observation : Post
         }
         return Taxon;
     }
+
+    public string? ImageUrl {get; set;}
 }

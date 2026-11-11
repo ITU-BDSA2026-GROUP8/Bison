@@ -21,6 +21,14 @@
         @Model.Observation.Text
         <small>&mdash; @Model.Observation.Timestamp</small>
     </p>
+    
+    @if (!string.IsNullOrEmpty(Model.Observation.ImageUrl))
+    {
+    <img src="@Model.Observation.ImageUrl"
+         alt="Animal picture"
+         style="max-width:500px;height:auto;" />
+    }
+
     <h4>Taxonomies</h4>
 @if (Model._Taxon!=null)
     {

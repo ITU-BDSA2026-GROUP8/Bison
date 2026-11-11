@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Bison.Razor.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +11,7 @@ public interface IPostRepository
 
     public List<PostDTO> GetObservationsFromAuthor(string author, int page);
 
-    public void StoreObservation(string author, string message, string location);
+    public void StoreObservation(string author, string message, string location, string? imageUrl);
     public List<CommentDTO> GetCommentsForObservation(int Id);
     public TaxonDTO? GetTaxonForObservation(int Id);
 }
@@ -24,6 +25,8 @@ public class PostDTO
     public DateTime Timestamp { get; set; }
 
     public int Id { get; set; }
+
+    public string? ImageUrl {get; set; }
 }
 public class CommentDTO
 {
@@ -58,7 +61,7 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id);
+            observation.Timestamp,observation.Id,observation.ImageUrl);
             DTOList.Add(temp);
         }
 
@@ -71,7 +74,7 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == id);
 
         if (obs == null) return null;
-        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id);
+        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id,obs.ImageUrl);
         return temp;
     }
 
@@ -88,13 +91,13 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id);
+            observation.Timestamp,observation.Id,observation.ImageUrl);
             DTOList.Add(temp);
         }
         return DTOList;
     }
 
-    public void StoreObservation(string author, string message, string location)
+    public void StoreObservation(string author, string message, string location, string? imageUrl)
     {
 
         var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
@@ -108,7 +111,8 @@ public class PostRepository : IPostRepository
             Author = postAuthor,
             Text = message,
             Timestamp = DateTime.UtcNow,
-            Location = location
+            Location = location,
+            ImageUrl = imageUrl
         });
         _context.SaveChanges();
 
@@ -147,13 +151,14 @@ public class PostRepository : IPostRepository
 //A Helper class containing methods to ensure that DTOs are made correctly
 public class DTOHelper
 {
-    public PostDTO createPostDTO(string text, Author author, DateTime timeStamp, int id)
+    public PostDTO createPostDTO(string text, Author author, DateTime timeStamp, int id, string? imageUrl)
     {
         var DTO = new PostDTO();
         DTO.Author = author;
         DTO.Text = text;
         DTO.Timestamp = timeStamp;
         DTO.Id = id;
+        DTO.ImageUrl = imageUrl;
         return DTO;
     }
 
