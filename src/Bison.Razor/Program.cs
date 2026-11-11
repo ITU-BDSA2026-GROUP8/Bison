@@ -30,18 +30,12 @@ options.Password.RequireNonAlphanumeric=false;
 options.Password.RequireLowercase=false;
 })
 .AddEntityFrameworkStores<BisonDBContext>() ;
-builder.Services.AddAuthentication(options =>
-{
-options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme ;
-options.DefaultSignInScheme= CookieAuthenticationDefaults.AuthenticationScheme ;
-options.DefaultChallengeScheme = "GitHub";
-})
-.AddCookie()
+builder.Services.AddAuthentication()
 .AddGitHub(o =>
 {
 o.ClientId = builder.Configuration["authentication:github:clientId"];
 o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
-o.CallbackPath = "/signin-github";
+o.Scope.Add("user:email");
 });
 var app = builder.Build();
 
@@ -62,7 +56,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseAuthentication();
 app.UseAuthorization();
 //app.UseSession();
 
