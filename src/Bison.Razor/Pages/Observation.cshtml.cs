@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using Bison.Razor.Models;
 
 namespace Bison.Razor.Pages;
@@ -7,9 +9,14 @@ namespace Bison.Razor.Pages;
 public class ObservationModel : PageModel
 {
     private readonly IObservationService _observationService;
-    public String Message {get;set;}=String.Empty;
-    public String Name {get;set;}=String.Empty;
-    public int ID;
+    
+    [BindProperty]
+    [Required]
+        public string Message { get; set; } = string.Empty;
+        [BindProperty]
+        [Required]
+    public string Comment { get; set; } = string.Empty;
+
     public PostDTO Observation { get; private set; } = null!;
     public List<CommentDTO> Comments { get; private set; } = [];
     public TaxonDTO? _Taxon;
@@ -18,25 +25,8 @@ public class ObservationModel : PageModel
     {
         _observationService = observationService;
     }
-    public IActionResult OnPost()
-    {
-        Console.WriteLine("metoden kommer igennem i guess");
-        if(string.IsNullOrWhiteSpace(Name) && string.IsNullOrWhiteSpace(Message)){
-            ModelState.AddModelError(string.Empty, "Enter both an observation and a location.");
-
-            return Page();
-        }
-        Console.WriteLine("jeg er i det mindste her");
-        if(!string.IsNullOrWhiteSpace(Name)){
-            Console.WriteLine(ID+" "+Name + " her er jeg");
-            _observationService.StoreProposal(ID,Name);
-        }
-        return RedirectToPage();
-    }
-
     public IActionResult OnGet(int id)
     {
-        ID=id;
         var observation = _observationService.GetObservation(id);
         if (observation is null)
         {
@@ -47,4 +37,22 @@ public class ObservationModel : PageModel
         _Taxon = _observationService.GetTaxonForObservation(id);
         return Page();
     }
+    public IActionResult OnPost(int id)
+    {
+        
+        if(string.IsNullOrWhiteSpace(Message)&&string.IsNullOrWhiteSpace(Comment)){
+            Console.WriteLine("jeg er her");
+            ModelState.AddModelError(string.Empty, "Enter either a taxon or a comment.");
+
+            return RedirectToPage();
+        }
+        Console.WriteLine("jeg er i det mindste her");
+        if(!string.IsNullOrWhiteSpace(Message)){
+            Console.WriteLine(id+" "+Message + " her er jeg");
+            _observationService.StoreProposal(id,Message);
+        }
+        return RedirectToPage();
+    }
+
+    
 }
