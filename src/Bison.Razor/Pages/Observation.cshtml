@@ -51,7 +51,17 @@
     }
     
     <h3>Comments</h3>
-    
+    @if(User.Identity.IsAuthenticated){
+        <form method="post">
+        <div class="observationbox">    
+        <h3>What did you see, @(User.Identity.Name)?</h3>
+        <div asp-validation-summary="All"></div>
+        <label asp-for="Comment"></label>
+        <input asp-for="Comment" required/>
+        <button type="submit">Post comment</button>
+        </div>
+    </form>
+        }
     @if (Model.Comments.Count > 0)
     {
         <ul>

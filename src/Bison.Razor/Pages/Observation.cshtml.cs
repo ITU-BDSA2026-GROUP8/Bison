@@ -51,6 +51,10 @@ public class ObservationModel : PageModel
             Console.WriteLine(id+" "+Message + " her er jeg");
             _observationService.StoreProposal(id,Message);
         }
+        if (!string.IsNullOrWhiteSpace(Comment))
+        {
+            _observationService.StoreComment(Environment.UserName,Comment,id);
+        }
         return RedirectToPage();
     }
 
