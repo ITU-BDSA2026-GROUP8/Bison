@@ -15,6 +15,8 @@ public interface IObservationService
     public List<CommentDTO> GetCommentsForObservation(int id);
     public TaxonDTO? GetTaxonForObservation(int Id);
     public void StoreProposal(int id, string Name);
+    public void StoreComment(string author,string message, int Oid);
+
 }
 public class ObservationService : IObservationService
 {
@@ -55,4 +57,8 @@ public class ObservationService : IObservationService
     {
         _repo.StoreProposal(id,name);
     }
+    public void StoreComment(string author,string message, int Oid)
+    {
+        _repo.StoreComment(author,message,Oid);
+    } 
 }
