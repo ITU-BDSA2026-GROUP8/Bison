@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.Cookies;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -29,7 +30,19 @@ options.Password.RequireNonAlphanumeric=false;
 options.Password.RequireLowercase=false;
 })
 .AddEntityFrameworkStores<BisonDBContext>() ;
-
+builder.Services.AddAuthentication(options =>
+{
+options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme ;
+options.DefaultSignInScheme= CookieAuthenticationDefaults.AuthenticationScheme ;
+options.DefaultChallengeScheme = "GitHub";
+})
+.AddCookie()
+.AddGitHub(o =>
+{
+o.ClientId = builder.Configuration["authentication:github:clientId"];
+o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
+o.CallbackPath = "/signin-github";
+});
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -49,6 +62,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseAuthentication();
+app.UseAuthorization();
+//app.UseSession();
 
 app.UseRouting();
 
