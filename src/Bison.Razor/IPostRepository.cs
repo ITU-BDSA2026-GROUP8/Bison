@@ -124,16 +124,15 @@ public class PostRepository : IPostRepository
             if (ob.Id == id)
             {
                 observation=ob;
-                break;
             }
         }
         foreach(Taxon tx in taxons){
-            if(tx.DanishVernacularName.Equals(danishVernacularName)){
+            if(tx.DanishVernacularName==danishVernacularName){
         observation.Taxon=tx;
         break;}
+       }
         _context.SaveChanges();
 
-        }
     }
     public List<CommentDTO> GetCommentsForObservation(int Id)
     {
