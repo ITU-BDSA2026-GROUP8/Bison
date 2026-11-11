@@ -1,16 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using Bison.Core.Models;
 using Bison.Core.DTOs;
 using Bison.Core.Services;
+using Microsoft.EntityFrameworkCore;
+using Bison.Core.Models;
 
-// Service that filters observations by taxon.
-// The Razor pages use this instead of calling the verified Dafny code directly.
-public interface IObservationFilterService
-{
-    // Returns the observations (as PostDTOs) whose taxon has the given Danish name or is a subtaxon of it.
-    // Observations without a taxon are left out. Returns an empty list if no taxon has that name.
-    List<PostDTO> GetObservationsByTaxon(string taxonName);
-}
+namespace Bison.Infrastructure.Services;
 
 public class ObservationFilterService : IObservationFilterService
 {
