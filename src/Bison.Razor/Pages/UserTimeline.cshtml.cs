@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Bison.Core.Models;
 using Bison.Core.DTOs;
+using Bison.Core.Services;
 
 
 namespace Bison.Razor.Pages;

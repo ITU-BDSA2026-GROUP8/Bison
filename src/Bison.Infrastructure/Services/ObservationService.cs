@@ -1,22 +1,9 @@
-using Bison.Core.Models;
-using Microsoft.EntityFrameworkCore;
+
 using Bison.Core.DTOs;
 using Bison.Core.Repositories;
+using Bison.Core.Services;
 
-
-public interface IObservationService
-{
-    public List<PostDTO> GetObservations(int page);
-
-    public PostDTO? GetObservation(int id);
-
-    public List<PostDTO> GetObservationsFromAuthor(string author, int page);
-
-    public void StoreObservation(string author, string message, string location);
-
-    public List<CommentDTO> GetCommentsForObservation(int id);
-    public TaxonDTO? GetTaxonForObservation(int Id);
-}
+namespace Bison.Infrastructure.Services;
 public class ObservationService : IObservationService
 {
     private readonly IPostRepository _repo;
