@@ -1,5 +1,7 @@
 using Bison.Core.Models;
 using Microsoft.EntityFrameworkCore;
+using Bison.Core.DTOs;
+using Bison.Core.Repositories;
 
 
 public interface IObservationService

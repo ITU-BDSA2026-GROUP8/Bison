@@ -1,4 +1,6 @@
 ﻿namespace Bison.Post.Tests;
+using Bison.Core.DTOs;
+using Bison.Infrastructure.Repositories;
 
 using Bison.Razor;
 using Bison.Core.Models;

@@ -1,43 +1,10 @@
+
+using Bison.Core.DTOs;
 using Bison.Core.Models;
+using Bison.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-
-public interface IPostRepository
-{
-    public List<PostDTO> GetObservations(int page);
-
-    public PostDTO GetObservation(int id);
-
-    public List<PostDTO> GetObservationsFromAuthor(string author, int page);
-
-    public void StoreObservation(string author, string message, string location);
-    public List<CommentDTO> GetCommentsForObservation(int Id);
-    public TaxonDTO? GetTaxonForObservation(int Id);
-}
-
-public class PostDTO
-{
-    public string Text { get; set; } = string.Empty;
-
-    public Author Author { get; set; } = null!;
-
-    public DateTime Timestamp { get; set; }
-
-    public int Id { get; set; }
-}
-public class CommentDTO
-{
-    public string Text { get; set; } = string.Empty;
-
-    public int Id { get; set; }
-}
-public class TaxonDTO
-{
-    public string? TaxonId { get; set; }
-
-    public string? DanishVernacularName { get; set; }
-}
-
+namespace Bison.Infrastructure.Repositories;
 public class PostRepository : IPostRepository
 {
     DTOHelper helper = new DTOHelper();
@@ -141,35 +108,5 @@ public class PostRepository : IPostRepository
         var temp = helper.createTaxonDTO(obs.Taxon.TaxonId,
         obs.Taxon.DanishVernacularName);
         return temp;
-    }
-}
-
-//A Helper class containing methods to ensure that DTOs are made correctly
-public class DTOHelper
-{
-    public PostDTO createPostDTO(string text, Author author, DateTime timeStamp, int id)
-    {
-        var DTO = new PostDTO();
-        DTO.Author = author;
-        DTO.Text = text;
-        DTO.Timestamp = timeStamp;
-        DTO.Id = id;
-        return DTO;
-    }
-
-    public CommentDTO createCommentDTO(string text, int Id)
-    {
-        var CDTO = new CommentDTO();
-        CDTO.Text = text;
-        CDTO.Id = Id;
-        return CDTO;
-    }
-
-    public TaxonDTO createTaxonDTO(string TaxonId, string DanishVernacularName)
-    {
-        var TDTO = new TaxonDTO();
-        TDTO.TaxonId = TaxonId;
-        TDTO.DanishVernacularName = DanishVernacularName;
-        return TDTO;
     }
 }
