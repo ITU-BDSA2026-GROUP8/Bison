@@ -1,6 +1,6 @@
 using Bison.Core.DTOs;
 
-namespace Bison.Core.Services;
+namespace Bison.Infrastructure.Services;
 
 public interface IObservationService
 {
