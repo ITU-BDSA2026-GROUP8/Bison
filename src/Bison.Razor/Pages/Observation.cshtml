@@ -1,5 +1,6 @@
 @page "/ob/{id:int}"
 @model Bison.Razor.Pages.ObservationModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @{
     ViewData["Title"] = "Observation";
     Layout = "Shared/_Layout";
@@ -21,7 +22,21 @@
         @Model.Observation.Text
         <small>&mdash; @Model.Observation.Timestamp</small>
     </p>
+@if(Model._Taxon==null){
     <h4>Taxonomies</h4>
+    @if(User.Identity.IsAuthenticated){
+        <form method="post">
+        <div class="observationbox">    
+        <h3>What did you see, @(User.Identity.Name)?</h3>
+        <div asp-validation-summary="All"></div>
+        <label asp-for="Message"></label>
+        <input asp-for="Message" required/>
+        <button type="submit">Post proposal</button>
+        </div>
+    </form>
+        }
+
+    }
 @if (Model._Taxon!=null)
     {
         <ul>
@@ -36,7 +51,17 @@
     }
     
     <h3>Comments</h3>
-    
+    @if(User.Identity.IsAuthenticated){
+        <form method="post">
+        <div class="observationbox">    
+        <h3>What did you see, @(User.Identity.Name)?</h3>
+        <div asp-validation-summary="All"></div>
+        <label asp-for="Comment"></label>
+        <input asp-for="Comment" required/>
+        <button type="submit">Post comment</button>
+        </div>
+    </form>
+        }
     @if (Model.Comments.Count > 0)
     {
         <ul>

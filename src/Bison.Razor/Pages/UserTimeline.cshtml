@@ -8,6 +8,7 @@
 
 <div>
     <h2> @routeName's Observations </h2>
+        
     <form method="get">
         <input type="hidden" name="page" value="@(Math.Max(1, Model.CurrentPage - 1))" />
         <button type="submit" disabled="@(Model.CurrentPage <= 1)">previous page</button>

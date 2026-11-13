@@ -38,4 +38,12 @@ public class ObservationService : IObservationService
     {
         return _repo.GetTaxonForObservation(Id);
     }
+    public void StoreProposal(int id,string name)
+    {
+        _repo.StoreProposal(id,name);
+    }
+    public void StoreComment(string author,string message, int Oid)
+    {
+        _repo.StoreComment(author,message,Oid);
+    } 
 }

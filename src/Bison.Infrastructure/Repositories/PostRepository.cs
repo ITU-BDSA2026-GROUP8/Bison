@@ -30,6 +30,7 @@ public class PostRepository : IPostRepository
 
         return DTOList;
     }
+    
     public PostDTO? GetObservation(int id)
     {
         var obs = _context.Observations
@@ -59,7 +60,32 @@ public class PostRepository : IPostRepository
         }
         return DTOList;
     }
+public void StoreComment(string author,string message, int Oid)
+    {
+        var postAuthor=_context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
+        if (postAuthor is null)
+        {
+            postAuthor = new Author { UserName = author, Email = string.Empty };
+            _context.Authors.Add(postAuthor);
+        }
+        Observation obs=null;
+        foreach(Observation ob in _context.Observations)
+        {
+            if (ob.Id == Oid)
+            {
+                obs=ob;
+            }
+        }
+        _context.Comments.Add(new Bison.Core.Models.Comment        {
+            Observation=obs,
+            Author = postAuthor,
+            Text = message,
+            Timestamp = DateTime.UtcNow}
+        );
 
+        
+        _context.SaveChanges();
+    } 
     public void StoreObservation(string author, string message, string location)
     {
 
@@ -76,6 +102,28 @@ public class PostRepository : IPostRepository
             Timestamp = DateTime.UtcNow,
             Location = location
         });
+        _context.SaveChanges();
+
+    }
+    public void StoreProposal(int id,string danishVernacularName)
+    {
+        var obs = _context.Observations;
+        var taxons=_context.taxons;
+        Observation observation=null;
+        foreach(Observation ob in obs)
+        {
+            if (ob.Id == id)
+            {
+                observation=ob;
+                break;
+            }
+        }
+        foreach(Taxon tx in taxons){
+            if(tx.DanishVernacularName==danishVernacularName){
+        observation.Taxon=tx;
+        break;}
+
+       }
         _context.SaveChanges();
 
     }
