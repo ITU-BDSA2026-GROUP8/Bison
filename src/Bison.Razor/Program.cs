@@ -2,7 +2,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Bison.Core.Repositories;
+using Bison.Infrastructure.Repositories;
+using Bison.Core.Services;
+using Bison.Infrastructure.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -30,18 +36,11 @@ options.Password.RequireNonAlphanumeric=false;
 options.Password.RequireLowercase=false;
 })
 .AddEntityFrameworkStores<BisonDBContext>() ;
-builder.Services.AddAuthentication(options =>
-{
-options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme ;
-options.DefaultSignInScheme= CookieAuthenticationDefaults.AuthenticationScheme ;
-options.DefaultChallengeScheme = "GitHub";
-})
-.AddCookie()
+builder.Services.AddAuthentication()
 .AddGitHub(o =>
 {
 o.ClientId = builder.Configuration["authentication:github:clientId"];
 o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
-o.CallbackPath = "/signin-github";
 });
 var app = builder.Build();
 
@@ -62,7 +61,6 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseAuthentication();
 app.UseAuthorization();
 //app.UseSession();
 
