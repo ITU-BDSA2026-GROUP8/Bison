@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Bison.Core.Models;
 using Bison.Core.DTOs;
-using Bison.Core.Services;
-using System.ComponentModel.DataAnnotations;
+using Bison.Infrastructure.Services;
 
 namespace Bison.Razor.Pages;
 

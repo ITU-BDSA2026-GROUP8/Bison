@@ -1,5 +1,5 @@
 using Bison.Core.DTOs;
-using Bison.Core.Services;
+using Bison.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Bison.Core.Models;
 

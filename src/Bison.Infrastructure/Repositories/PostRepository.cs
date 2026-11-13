@@ -1,7 +1,6 @@
 
 using Bison.Core.DTOs;
 using Bison.Core.Models;
-using Bison.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bison.Infrastructure.Repositories;
