@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>@ViewData["Title"]</title>
@@ -21,9 +22,9 @@
     <div class=footer>
         Bison &mdash; An ASP.NET Application
     </div>
+    @await RenderSectionAsync("Scripts", required: false)
+
 </div>
 
-
 </body>
-@await RenderSectionAsync("Scripts", required: false)
 </html>

@@ -46,7 +46,7 @@ public class PublicModel : PageModel
             return Page();
         }
 
-        _service.StoreObservation(Environment.UserName, Message, Location);
+        _service.StoreObservation(User.Identity?.Name ?? "Anonymous", Message, Location);
         return RedirectToPage();
     }
 }
