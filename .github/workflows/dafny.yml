@@ -16,7 +16,7 @@ jobs:
           dafny-version: "4.9.0"
 
       - name: Verify Dafny proof
-        run: dafny verify --allow-external-contracts src/Bison.Razor/Verified/Filter.dfy
+        run: dafny verify --allow-external-contracts src/Bison.Infrastructure/Verified/Filter.dfy
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
