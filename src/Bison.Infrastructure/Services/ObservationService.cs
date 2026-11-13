@@ -1,7 +1,6 @@
 
 using Bison.Core.DTOs;
-using Bison.Core.Repositories;
-using Bison.Core.Services;
+using Bison.Infrastructure.Repositories;
 
 namespace Bison.Infrastructure.Services;
 public class ObservationService : IObservationService
