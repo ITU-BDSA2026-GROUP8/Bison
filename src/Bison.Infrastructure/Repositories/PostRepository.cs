@@ -77,15 +77,14 @@ public void StoreComment(string author,string message, int Oid)
                 obs=ob;
             }
         }
-        _context.Comments.Add(new Bison.Razor.Models.Comment
-        {
+        _context.Comments.Add(new Bison.Core.Models.Comment        {
             Observation=obs,
             Author = postAuthor,
             Text = message,
-            Timestamp = DateTime.UtcNow,
-            
+            Timestamp = DateTime.UtcNow}
+        );
 
-        });
+        
         _context.SaveChanges();
     } 
     public void StoreObservation(string author, string message, string location)
