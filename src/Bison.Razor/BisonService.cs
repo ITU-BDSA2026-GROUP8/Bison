@@ -7,6 +7,9 @@ public interface IObservationService
 {
     public List<PostDTO> GetObservations(int page);
 
+
+    public List<CommentDTO> GetCommentsFromAuthor(string Author);
+
     public PostDTO? GetObservation(int id);
 
     public List<PostDTO> GetObservationsFromAuthor(string author, int page);
@@ -28,6 +31,11 @@ public class ObservationService : IObservationService
     public List<PostDTO> GetObservations(int page)
     {
         return _repo.GetObservations(page);
+    }
+
+        public List<CommentDTO> GetCommentsFromAuthor(string Author)
+    {
+        return _repo.GetCommentsFromAuthor(Author);
     }
 
     public PostDTO? GetObservation(int id)
