@@ -39,7 +39,6 @@ public class PostRepository : IPostRepository
         .Where(comment=> comment.Author.UserName.ToString().Equals(Author));
         foreach(Comment comment in com)
         {
-            Console.WriteLine("Jeg er ikke null");
             var temp = helper.createCommentDTO(comment.Text,comment.Id);
             commentDTOs.Add(temp);
             
@@ -102,10 +101,8 @@ public void StoreComment(string author,string message, int Oid)
             Timestamp = DateTime.UtcNow}
         );
         if(postAuthor.UserName!=null){
-        Console.WriteLine("Valid username er "+ postAuthor.UserName.ToString());
-}
-        
-      //  _context.SaveChanges();
+}        
+        _context.SaveChanges();
     } 
     public void StoreObservation(string author, string message, string location)
     {
