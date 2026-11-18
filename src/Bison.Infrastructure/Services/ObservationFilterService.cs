@@ -50,7 +50,8 @@ public class ObservationFilterService : IObservationFilterService
                 Author = o.Author,
                 Text = o.Text,
                 Timestamp = o.Timestamp,
-                Id = o.Id
+                Id = o.Id,
+                ImageUrl = o.ImageUrl
             })
             .ToList();
     }

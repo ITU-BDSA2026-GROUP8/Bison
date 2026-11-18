@@ -14,7 +14,7 @@ public interface IObservationService
 
     public List<PostDTO> GetObservationsFromAuthor(string author, int page);
 
-    public void StoreObservation(string author, string message, string location);
+    public void StoreObservation(string author, string message, string location, string? imageUrl);
 
     public List<CommentDTO> GetCommentsForObservation(int id);
     public TaxonDTO? GetTaxonForObservation(int Id);
@@ -48,9 +48,9 @@ public class ObservationService : IObservationService
         return _repo.GetObservationsFromAuthor(author, page);
     }
 
-    public void StoreObservation(string author, string message, string location)
+    public void StoreObservation(string author, string message, string location, string? imageUrl)
     {
-        _repo.StoreObservation(author, message, location);
+        _repo.StoreObservation(author, message, location, imageUrl);
     }
 
     public List<CommentDTO> GetCommentsForObservation(int id)

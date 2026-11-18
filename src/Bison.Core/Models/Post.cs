@@ -7,4 +7,6 @@ public abstract class Post
     public DateTime Timestamp { get; set; }
 
     public Author Author { get; set; }
+
+    public string? ImageUrl {get; set; }
 }
