@@ -21,7 +21,7 @@ public class PostUnitTest
         var repo = new PostRepository(context);
 
         var malicious = "'; DROP TABLE Observations; --";
-        repo.StoreObservation("hacker", malicious, "Aarhus");
+        repo.StoreObservation("hacker", malicious, "Aarhus", null);
 
         var posts = repo.GetObservations(1);
         Assert.Single(posts);
