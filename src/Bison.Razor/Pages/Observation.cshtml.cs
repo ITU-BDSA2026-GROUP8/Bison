@@ -14,10 +14,11 @@ public class ObservationModel : PageModel
     private readonly IObservationService _observationService;
     
     [BindProperty]
-    [Required]
-        public string Message { get; set; } = string.Empty;
-        [BindProperty]
-        [Required]
+    [StringLength(100)]
+    public string Message { get; set; } = string.Empty;
+        
+    [BindProperty]
+    [StringLength(100)]
     public string Comment { get; set; } = string.Empty;
 
     public PostDTO Observation { get; private set; } = null!;
@@ -42,7 +43,13 @@ public class ObservationModel : PageModel
     }
     public IActionResult OnPost(int id)
     {
-        
+        if (User.Identity?.IsAuthenticated != true)
+        return Challenge();
+
+        if (!ModelState.IsValid)
+        return RedirectToPage();
+
+
         if(string.IsNullOrWhiteSpace(Message)&&string.IsNullOrWhiteSpace(Comment)){
             Console.WriteLine("jeg er her");
             ModelState.AddModelError(string.Empty, "Enter either a taxon or a comment.");
