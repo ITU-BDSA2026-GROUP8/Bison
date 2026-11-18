@@ -12,6 +12,7 @@ public interface IPostRepository
 
     public void StoreObservation(string author, string message, string location);
     public List<CommentDTO> GetCommentsForObservation(int Id);
+    //public List<CommentDTO> GetCommentsFromAuthor(string Author);
     public TaxonDTO? GetTaxonForObservation(int Id);
 
     public void StoreComment(string author, string message, int Oid);
