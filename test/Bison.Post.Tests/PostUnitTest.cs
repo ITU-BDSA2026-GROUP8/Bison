@@ -23,13 +23,15 @@ public class PostUnitTest
         testDTO.Text = "This is a test";
         testDTO.Author = testAuthor;
         testDTO.Timestamp = testDate;
+        testDTO.ImageUrl = null;
 
-        var DTOMadeWithMethod = DTOhelper.createPostDTO("This is a test", testAuthor,new DateTime(2004,9,26),2);
+        var DTOMadeWithMethod = DTOhelper.createPostDTO("This is a test", testAuthor,new DateTime(2004,9,26),2,null);
 
         Assert.Equal(testDTO.Id, DTOMadeWithMethod.Id);
         Assert.Equal(testDTO.Author,DTOMadeWithMethod.Author);    
         Assert.Equal(testDTO.Text,DTOMadeWithMethod.Text);
         Assert.Equal(testDTO.Timestamp,DTOMadeWithMethod.Timestamp);
+        //Assert.Equal(testDTO.ImageUrl,DTOMadeWithMethod.ImageUrl);
     }
     [Fact]
     public async Task CommentDTOGetsMadeCorrectly()
