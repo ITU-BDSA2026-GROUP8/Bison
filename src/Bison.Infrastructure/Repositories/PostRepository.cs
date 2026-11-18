@@ -30,6 +30,25 @@ public class PostRepository : IPostRepository
 
         return DTOList;
     }
+        public List<CommentDTO> GetCommentsFromAuthor(string Author)
+    {   
+        Console.WriteLine(Author);
+        var commentDTOs = new List<CommentDTO>();
+        var com=_context.Comments
+        .Include(comment=>comment.Author)
+        .Where(comment=> comment.Author.UserName.ToString().Equals(Author));
+        foreach(Comment comment in com)
+        {
+            Console.WriteLine("Jeg er ikke null");
+            var temp = helper.createCommentDTO(comment.Text,comment.Id);
+            commentDTOs.Add(temp);
+            
+            
+        }
+        return commentDTOs; 
+        
+    }
+ 
     
     public PostDTO? GetObservation(int id)
     {
@@ -82,9 +101,11 @@ public void StoreComment(string author,string message, int Oid)
             Text = message,
             Timestamp = DateTime.UtcNow}
         );
-
+        if(postAuthor.UserName!=null){
+        Console.WriteLine("Valid username er "+ postAuthor.UserName.ToString());
+}
         
-        _context.SaveChanges();
+      //  _context.SaveChanges();
     } 
     public void StoreObservation(string author, string message, string location)
     {
