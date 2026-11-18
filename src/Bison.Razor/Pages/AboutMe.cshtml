@@ -1,0 +1,71 @@
+@page "/About_me/{Author}"
+@using Bison.Core.DTOs
+@model Bison.Razor.Pages.AboutMeModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    var routeName = HttpContext.GetRouteValue("author");
+    ViewData[index: "Title"] = "Bison";
+    Layout = "Shared/_Layout";
+}
+<div>   
+    <h2>About me</h2>
+    <p>
+        <strong>
+            @if (User.Identity.IsAuthenticated&&User.Identity.Name.Equals(@routeName))
+            {
+                <h3>Username: @User.Identity.Name;</h3>
+                @if(Model.Observations!=null){
+                    @if(Model.Observations.Any()){
+                    @if(Model.Observations.Last().Author.Email!=null&&Model.CurrentPage<2){
+                        <h3>Email: @Model.Observations.First().Author.Email</h3>
+                        }
+                    @if(Model.Observations.First().Author.PhoneNumber!=null&&Model.CurrentPage<2){
+                        <h3>Phone Number: @Model.Observations.First().Author.PhoneNumber</h3>
+                    }
+                    @if(Model.Observations.First().Author.Id!=null&&Model.CurrentPage<2){
+                        <h3>User ID: @Model.Observations.First().Author.Id</h3>
+                    }
+                    <h3>Observations</h3>
+                    
+                @foreach(var obs in Model.Observations)
+                {
+                    
+                        <li>
+                    <p>
+                        <strong>
+                            <a href="/@obs.Author.UserName">@obs.Author.UserName</a>
+                        </strong>
+                        @obs.Text
+                        <small>&mdash; @obs.Timestamp</small>
+                       
+                        <a href="/ob/@obs.Id">View observation details</a>
+                        
+                    </p>
+                    
+                </li>
+                 }
+                }
+                    }
+                    @if(Model.Comments!=null){
+                        <h3>Comments</h3>
+                        @foreach(var comment in Model.Comments)
+                        {
+                            <li>
+                                <p>
+                                    @comment.Text    
+                                    <a href="/ob/@comment.Id">View observation details</a>
+                                </p>
+                            </li>
+                        }
+                    }
+                   
+            }
+            else
+            {
+                <h3> Only authenticated users can se this page</h3>
+            }
+
+        </strong>
+    </p>
+
+</div>

@@ -23,6 +23,10 @@ public class ObservationService : IObservationService
     {
         return _repo.GetObservationsFromAuthor(author, page);
     }
+    public List<CommentDTO> GetCommentsFromAuthor(string Author)
+    {
+        return _repo.GetCommentsFromAuthor(Author);
+    }
 
     public void StoreObservation(string author, string message, string location)
     {
