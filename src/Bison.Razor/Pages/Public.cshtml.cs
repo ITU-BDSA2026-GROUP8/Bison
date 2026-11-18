@@ -24,6 +24,9 @@ public class PublicModel : PageModel
     [Required]
     public string Location { get; set; } = string.Empty;
 
+    [BindProperty]
+    public string? ImageUrl {get; set; }
+
     public PublicModel(IObservationService service, IObservationFilterService filter)
     {
         _service = service;
@@ -49,7 +52,7 @@ public class PublicModel : PageModel
             return Page();
         }
 
-        _service.StoreObservation(User.Identity?.Name ?? "Anonymous", Message, Location);
+        _service.StoreObservation(User.Identity?.Name ?? "Anonymous", Message, Location, ImageUrl);
         return RedirectToPage();
     }
 }
