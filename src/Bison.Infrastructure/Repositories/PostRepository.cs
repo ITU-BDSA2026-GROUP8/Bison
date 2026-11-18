@@ -24,7 +24,7 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id);
+            observation.Timestamp,observation.Id,observation.ImageUrl);
             DTOList.Add(temp);
         }
 
@@ -38,7 +38,7 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == id);
 
         if (obs == null) return null;
-        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id);
+        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id,obs.ImageUrl);
         return temp;
     }
 
@@ -55,7 +55,7 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id);
+            observation.Timestamp,observation.Id,observation.ImageUrl);
             DTOList.Add(temp);
         }
         return DTOList;
@@ -86,7 +86,7 @@ public void StoreComment(string author,string message, int Oid)
         
         _context.SaveChanges();
     } 
-    public void StoreObservation(string author, string message, string location)
+    public void StoreObservation(string author, string message, string location, string? imageUrl)
     {
 
         var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
@@ -100,7 +100,8 @@ public void StoreComment(string author,string message, int Oid)
             Author = postAuthor,
             Text = message,
             Timestamp = DateTime.UtcNow,
-            Location = location
+            Location = location,
+            ImageUrl = imageUrl
         });
         _context.SaveChanges();
 

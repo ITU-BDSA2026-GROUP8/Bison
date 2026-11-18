@@ -10,7 +10,7 @@ public interface IPostRepository
 
     public List<PostDTO> GetObservationsFromAuthor(string author, int page);
 
-    public void StoreObservation(string author, string message, string location);
+    public void StoreObservation(string author, string message, string location, string? imageUrl);
     public List<CommentDTO> GetCommentsForObservation(int Id);
     public TaxonDTO? GetTaxonForObservation(int Id);
 

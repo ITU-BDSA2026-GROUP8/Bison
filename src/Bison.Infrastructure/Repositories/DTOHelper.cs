@@ -6,13 +6,14 @@ namespace Bison.Infrastructure.Repositories;
 
 public class DTOHelper
 {
-    public PostDTO createPostDTO(string text, Author author, DateTime timeStamp, int id)
+    public PostDTO createPostDTO(string text, Author author, DateTime timeStamp, int id, string? imageUrl)
     {
         var DTO = new PostDTO();
         DTO.Author = author;
         DTO.Text = text;
         DTO.Timestamp = timeStamp;
         DTO.Id = id;
+        DTO.ImageUrl = imageUrl;
         return DTO;
     }
 
