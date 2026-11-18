@@ -1,12 +1,32 @@
 ﻿namespace Bison.Post.Tests;
 using Bison.Core.DTOs;
 using Bison.Infrastructure.Repositories;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 using Bison.Razor;
 using Bison.Core.Models;
 
 public class PostUnitTest
 {
+
+    [Fact]
+    public void StoreObservation_WithSqlInjection_IsStoredAsPlainText()
+    {
+        using var connection = new SqliteConnection("Filename=:memory:");
+        connection.Open();
+        var options = new DbContextOptionsBuilder<BisonDBContext>().UseSqlite(connection).Options;
+        using var context = new BisonDBContext(options);
+        context.Database.EnsureCreated();
+        var repo = new PostRepository(context);
+
+        var malicious = "'; DROP TABLE Observations; --";
+        repo.StoreObservation("hacker", malicious, "Aarhus");
+
+        var posts = repo.GetObservations(1);
+        Assert.Single(posts);
+        Assert.Equal(malicious, posts[0].Text);
+    }
 
     [Fact]
     public async Task PostDTOGetsMadeCorrectly()

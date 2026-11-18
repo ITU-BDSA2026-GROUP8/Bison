@@ -18,10 +18,12 @@ public class PublicModel : PageModel
 
     [BindProperty]
     [Required]
+    [StringLength(500)]
     public string Message { get; set; } = string.Empty;
 
     [BindProperty]
     [Required]
+    [StringLength(100)]
     public string Location { get; set; } = string.Empty;
 
     [BindProperty]
@@ -44,15 +46,16 @@ public class PublicModel : PageModel
 
     public IActionResult OnPost()
     {
-        Console.WriteLine("Public observation POST handler reached.");
-        if (string.IsNullOrWhiteSpace(Message) || string.IsNullOrWhiteSpace(Location))
-        {
-            ModelState.AddModelError(string.Empty, "Enter both an observation and a location.");
-            Observations = _service.GetObservations(1);
-            return Page();
-        }
+         if (User.Identity?.IsAuthenticated != true)
+        return Challenge();   // sender brugeren til login
 
-        _service.StoreObservation(User.Identity?.Name ?? "Anonymous", Message, Location, ImageUrl);
-        return RedirectToPage();
+    if (!ModelState.IsValid)
+    {
+        Observations = _service.GetObservations(1);
+        return Page();
+    }
+
+    _service.StoreObservation(User.Identity.Name!, Message, Location, ImageUrl);
+    return RedirectToPage();
     }
 }
