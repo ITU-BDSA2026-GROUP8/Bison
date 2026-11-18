@@ -18,10 +18,12 @@ public class PublicModel : PageModel
 
     [BindProperty]
     [Required]
+    [StringLength(500)]
     public string Message { get; set; } = string.Empty;
 
     [BindProperty]
     [Required]
+    [StringLength(100)]
     public string Location { get; set; } = string.Empty;
 
     public PublicModel(IObservationService service, IObservationFilterService filter)
