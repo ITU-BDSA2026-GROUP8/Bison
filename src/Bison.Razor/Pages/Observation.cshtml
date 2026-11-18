@@ -23,6 +23,8 @@
         <small>&mdash; @Model.Observation.Timestamp</small>
     </p>
 
+    <p>ImageUrl: @Model.Observation.ImageUrl</p>
+    
     @if (!string.IsNullOrEmpty(Model.Observation.ImageUrl))
     {
     <img src="@Model.Observation.ImageUrl"

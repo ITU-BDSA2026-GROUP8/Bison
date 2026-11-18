@@ -8,7 +8,6 @@ public class PostDTO
     public Author Author { get; set; } = null!;
     public DateTime Timestamp { get; set; }
     public int Id { get; set; }
-
     public string? ImageUrl {get; set; }
 }
 
