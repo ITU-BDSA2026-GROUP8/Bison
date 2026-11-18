@@ -15,11 +15,11 @@ public class ObservationModel : PageModel
     
     [BindProperty]
     [StringLength(100)]
-    public string Message { get; set; } = string.Empty;
+    public string? Message { get; set; } = string.Empty;
         
     [BindProperty]
     [StringLength(100)]
-    public string Comment { get; set; } = string.Empty;
+    public string? Comment { get; set; } = string.Empty;
 
     public PostDTO Observation { get; private set; } = null!;
     public List<CommentDTO> Comments { get; private set; } = [];
