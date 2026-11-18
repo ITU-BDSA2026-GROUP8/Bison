@@ -20,6 +20,11 @@ public class XssTests
 
         await using var factory = new WebApplicationFactory<Program>().WithWebHostBuilder(builder =>
         {
+
+        // Dummy GitHub OAuth values so the app can start in CI (no real login happens)
+        builder.UseSetting("authentication:github:clientId", "test");
+        builder.UseSetting("authentication:github:clientSecret", "test");
+
             builder.ConfigureTestServices(services =>
             {
                 services.RemoveAll<DbContextOptions<BisonDBContext>>();
@@ -42,7 +47,7 @@ public class XssTests
             context.SaveChanges();
         }
 
-        // Fetch the public timeline as a browser would
+        // Fetch the user's timeline as a browser would
         var client = factory.CreateClient();
         var html = await client.GetStringAsync("/hacker");
         // The script must be shown as encoded text, not as a real script tag
