@@ -44,14 +44,11 @@ public class ObservationModel : PageModel
     {
         
         if(string.IsNullOrWhiteSpace(Message)&&string.IsNullOrWhiteSpace(Comment)){
-            Console.WriteLine("jeg er her");
             ModelState.AddModelError(string.Empty, "Enter either a taxon or a comment.");
 
             return RedirectToPage();
         }
-        Console.WriteLine("jeg er i det mindste her");
         if(!string.IsNullOrWhiteSpace(Message)){
-            Console.WriteLine(id+" "+Message + " her er jeg");
             _observationService.StoreProposal(id,Message);
         }
         if (!string.IsNullOrWhiteSpace(Comment))
