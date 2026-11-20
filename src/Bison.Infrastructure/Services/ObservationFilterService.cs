@@ -1,5 +1,5 @@
 using Bison.Core.DTOs;
-using Bison.Core.Services;
+using Bison.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Bison.Core.Models;
 
@@ -50,7 +50,8 @@ public class ObservationFilterService : IObservationFilterService
                 Author = o.Author,
                 Text = o.Text,
                 Timestamp = o.Timestamp,
-                Id = o.Id
+                Id = o.Id,
+                ImageUrl = o.ImageUrl
             })
             .ToList();
     }

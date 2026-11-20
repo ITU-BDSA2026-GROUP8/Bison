@@ -3,7 +3,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Bison.Core.DTOs;
 using Bison.Infrastructure.Services;
-using Bison.Core.Services;
+using Bison.Infrastructure.Services;
 
 namespace Bison.Razor.Tests;
 

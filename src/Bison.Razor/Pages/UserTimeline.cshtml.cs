@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Bison.Core.Models;
 using Bison.Core.DTOs;
-using Bison.Core.Services;
+using Bison.Infrastructure.Services;
 
 
 namespace Bison.Razor.Pages;
@@ -12,6 +12,7 @@ public class UserTimelineModel : PageModel
     private readonly IObservationService _service;
     public List<PostDTO> Observations { get; set; }
     public int CurrentPage { get; private set; } = 1;
+    public List<CommentDTO> Comments{get;set;}
 
     public UserTimelineModel(IObservationService service)
     {
@@ -23,6 +24,7 @@ public class UserTimelineModel : PageModel
     {
         CurrentPage = Math.Max(1, page);
         Observations = _service.GetObservationsFromAuthor(author, CurrentPage);
+        Comments =_service.GetCommentsFromAuthor(author);
         return Page();
     }
 }

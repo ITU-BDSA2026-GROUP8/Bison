@@ -1,13 +1,14 @@
 ﻿@page "/{author}"
 @model Bison.Razor.Pages.UserTimelineModel
 @{
-    ViewData["Title"] = "Bison";
+    ViewData[index: "Title"] = "Bison";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
 }
 
 <div>
     <h2> @routeName's Observations </h2>
+        
     <form method="get">
         <input type="hidden" name="page" value="@(Math.Max(1, Model.CurrentPage - 1))" />
         <button type="submit" disabled="@(Model.CurrentPage <= 1)">previous page</button>
@@ -29,6 +30,7 @@
                         </strong>
                         @ob.Text
                         <small>&mdash; @ob.Timestamp</small>
+                        <a href="/ob/@ob.Id">View observation details</a>
                     </p>
                 </li>
             }

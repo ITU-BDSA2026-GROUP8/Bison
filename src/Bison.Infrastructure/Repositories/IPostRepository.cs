@@ -1,6 +1,6 @@
 using Bison.Core.DTOs;
 
-namespace Bison.Core.Repositories;
+namespace Bison.Infrastructure.Repositories;
 
 public interface IPostRepository
 {
@@ -10,7 +10,11 @@ public interface IPostRepository
 
     public List<PostDTO> GetObservationsFromAuthor(string author, int page);
 
-    public void StoreObservation(string author, string message, string location);
+    public void StoreObservation(string author, string message, string location, string? imageUrl);
     public List<CommentDTO> GetCommentsForObservation(int Id);
+    public List<CommentDTO> GetCommentsFromAuthor(string Author);
     public TaxonDTO? GetTaxonForObservation(int Id);
+
+    public void StoreComment(string author, string message, int Oid);
+    public void StoreProposal(int id,string name);
 }

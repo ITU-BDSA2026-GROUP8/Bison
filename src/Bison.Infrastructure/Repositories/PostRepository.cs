@@ -1,7 +1,6 @@
 
 using Bison.Core.DTOs;
 using Bison.Core.Models;
-using Bison.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bison.Infrastructure.Repositories;
@@ -25,12 +24,31 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id);
+            observation.Timestamp,observation.Id,observation.ImageUrl);
             DTOList.Add(temp);
         }
 
         return DTOList;
     }
+        public List<CommentDTO> GetCommentsFromAuthor(string Author)
+    {   
+        Console.WriteLine(Author);
+        var commentDTOs = new List<CommentDTO>();
+        var com=_context.Comments
+        .Include(comment=>comment.Author)
+        .Where(comment=> comment.Author.UserName.ToString().Equals(Author));
+        foreach(Comment comment in com)
+        {
+            var temp = helper.createCommentDTO(comment.Text,comment.Id);
+            commentDTOs.Add(temp);
+            
+            
+        }
+        return commentDTOs; 
+        
+    }
+ 
+    
     public PostDTO? GetObservation(int id)
     {
         var obs = _context.Observations
@@ -38,7 +56,7 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == id);
 
         if (obs == null) return null;
-        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id);
+        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id,obs.ImageUrl);
         return temp;
     }
 
@@ -55,13 +73,38 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id);
+            observation.Timestamp,observation.Id,observation.ImageUrl);
             DTOList.Add(temp);
         }
         return DTOList;
     }
-
-    public void StoreObservation(string author, string message, string location)
+public void StoreComment(string author,string message, int Oid)
+    {
+        var postAuthor=_context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
+        if (postAuthor is null)
+        {
+            postAuthor = new Author { UserName = author, Email = string.Empty };
+            _context.Authors.Add(postAuthor);
+        }
+        Observation obs=null;
+        foreach(Observation ob in _context.Observations)
+        {
+            if (ob.Id == Oid)
+            {
+                obs=ob;
+            }
+        }
+        _context.Comments.Add(new Bison.Core.Models.Comment        {
+            Observation=obs,
+            Author = postAuthor,
+            Text = message,
+            Timestamp = DateTime.UtcNow}
+        );
+        if(postAuthor.UserName!=null){
+}        
+        _context.SaveChanges();
+    } 
+    public void StoreObservation(string author, string message, string location, string? imageUrl)
     {
 
         var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
@@ -75,8 +118,31 @@ public class PostRepository : IPostRepository
             Author = postAuthor,
             Text = message,
             Timestamp = DateTime.UtcNow,
-            Location = location
+            Location = location,
+            ImageUrl = imageUrl
         });
+        _context.SaveChanges();
+
+    }
+    public void StoreProposal(int id,string danishVernacularName)
+    {
+        var obs = _context.Observations;
+        var taxons=_context.taxons;
+        Observation observation=null;
+        foreach(Observation ob in obs)
+        {
+            if (ob.Id == id)
+            {
+                observation=ob;
+                break;
+            }
+        }
+        foreach(Taxon tx in taxons){
+            if(tx.DanishVernacularName==danishVernacularName){
+        observation.Taxon=tx;
+        break;}
+
+       }
         _context.SaveChanges();
 
     }

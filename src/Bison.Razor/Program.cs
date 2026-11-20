@@ -1,12 +1,9 @@
 using System.Runtime.CompilerServices;
+using Bison.Infrastructure.Repositories;
+using Bison.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Bison.Core.Repositories;
-using Bison.Infrastructure.Repositories;
-using Bison.Core.Services;
-using Bison.Infrastructure.Services;
 
 [assembly: InternalsVisibleTo("end_to_endTest")]
 
@@ -75,3 +72,5 @@ app.UseAuthorization();
 app.MapRazorPages();
 
 app.Run();
+
+public partial class Program { }

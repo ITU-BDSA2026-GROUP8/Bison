@@ -1,7 +1,6 @@
 
 using Bison.Core.DTOs;
-using Bison.Core.Repositories;
-using Bison.Core.Services;
+using Bison.Infrastructure.Repositories;
 
 namespace Bison.Infrastructure.Services;
 public class ObservationService : IObservationService
@@ -24,10 +23,14 @@ public class ObservationService : IObservationService
     {
         return _repo.GetObservationsFromAuthor(author, page);
     }
-
-    public void StoreObservation(string author, string message, string location)
+    public List<CommentDTO> GetCommentsFromAuthor(string Author)
     {
-        _repo.StoreObservation(author, message, location);
+        return _repo.GetCommentsFromAuthor(Author);
+    }
+
+    public void StoreObservation(string author, string message, string location, string? imageUrl)
+    {
+        _repo.StoreObservation(author, message, location, imageUrl);
     }
 
     public List<CommentDTO> GetCommentsForObservation(int id)
@@ -39,4 +42,12 @@ public class ObservationService : IObservationService
     {
         return _repo.GetTaxonForObservation(Id);
     }
+    public void StoreProposal(int id,string name)
+    {
+        _repo.StoreProposal(id,name);
+    }
+    public void StoreComment(string author,string message, int Oid)
+    {
+        _repo.StoreComment(author,message,Oid);
+    } 
 }
