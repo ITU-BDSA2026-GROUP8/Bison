@@ -23,7 +23,7 @@ jobs:
         run: pwsh test/PlaywrightTests/bin/Debug/net8.0/playwright.ps1 install --with-deps chromium
       - name: Test
         run: |
-              export GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
-              export GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
+              export Authentication__GitHub__ClientId="${{ secrets.GITHUBCLIENTID }}"
+              export Authentication__GitHub__ClientSecret="${{ secrets.GITHUBCLIENTSECRET }}"
               dotnet test --no-build --verbosity normal
 
