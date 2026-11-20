@@ -264,6 +264,10 @@ button:hover {
     background-color: #8b4949;
 }
 
+.page-button {
+    width: 160px;
+}
+
 ul.nav {
     list-style-type: none;
     margin: 0;

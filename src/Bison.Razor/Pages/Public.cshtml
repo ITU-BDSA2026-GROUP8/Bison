@@ -19,18 +19,18 @@
         <input asp-for="Location" required />
         <label asp-for="ImageUrl"></label>
         <input asp-for="ImageUrl" />
-        <button type="submit">Post observation</button>
+        <button type="submit" class="page-button">Post observation</button>
             </div>
         </form>
     }
     <form method="get">
         <input type="hidden" name="page" value="@(Math.Max(1, Model.CurrentPage - 1))" />
-        <button type="submit" disabled="@(Model.CurrentPage <= 1)">previous page</button>
+        <button type="submit" class="page-button" disabled="@(Model.CurrentPage <= 1)">previous page</button>
     </form>
 
     <form method="get">
         <input type="hidden" name="page" value="@(Model.CurrentPage + 1)" />
-        <button type="submit">next page</button>
+        <button type="submit" class="page-button">next page</button>
     </form>
 
     @if (Model.Observations.Any())
