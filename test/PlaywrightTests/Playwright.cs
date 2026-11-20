@@ -13,10 +13,12 @@ public class Playwright : PageTest
     [SetUp]
     public async Task Setup()
     {
+        var projectPath = Path.GetFullPath(Path.Combine
+        (AppContext.BaseDirectory, "../../../../../src/Bison.Razor"));
         _serverProcess = Process.Start(new ProcessStartInfo
         {
             FileName = "dotnet",
-            Arguments = "run --project ../../src/Bison.Razor --no-build --urls http://localhost:5273",
+            Arguments = $"run --project \"{projectPath}\" --no-build --urls http://localhost:5273",
             UseShellExecute = false,
         })!;
 
@@ -30,18 +32,17 @@ public class Playwright : PageTest
         
     }
 
-    [TearDown]
-    public async Task CleanUp()
-    {
-        _serverProcess.Kill();
-        _serverProcess.Dispose();
-    }
-
     [Test]
     public async Task goingToLinkGetsYouToPublicTimeline()
     {
-        
+        await Page.GotoAsync("http://localhost:5273");
+        await Expect(Page).ToHaveTitleAsync("Public timeline");
     }
 
-    
+    [TearDown]
+    public async Task CleanUp()
+    {
+        _serverProcess.Kill(entireProcessTree: true);
+        _serverProcess.Dispose();
+    }
 }
