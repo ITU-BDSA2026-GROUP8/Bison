@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -6,6 +7,8 @@ using Bison.Core.Repositories;
 using Bison.Infrastructure.Repositories;
 using Bison.Core.Services;
 using Bison.Infrastructure.Services;
+
+[assembly: InternalsVisibleTo("end_to_endTest")]
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,19 +31,19 @@ builder.Services.AddDbContext<BisonDBContext>(options => options.UseSqlite(conne
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
-options.SignIn.RequireConfirmedAccount = true;
-options.Password.RequireDigit=false;
-options.Password.RequiredLength=6;
-options.Password.RequireUppercase=false;
-options.Password.RequireNonAlphanumeric=false;
-options.Password.RequireLowercase=false;
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireLowercase = false;
 })
-.AddEntityFrameworkStores<BisonDBContext>() ;
+.AddEntityFrameworkStores<BisonDBContext>();
 builder.Services.AddAuthentication()
 .AddGitHub(o =>
 {
-o.ClientId = builder.Configuration["authentication:github:clientId"];
-o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
+    o.ClientId = builder.Configuration["authentication:github:clientId"];
+    o.ClientSecret = builder.Configuration["authentication:github:clientSecret"];
 });
 var app = builder.Build();
 
