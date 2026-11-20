@@ -1,0 +1,14 @@
+@model int
+
+<div class="pagination">
+    <form method="get">
+        <input type="hidden" name="page" value="@(Math.Max(1, Model - 1))" />
+        <button type="submit" class="page-button" disabled="@(Model <= 1)">previous page</button>
+    </form>
+
+    <form method="get">
+        <input type="hidden" name="page" value="@(Model + 1)" />
+        <button type="submit" class="page-button">next page</button>
+    </form>
+</div>
+
