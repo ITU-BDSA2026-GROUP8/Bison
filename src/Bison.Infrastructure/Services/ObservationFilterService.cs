@@ -55,4 +55,13 @@ public class ObservationFilterService : IObservationFilterService
             })
             .ToList();
     }
+
+// Returns a list of all taxon names that have a Danish vernacular name, sorted alphabetically and without duplicates.
+    public List<string> GetTaxonNames() =>
+    _context.taxons
+        .Where(t => t.DanishVernacularName != null && t.DanishVernacularName != "")
+        .Select(t => t.DanishVernacularName)
+        .Distinct()
+        .OrderBy(name => name)
+        .ToList();
 }
