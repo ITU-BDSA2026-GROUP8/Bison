@@ -296,3 +296,9 @@ ul.nav li a:hover {
     display: flex;
     justify-content: space-between;
 }
+
+.taxon-select {
+    font-size: 12px;
+    font-family: inherit;
+    max-width: 150px;
+}
