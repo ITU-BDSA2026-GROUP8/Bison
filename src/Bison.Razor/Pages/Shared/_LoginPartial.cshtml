@@ -2,14 +2,8 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-@inject Bison.Infrastructure.Services.IObservationFilterService TaxonFilter
-@{
-    var taxonNames = TaxonFilter.GetTaxonNames();
-    var selectedTaxon = Context.Request.Query["taxon"].ToString();
-}
 
 <div class="navigation">
-
 <div>
     @if (SignInManager.IsSignedIn (User))
         {
@@ -17,18 +11,10 @@
         }
 
 <a href="/">Public Observations</a> |
-<form method ="get" action="/">
-    <select name="taxon" class="taxon-select" onchange="this.form.submit()">
-        <option value="">All Taxa</option>
-        @foreach (var taxon in taxonNames)
-        {
-            <option value="@taxon" selected="@(taxon == selectedTaxon ? "selected" : null)"> @taxon</option>
-        }
-    </select>
-</form> |
+
     @if (SignInManager.IsSignedIn (User))
         {
-        <a href="/About_Me/@User.Identity!.Name"> About Me</a> 
+        <a href="/About_Me/@User.Identity!.Name"> About Me</a> <text>|</text>
         <form method="post" asp-area="Identity" asp-page="/Account/Logout"
               asp-route-returnUrl="/" style="display:inline">
             <button type="submit" style="all:unset;cursor:pointer">
