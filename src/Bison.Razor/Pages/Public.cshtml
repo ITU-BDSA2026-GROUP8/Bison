@@ -19,6 +19,17 @@
         <input asp-for="Location" required />
         <label asp-for="ImageUrl"></label>
         <input asp-for="ImageUrl" />
+        <label asp-for="ImageLicense"></label>
+        <select asp-for="ImageLicense">
+            <option value="">Choose Image License</option>
+            <option value="CC BY">CC BY</option>
+            <option value="CC BY-NC">CC BY-NC</option>
+            <option value="CC BY-NC-ND">CC BY-NC-ND</option>
+            <option value="CC BY-NC-SA">CC BY-NC-SA</option>
+            <option value="CC BY-ND">CC BY-ND</option>
+            <option value="CC BY-SA">CC BY-SA</option>
+        </select>
+        
         <button type="submit" class="page-button">Post observation</button>
             </div>
         </form>

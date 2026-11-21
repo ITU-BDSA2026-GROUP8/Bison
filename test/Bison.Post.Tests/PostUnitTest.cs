@@ -21,7 +21,7 @@ public class PostUnitTest
         var repo = new PostRepository(context);
 
         var malicious = "'; DROP TABLE Observations; --";
-        repo.StoreObservation("hacker", malicious, "Aarhus", null);
+        repo.StoreObservation("hacker", malicious, "Aarhus", null, null);
 
         var posts = repo.GetObservations(1);
         Assert.Single(posts);
@@ -45,13 +45,12 @@ public class PostUnitTest
         testDTO.Timestamp = testDate;
         testDTO.ImageUrl = null;
 
-        var DTOMadeWithMethod = DTOhelper.createPostDTO("This is a test", testAuthor,new DateTime(2004,9,26),2,null);
+        var DTOMadeWithMethod = DTOhelper.createPostDTO("This is a test", testAuthor,new DateTime(2004,9,26),2,null,null);
 
         Assert.Equal(testDTO.Id, DTOMadeWithMethod.Id);
         Assert.Equal(testDTO.Author,DTOMadeWithMethod.Author);    
         Assert.Equal(testDTO.Text,DTOMadeWithMethod.Text);
         Assert.Equal(testDTO.Timestamp,DTOMadeWithMethod.Timestamp);
-        //Assert.Equal(testDTO.ImageUrl,DTOMadeWithMethod.ImageUrl);
     }
     [Fact]
     public async Task CommentDTOGetsMadeCorrectly()
