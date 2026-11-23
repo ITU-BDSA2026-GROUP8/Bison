@@ -28,9 +28,9 @@ public class ObservationService : IObservationService
         return _repo.GetCommentsFromAuthor(Author);
     }
 
-    public void StoreObservation(string author, string message, string location, string? imageUrl)
+    public void StoreObservation(string author, string message, string location, string? imageUrl, string? imageLicense)
     {
-        _repo.StoreObservation(author, message, location, imageUrl);
+        _repo.StoreObservation(author, message, location, imageUrl, imageLicense);
     }
 
     public List<CommentDTO> GetCommentsForObservation(int id)

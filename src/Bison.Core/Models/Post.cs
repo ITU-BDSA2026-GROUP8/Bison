@@ -9,4 +9,6 @@ public abstract class Post
     public Author Author { get; set; }
 
     public string? ImageUrl {get; set; }
+
+    public string? ImageLicense { get; set; }
 }

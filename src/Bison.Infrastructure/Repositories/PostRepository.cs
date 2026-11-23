@@ -24,7 +24,7 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id,observation.ImageUrl);
+            observation.Timestamp,observation.Id,observation.ImageUrl,observation.ImageLicense);
             DTOList.Add(temp);
         }
 
@@ -56,7 +56,7 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == id);
 
         if (obs == null) return null;
-        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id,obs.ImageUrl);
+        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id,obs.ImageUrl,obs.ImageLicense);
         return temp;
     }
 
@@ -73,7 +73,7 @@ public class PostRepository : IPostRepository
         foreach (Observation observation in obs)
         {
             var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id,observation.ImageUrl);
+            observation.Timestamp,observation.Id,observation.ImageUrl,observation.ImageLicense);
             DTOList.Add(temp);
         }
         return DTOList;
@@ -104,7 +104,7 @@ public void StoreComment(string author,string message, int Oid)
 }        
         _context.SaveChanges();
     } 
-    public void StoreObservation(string author, string message, string location, string? imageUrl)
+    public void StoreObservation(string author, string message, string location, string? imageUrl, string? imageLicense)
     {
 
         var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
@@ -119,7 +119,8 @@ public void StoreComment(string author,string message, int Oid)
             Text = message,
             Timestamp = DateTime.UtcNow,
             Location = location,
-            ImageUrl = imageUrl
+            ImageUrl = imageUrl,
+            ImageLicense = imageLicense
         });
         _context.SaveChanges();
 
