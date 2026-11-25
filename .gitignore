@@ -166,3 +166,5 @@ MigrationBackup/
 *.msm
 *.msp
 
+# other
+*.DS_Store

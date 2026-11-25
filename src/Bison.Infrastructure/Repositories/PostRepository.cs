@@ -139,7 +139,7 @@ public void StoreComment(string author,string message, int Oid)
             }
         }
         foreach(Taxon tx in taxons){
-            if(tx.DanishVernacularName==danishVernacularName){
+            if(tx.DanishVernacularName.ToLower()==danishVernacularName.ToLower()){
         observation.Taxon=tx;
         break;}
 
