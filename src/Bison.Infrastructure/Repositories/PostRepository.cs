@@ -30,15 +30,15 @@ public class PostRepository : IPostRepository
 
         return DTOList;
     }
-        public List<CommentDTO> GetCommentsFromAuthor(string Author)
+        public List<CommentDTO> GetCommentsFromAuthor(string author)
     {   
-        Console.WriteLine(Author);
         var commentDTOs = new List<CommentDTO>();
         var com=_context.Comments
         .Include(comment=>comment.Author)
-        .Where(comment=> comment.Author.UserName.ToString().Equals(Author));
+        .Where(comment=> comment.Author.UserName ==author);
         foreach(Comment comment in com)
         {
+            Console.WriteLine(comment.Author.UserName.ToString());
             var temp = helper.createCommentDTO(comment.Text,comment.Id);
             commentDTOs.Add(temp);
             
@@ -101,8 +101,8 @@ public void StoreComment(string author,string message, int Oid)
             Timestamp = DateTime.UtcNow}
         );
         if(postAuthor.UserName!=null){
-}        
-        _context.SaveChanges();
+        
+        _context.SaveChanges();}
     } 
     public void StoreObservation(string author, string message, string location, string? imageUrl)
     {
@@ -124,14 +124,28 @@ public void StoreComment(string author,string message, int Oid)
         _context.SaveChanges();
 
     }
-    public void DeleteObservationsFromAuthor(String author)
+    public void DeleteCommentsFromAuthor(string author)
+    {
+        var coms =_context.Comments
+            .Include(comment=>comment.Author)
+            .Where(comment=>comment.Author.UserName==author);
+            foreach(Comment com in coms)
+        {
+            if (com.Author.UserName.ToString() == author)
+            {
+                _context.Remove(com);
+            }
+        }
+        _context.SaveChanges();
+
+    }
+    public void DeleteObservationsFromAuthor(string author)
     {
         var obs =_context.Observations
             .Include(observation => observation.Author)
             .Where(observation => observation.Author.UserName == author);
         foreach(Observation ob in obs)
         {
-            Console.WriteLine(ob.Author.UserName.ToString()+" "+ author);
             if (ob.Author.UserName.ToString() == author)
             {
 

@@ -21,6 +21,8 @@ public interface IObservationService
     public void StoreProposal(int id, string Name);
     public void StoreComment(string author,string message, int Oid);
     public void DeleteObservationsFromAuthor(String Author);
+        public void DeleteCommentsFromAuthor(string author);
+
 
 }
 public class ObservationService : IObservationService
@@ -33,6 +35,11 @@ public class ObservationService : IObservationService
     {
         return _repo.GetObservations(page);
     }
+        public void DeleteCommentsFromAuthor(string author)
+    {
+        _repo.DeleteCommentsFromAuthor(author);
+    }
+
     public void DeleteObservationsFromAuthor(string Author)
     {
         _repo.DeleteObservationsFromAuthor(Author);

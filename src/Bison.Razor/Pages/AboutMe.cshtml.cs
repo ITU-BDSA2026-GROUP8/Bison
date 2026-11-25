@@ -44,14 +44,14 @@ private readonly IObservationService _service;
         {
             Console.WriteLine(author);
              _service.DeleteObservationsFromAuthor(author);
+            _service.DeleteCommentsFromAuthor(author);
+                //_service.DeleteAuthor(author);
 
             var result = await userManager.DeleteAsync(user);
             await signInManager.SignOutAsync();
             if (result.Succeeded)
             {  
 
-                //_service.DeleteCommentsFromAuthor(author);
-                //_service.DeleteAuthor(author);
                 return RedirectToPage();
             }
 

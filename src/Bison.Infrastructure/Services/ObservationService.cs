@@ -35,6 +35,11 @@ public class ObservationService : IObservationService
     {
         _repo.StoreObservation(author, message, location, imageUrl);
     }
+        public void DeleteCommentsFromAuthor(string author)
+    {
+        _repo.DeleteCommentsFromAuthor(author);
+    }
+
 
     public List<CommentDTO> GetCommentsForObservation(int id)
     {
