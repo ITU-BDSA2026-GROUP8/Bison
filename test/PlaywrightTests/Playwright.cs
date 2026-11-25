@@ -39,6 +39,16 @@ public class Playwright : PageTest
         await Expect(Page).ToHaveTitleAsync("Public timeline");
     }
 
+    [Test]
+    public async Task clickingRegisterGetsYouToLoginPage()
+    {
+        await Page.GotoAsync("http://localhost:5273");
+        var registerLocator = Page.GetByText("Register", new () {Exact = true});
+        await Expect(registerLocator).ToHaveAttributeAsync("href", "/Identity/Account/Register");
+        await registerLocator.ClickAsync();
+        await Expect(Page).ToHaveURLAsync("http://localhost:5273/Identity/Account/Register");
+    }
+
     [TearDown]
     public async Task CleanUp()
     {
