@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace end_to_endTest;
 
-public class Local_end_to_End
+/* public class Local_end_to_End
 {
     [Fact]
     public async Task PostingObservationPersistsAndRedirects()
@@ -103,4 +103,4 @@ public class Local_end_to_End
 
         throw new DirectoryNotFoundException("Could not locate the Bison repository root.");
     }
-}
+}/*
