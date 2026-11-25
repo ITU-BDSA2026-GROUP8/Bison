@@ -20,6 +20,7 @@ public interface IObservationService
     public TaxonDTO? GetTaxonForObservation(int Id);
     public void StoreProposal(int id, string Name);
     public void StoreComment(string author,string message, int Oid);
+    public void DeleteObservationsFromAuthor(String Author);
 
 }
 public class ObservationService : IObservationService
@@ -31,6 +32,10 @@ public class ObservationService : IObservationService
     public List<PostDTO> GetObservations(int page)
     {
         return _repo.GetObservations(page);
+    }
+    public void DeleteObservationsFromAuthor(string Author)
+    {
+        _repo.DeleteObservationsFromAuthor(Author);
     }
 
         public List<CommentDTO> GetCommentsFromAuthor(string Author)

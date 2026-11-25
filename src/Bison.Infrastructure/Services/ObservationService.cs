@@ -13,7 +13,10 @@ public class ObservationService : IObservationService
     {
         return _repo.GetObservations(page);
     }
-
+    public void DeleteObservationsFromAuthor(String Author)
+    {
+        _repo.DeleteObservationsFromAuthor(Author);
+    }
     public PostDTO? GetObservation(int id)
     {
         return _repo.GetObservation(id);

@@ -124,6 +124,22 @@ public void StoreComment(string author,string message, int Oid)
         _context.SaveChanges();
 
     }
+    public void DeleteObservationsFromAuthor(String author)
+    {
+        var obs =_context.Observations
+            .Include(observation => observation.Author)
+            .Where(observation => observation.Author.UserName == author);
+        foreach(Observation ob in obs)
+        {
+            Console.WriteLine(ob.Author.UserName.ToString()+" "+ author);
+            if (ob.Author.UserName.ToString() == author)
+            {
+
+                _context.Observations.Remove(ob);
+            }
+        }
+        _context.SaveChanges();
+    }
     public void StoreProposal(int id,string danishVernacularName)
     {
         var obs = _context.Observations;

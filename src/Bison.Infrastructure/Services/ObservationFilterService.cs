@@ -13,7 +13,7 @@ public class ObservationFilterService : IObservationFilterService
     {
         _context = context;
     }
-
+    
     public List<PostDTO> GetObservationsByTaxon(string taxonName)
     {
 

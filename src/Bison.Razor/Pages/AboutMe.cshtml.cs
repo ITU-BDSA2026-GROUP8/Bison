@@ -42,12 +42,16 @@ private readonly IObservationService _service;
     
         if(user!=null)
         {
-            Console.WriteLine("jeg er kommet helt ind:)");
-            
+            Console.WriteLine(author);
+             _service.DeleteObservationsFromAuthor(author);
+
             var result = await userManager.DeleteAsync(user);
             await signInManager.SignOutAsync();
             if (result.Succeeded)
-            {
+            {  
+
+                //_service.DeleteCommentsFromAuthor(author);
+                //_service.DeleteAuthor(author);
                 return RedirectToPage();
             }
 
@@ -63,9 +67,7 @@ private readonly IObservationService _service;
         }
 
         
-       //_service.DeleteObservationsFromAuthor(author);
-        //_service.DeleteCommentsFromAuthor(author);
-        //_service.DeleteAuthor(author);
+
 
         return Page();
     }
