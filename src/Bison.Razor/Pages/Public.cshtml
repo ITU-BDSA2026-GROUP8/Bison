@@ -9,7 +9,7 @@
     <h2> Public Timeline </h2>
            @if(User.Identity.IsAuthenticated){
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="observationbox">
         <h3>What did you see, @(User.Identity.Name)?</h3>
         <div asp-validation-summary="All"></div>
@@ -17,8 +17,10 @@
         <input asp-for="Message" required />
         <label asp-for="Location"></label>
         <input asp-for="Location" required />
-        <label asp-for="ImageUrl"></label>
-        <input asp-for="ImageUrl" />
+        <!-- <label asp-for="ImageUrl"></label> -->
+        <!-- <input asp-for="ImageUrl" /> -->
+        <label>Image</label>
+        <input type="file" asp-for="ImageFile" accept="image/*" />
         <label asp-for="ImageLicense"></label>
         <select asp-for="ImageLicense">
             <option value="">Choose Image License</option>
@@ -36,6 +38,7 @@
     }
     
     <partial name="_Pagination" model="Model.CurrentPage" />
+    <partial name="_TaxonFilterPartial" />
 
     @if (Model.Observations.Any())
     {

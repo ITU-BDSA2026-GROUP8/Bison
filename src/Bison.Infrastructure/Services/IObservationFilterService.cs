@@ -6,5 +6,6 @@ namespace Bison.Infrastructure.Services;
 public interface IObservationFilterService
 {
     List<PostDTO> GetObservationsByTaxon(string taxonName);
+    List<string> GetTaxonNames();
 }
 

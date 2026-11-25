@@ -6,6 +6,7 @@ using Bison.Core.Models;
 using Bison.Core.DTOs;
 using Bison.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Http;
 
 
 namespace Bison.Razor.Pages;
@@ -27,12 +28,16 @@ public class PublicModel : PageModel
     [StringLength(100)]
     public string Location { get; set; } = string.Empty;
 
+    //[BindProperty]
+    //public string? ImageUrl {get; set; }
+
     [BindProperty]
-    public string? ImageUrl {get; set; }
+    public IFormFile? ImageFile { get; set; }
 
     [BindProperty]
     public string? ImageLicense { get; set; }
 
+    
     public PublicModel(IObservationService service, IObservationFilterService filter)
     {
         _service = service;
@@ -48,19 +53,19 @@ public class PublicModel : PageModel
         return Page();
     }
 
-    public IActionResult OnPost()
+    public async Task<IActionResult> OnPostAsync()
     {
          if (User.Identity?.IsAuthenticated != true)
         return Challenge();   // sender brugeren til login
 
-    if (!string.IsNullOrEmpty(ImageUrl) && string.IsNullOrEmpty(ImageLicense))
+    if (ImageFile != null && string.IsNullOrWhiteSpace(ImageLicense))
     {
-        ModelState.AddModelError(nameof(ImageLicense), "Image License Is Required!" );
+        ModelState.AddModelError(nameof(ImageLicense), "Image license is required!" );
     }
 
-    if (string.IsNullOrEmpty(ImageUrl) && !string.IsNullOrEmpty(ImageLicense))
+    if (ImageFile == null && !string.IsNullOrWhiteSpace(ImageLicense))
     {
-        ModelState.AddModelError(nameof(ImageLicense), "Image License Is Not Required!" );
+        ModelState.AddModelError(nameof(ImageLicense), "Image license is not required, without a picture!" );
     }
 
     if (!ModelState.IsValid)
@@ -69,7 +74,33 @@ public class PublicModel : PageModel
         return Page();
     }
 
-    _service.StoreObservation(User.Identity.Name!, Message, Location, ImageUrl, ImageLicense);
+
+    string? imageUrl = null;
+
+    if (ImageFile != null)
+    {
+        Directory.CreateDirectory(
+            Path.Combine("wwwroot", "uploads"));
+
+        string fileName =
+            Guid.NewGuid() +
+            Path.GetExtension(ImageFile.FileName);
+
+        string filePath =
+            Path.Combine(
+                "wwwroot",
+                "uploads",
+                fileName);
+
+        using (var stream = System.IO.File.Create(filePath))
+        {
+            await ImageFile.CopyToAsync(stream);
+        }
+
+        imageUrl = "/uploads/" + fileName;
+    }
+
+    _service.StoreObservation(User.Identity.Name!, Message, Location, imageUrl, ImageLicense);
     return RedirectToPage();
     }
 }

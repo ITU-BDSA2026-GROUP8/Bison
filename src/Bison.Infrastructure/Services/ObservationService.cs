@@ -13,7 +13,10 @@ public class ObservationService : IObservationService
     {
         return _repo.GetObservations(page);
     }
-
+    public void DeleteObservationsFromAuthor(String Author)
+    {
+        _repo.DeleteObservationsFromAuthor(Author);
+    }
     public PostDTO? GetObservation(int id)
     {
         return _repo.GetObservation(id);
@@ -32,11 +35,21 @@ public class ObservationService : IObservationService
     {
         _repo.StoreObservation(author, message, location, imageUrl, imageLicense);
     }
+        public void DeleteCommentsFromAuthor(string author)
+    {
+        _repo.DeleteCommentsFromAuthor(author);
+    }
+
 
     public List<CommentDTO> GetCommentsForObservation(int id)
     {
         return _repo.GetCommentsForObservation(id);
     }
+    public void DeleteAuthor(string author)
+    {
+        _repo.DeleteAuthor(author);
+    }
+
 
     public TaxonDTO? GetTaxonForObservation(int Id)
     {
