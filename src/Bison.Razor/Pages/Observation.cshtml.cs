@@ -60,7 +60,7 @@ public class ObservationModel : PageModel
         }
         if (!string.IsNullOrWhiteSpace(Comment))
         {
-            _observationService.StoreComment(Environment.UserName,Comment,id);
+            _observationService.StoreComment(User.Identity.Name!,Comment,id);
         }
         return RedirectToPage();
     }

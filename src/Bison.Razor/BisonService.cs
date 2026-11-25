@@ -20,6 +20,11 @@ public interface IObservationService
     public TaxonDTO? GetTaxonForObservation(int Id);
     public void StoreProposal(int id, string Name);
     public void StoreComment(string author,string message, int Oid);
+    public void DeleteAuthor(string author);
+
+    public void DeleteObservationsFromAuthor(string Author);
+    public void DeleteCommentsFromAuthor(string author);
+
 
 }
 public class ObservationService : IObservationService
@@ -31,6 +36,15 @@ public class ObservationService : IObservationService
     public List<PostDTO> GetObservations(int page)
     {
         return _repo.GetObservations(page);
+    }
+        public void DeleteCommentsFromAuthor(string author)
+    {
+        _repo.DeleteCommentsFromAuthor(author);
+    }
+
+    public void DeleteObservationsFromAuthor(string Author)
+    {
+        _repo.DeleteObservationsFromAuthor(Author);
     }
 
         public List<CommentDTO> GetCommentsFromAuthor(string Author)
@@ -56,6 +70,10 @@ public class ObservationService : IObservationService
     public List<CommentDTO> GetCommentsForObservation(int id)
     {
         return _repo.GetCommentsForObservation(id);
+    }
+    public void DeleteAuthor(string author)
+    {
+        _repo.DeleteAuthor(author);
     }
 
     public TaxonDTO? GetTaxonForObservation(int Id)
