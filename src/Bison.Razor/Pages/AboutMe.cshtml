@@ -59,8 +59,8 @@
                         }
                     }
                      <form method="post" asp-route-id="@User.Identity.ToString()" asp-area="Identity">
-                        <input type="checkbox" id="math" name="subject" value="Anonymisize"/>
-                        <label for="anonymisize">Anonymisize</label>
+                        <input type="checkbox" asp-for="Anonymisize"/>
+                        <label asp-for="Anonymisize">Anonymisize</label>
                           <button type="delete" class="btn btn-sm btn-danger">
                         Delete User
                     </button>
