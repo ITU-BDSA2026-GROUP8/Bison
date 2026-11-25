@@ -40,7 +40,7 @@ public class Playwright : PageTest
     }
 
     [Test]
-    public async Task clickingRegisterGetsYouToLoginPage()
+    public async Task clickingRegisterGetsYouToRegisterPage()
     {
         await Page.GotoAsync("http://localhost:5273");
         var registerLocator = Page.GetByText("Register", new () {Exact = true});
@@ -48,6 +48,29 @@ public class Playwright : PageTest
         await registerLocator.ClickAsync();
         await Expect(Page).ToHaveURLAsync("http://localhost:5273/Identity/Account/Register");
     }
+
+    [Test]
+    public async Task clickingLoginGetYouToLoginPage()
+    {
+        await Page.GotoAsync("http://localhost:5273");
+        var loginLocator = Page.GetByText("Login", new () {Exact = true});
+        await Expect(loginLocator).ToHaveAttributeAsync("href", "/Identity/Account/Login");
+        await loginLocator.ClickAsync();
+        await Expect(Page).ToHaveURLAsync("http://localhost:5273/Identity/Account/Login");
+    }
+
+    [Test]
+    public async Task NextAndPreviousButtonsNavigateCorrectly()
+    {
+        await Page.GotoAsync("http://localhost:5273");
+        var buttonLocator = Page.GetByRole(AriaRole.Button , new () {Name = "next page"}).First;
+        await buttonLocator.ClickAsync();
+        await Expect(Page).ToHaveURLAsync("http://localhost:5273/?page=2");
+        buttonLocator = Page.GetByRole(AriaRole.Button , new () {Name = "previous page"}).First;
+        await buttonLocator.ClickAsync();
+        await Expect(Page).ToHaveURLAsync("http://localhost:5273/?page=1");
+    }
+    
 
     [TearDown]
     public async Task CleanUp()
