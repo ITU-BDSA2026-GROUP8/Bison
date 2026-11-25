@@ -12,4 +12,7 @@ public interface IObservationService
     void StoreObservation(string author, string message, string location, string? imageUrl, string? imageLicense);
     List<CommentDTO> GetCommentsForObservation(int id);
     TaxonDTO? GetTaxonForObservation(int Id);
+    void StoreComment(string author, string message, int observationId);
+    void EditComment(string author, string message, int commentId);
+    void StoreProposal(int id, string name);
 }

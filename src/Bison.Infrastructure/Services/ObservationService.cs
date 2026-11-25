@@ -49,5 +49,10 @@ public class ObservationService : IObservationService
     public void StoreComment(string author,string message, int Oid)
     {
         _repo.StoreComment(author,message,Oid);
-    } 
+    }
+
+    public void EditComment(string author, string message, int commentId)
+    {
+        _repo.EditComment(author, message, commentId);
+    }
 }

@@ -21,6 +21,13 @@ public class ObservationModel : PageModel
     [StringLength(100)]
     public string? Comment { get; set; } = string.Empty;
 
+    [BindProperty]
+    [StringLength(100)]
+    public string? CommentEdit { get; set; } = string.Empty;
+
+    [BindProperty]
+    public int CommentId { get; set; }
+
     public PostDTO Observation { get; private set; } = null!;
     public List<CommentDTO> Comments { get; private set; } = [];
     public TaxonDTO? _Taxon;
@@ -50,20 +57,17 @@ public class ObservationModel : PageModel
         return RedirectToPage();
 
 
-        if(string.IsNullOrWhiteSpace(Message)&&string.IsNullOrWhiteSpace(Comment)){
-            ModelState.AddModelError(string.Empty, "Enter either a taxon or a comment.");
+        if (string.IsNullOrWhiteSpace(Message) && string.IsNullOrWhiteSpace(Comment) && string.IsNullOrWhiteSpace(CommentEdit)){
+            ModelState.AddModelError(string.Empty, "Enter a taxon or comment.");
 
             return RedirectToPage();
         }
-        if(!string.IsNullOrWhiteSpace(Message)){
-            _observationService.StoreProposal(id,Message);
-        }
-        if (!string.IsNullOrWhiteSpace(Comment))
-        {
-            _observationService.StoreComment(Environment.UserName,Comment,id);
-        }
+        if(!string.IsNullOrWhiteSpace(Message)) _observationService.StoreProposal(id,Message);
+
+        if (!string.IsNullOrWhiteSpace(Comment)) _observationService.StoreComment(Environment.UserName,Comment,id);
+
+        if (!string.IsNullOrWhiteSpace(CommentEdit)) _observationService.EditComment(Environment.UserName, CommentEdit, CommentId);
+        
         return RedirectToPage();
     }
-
-    
 }

@@ -16,5 +16,6 @@ public interface IPostRepository
     public TaxonDTO? GetTaxonForObservation(int Id);
 
     public void StoreComment(string author, string message, int Oid);
+    public void EditComment(string author, string message, int commentId);
     public void StoreProposal(int id,string name);
 }
