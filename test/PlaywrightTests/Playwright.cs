@@ -58,6 +58,18 @@ public class Playwright : PageTest
         await loginLocator.ClickAsync();
         await Expect(Page).ToHaveURLAsync("http://localhost:5273/Identity/Account/Login");
     }
+
+    [Test]
+    public async Task NextAndPreviousButtonsNavigateCorrectly()
+    {
+        await Page.GotoAsync("http://localhost:5273");
+        var buttonLocator = Page.GetByRole(AriaRole.Button , new () {Name = "next page"}).First;
+        await buttonLocator.ClickAsync();
+        await Expect(Page).ToHaveURLAsync("http://localhost:5273/?page=2");
+        buttonLocator = Page.GetByRole(AriaRole.Button , new () {Name = "previous page"}).First;
+        await buttonLocator.ClickAsync();
+        await Expect(Page).ToHaveURLAsync("http://localhost:5273/?page=1");
+    }
     
 
     [TearDown]
