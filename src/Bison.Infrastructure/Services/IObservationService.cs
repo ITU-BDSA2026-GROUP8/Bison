@@ -9,7 +9,7 @@ public interface IObservationService
     List<PostDTO> GetObservations(int page);
     PostDTO? GetObservation(int id);
     List<PostDTO> GetObservationsFromAuthor(string author, int page);
-    void StoreObservation(string author, string message, string location, string? imageUrl);
+    void StoreObservation(string author, string message, string location, string? imageUrl, string? imageLicense);
     List<CommentDTO> GetCommentsForObservation(int id);
     TaxonDTO? GetTaxonForObservation(int Id);
 }

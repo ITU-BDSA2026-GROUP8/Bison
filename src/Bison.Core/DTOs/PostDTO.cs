@@ -9,5 +9,6 @@ public class PostDTO
     public DateTime Timestamp { get; set; }
     public int Id { get; set; }
     public string? ImageUrl {get; set; }
+    public string? ImageLicense { get; set; }
 }
 

@@ -264,6 +264,10 @@ button:hover {
     background-color: #8b4949;
 }
 
+.page-button {
+    width: 160px;
+}
+
 ul.nav {
     list-style-type: none;
     margin: 0;
@@ -286,4 +290,15 @@ ul.nav li a {
 
 ul.nav li a:hover {
     background-color: #8b4949;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+}
+
+.taxon-select {
+    font-size: 12px;
+    font-family: inherit;
+    max-width: 150px;
 }

@@ -2,7 +2,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model Bison.Razor.Pages.PublicModel
 @{
-    ViewData["Title"] = "Bison";
+    ViewData["Title"] = "Public timeline";
     Layout = "Shared/_Layout";
 }
 <div>
@@ -19,19 +19,24 @@
         <input asp-for="Location" required />
         <label asp-for="ImageUrl"></label>
         <input asp-for="ImageUrl" />
-        <button type="submit">Post observation</button>
+        <label asp-for="ImageLicense"></label>
+        <select asp-for="ImageLicense">
+            <option value="">Choose Image License</option>
+            <option value="CC BY">CC BY</option>
+            <option value="CC BY-NC">CC BY-NC</option>
+            <option value="CC BY-NC-ND">CC BY-NC-ND</option>
+            <option value="CC BY-NC-SA">CC BY-NC-SA</option>
+            <option value="CC BY-ND">CC BY-ND</option>
+            <option value="CC BY-SA">CC BY-SA</option>
+        </select>
+        
+        <button type="submit" class="page-button">Post observation</button>
             </div>
         </form>
     }
-    <form method="get">
-        <input type="hidden" name="page" value="@(Math.Max(1, Model.CurrentPage - 1))" />
-        <button type="submit" disabled="@(Model.CurrentPage <= 1)">previous page</button>
-    </form>
-
-    <form method="get">
-        <input type="hidden" name="page" value="@(Model.CurrentPage + 1)" />
-        <button type="submit">next page</button>
-    </form>
+    
+    <partial name="_Pagination" model="Model.CurrentPage" />
+    <partial name="_TaxonFilterPartial" />
 
     @if (Model.Observations.Any())
     {
@@ -57,4 +62,7 @@
     {
         <em>There are no observations so far.</em>
     }
+
+    <partial name="_Pagination" model="Model.CurrentPage" />
+
 </div>

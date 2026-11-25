@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using Bison.Core.Models;
 using Bison.Core.DTOs;
 using Bison.Infrastructure.Services;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace Bison.Razor.Pages;
@@ -29,6 +30,9 @@ public class PublicModel : PageModel
     [BindProperty]
     public string? ImageUrl {get; set; }
 
+    [BindProperty]
+    public string? ImageLicense { get; set; }
+
     public PublicModel(IObservationService service, IObservationFilterService filter)
     {
         _service = service;
@@ -49,13 +53,23 @@ public class PublicModel : PageModel
          if (User.Identity?.IsAuthenticated != true)
         return Challenge();   // sender brugeren til login
 
+    if (!string.IsNullOrEmpty(ImageUrl) && string.IsNullOrEmpty(ImageLicense))
+    {
+        ModelState.AddModelError(nameof(ImageLicense), "Image License Is Required!" );
+    }
+
+    if (string.IsNullOrEmpty(ImageUrl) && !string.IsNullOrEmpty(ImageLicense))
+    {
+        ModelState.AddModelError(nameof(ImageLicense), "Image License Is Not Required!" );
+    }
+
     if (!ModelState.IsValid)
     {
         Observations = _service.GetObservations(1);
         return Page();
     }
 
-    _service.StoreObservation(User.Identity.Name!, Message, Location, ImageUrl);
+    _service.StoreObservation(User.Identity.Name!, Message, Location, ImageUrl, ImageLicense);
     return RedirectToPage();
     }
 }

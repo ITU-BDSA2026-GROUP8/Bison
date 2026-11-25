@@ -1,0 +1,25 @@
+@model int
+@{
+    var taxon = Context.Request.Query["taxon"].ToString();
+}
+
+<div class="pagination">
+    <form method="get">
+        <input type="hidden" name="page" value="@(Math.Max(1, Model - 1))" />
+        @if (!string.IsNullOrEmpty(taxon))
+        {
+            <input type="hidden" name="taxon" value="@taxon" />
+        }
+        <button type="submit" class="page-button" disabled="@(Model <= 1)">previous page</button>
+    </form>
+
+    <form method="get">
+        <input type="hidden" name="page" value="@(Model + 1)" />
+        @if (!string.IsNullOrEmpty(taxon))
+        {
+            <input type="hidden" name="taxon" value="@taxon" />
+        }
+        <button type="submit" class="page-button">next page</button>
+    </form>
+</div>
+
