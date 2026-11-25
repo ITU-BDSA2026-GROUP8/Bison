@@ -1,0 +1,15 @@
+@inject Bison.Infrastructure.Services.IObservationFilterService TaxonFilter
+@{
+    var taxonNames = TaxonFilter.GetTaxonNames();
+    var selectedTaxon = Context.Request.Query["taxon"].ToString();
+}
+
+<form method="get" action="/" class="taxon-filter">
+    <select name="taxon" class="taxon-select" onchange="this.form.submit()">
+        <option value="">All Taxa</option>
+        @foreach (var taxon in taxonNames)
+        {
+            <option value="@taxon" selected="@(taxon == selectedTaxon ? "selected" : null)">@taxon</option>
+        }
+    </select>
+</form>
