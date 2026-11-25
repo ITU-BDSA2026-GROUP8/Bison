@@ -43,9 +43,9 @@ private readonly IObservationService _service;
         if(user!=null)
         {
             Console.WriteLine(author);
-             _service.DeleteObservationsFromAuthor(author);
+            _service.DeleteObservationsFromAuthor(author);
             _service.DeleteCommentsFromAuthor(author);
-                //_service.DeleteAuthor(author);
+            _service.DeleteAuthor(author);
 
             var result = await userManager.DeleteAsync(user);
             await signInManager.SignOutAsync();
@@ -63,7 +63,6 @@ private readonly IObservationService _service;
             }
         else
         {
-            Console.WriteLine("user er desværre null");
         }
 
         

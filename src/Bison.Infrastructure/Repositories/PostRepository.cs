@@ -47,6 +47,19 @@ public class PostRepository : IPostRepository
         return commentDTOs; 
         
     }
+    public void DeleteAuthor(string autho)
+    {
+        var auth=_context.Authors;
+   
+        foreach(Author author in auth)
+        {
+            if(author.UserName.ToString()==autho){
+            _context.Remove(author);
+            }
+        }
+        _context.SaveChanges();
+  
+    }
  
     
     public PostDTO? GetObservation(int id)

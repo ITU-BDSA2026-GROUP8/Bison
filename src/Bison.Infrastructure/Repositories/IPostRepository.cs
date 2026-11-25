@@ -18,5 +18,5 @@ public interface IPostRepository
     public void StoreComment(string author, string message, int Oid);
     public void StoreProposal(int id,string name);
     public void DeleteCommentsFromAuthor(string author);
-
+    public void DeleteAuthor(string author);
 }

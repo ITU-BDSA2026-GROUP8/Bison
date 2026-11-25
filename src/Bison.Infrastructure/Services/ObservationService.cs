@@ -45,6 +45,11 @@ public class ObservationService : IObservationService
     {
         return _repo.GetCommentsForObservation(id);
     }
+    public void DeleteAuthor(string author)
+    {
+        _repo.DeleteAuthor(author);
+    }
+
 
     public TaxonDTO? GetTaxonForObservation(int Id)
     {
