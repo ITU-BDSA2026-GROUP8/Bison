@@ -7,6 +7,7 @@ public interface IObservationService
 {
     public List<PostDTO> GetObservations(int page);
 
+     public void AnonimisizeAuthor(string author);
 
     public List<CommentDTO> GetCommentsFromAuthor(string Author);
 
@@ -32,6 +33,11 @@ public class ObservationService : IObservationService
     private readonly IPostRepository _repo;
 
     public ObservationService(IPostRepository postRepository) { _repo = postRepository; }
+
+        public void AnonimisizeAuthor(string author)
+    {
+        _repo.AnonimisizeAuthor(author);
+    }
 
     public List<PostDTO> GetObservations(int page)
     {

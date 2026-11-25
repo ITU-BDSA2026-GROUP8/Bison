@@ -19,4 +19,6 @@ public interface IPostRepository
     public void StoreProposal(int id,string name);
     public void DeleteCommentsFromAuthor(string author);
     public void DeleteAuthor(string author);
+    public void AnonimisizeAuthor(string author);
+
 }

@@ -17,6 +17,11 @@ public class ObservationService : IObservationService
     {
         _repo.DeleteObservationsFromAuthor(Author);
     }
+    public void AnonimisizeAuthor(string author)
+    {
+        _repo.AnonimisizeAuthor(author);
+    }
+
     public PostDTO? GetObservation(int id)
     {
         return _repo.GetObservation(id);
