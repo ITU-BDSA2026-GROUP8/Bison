@@ -3,6 +3,7 @@ using Bison.Core.DTOs;
 using Bison.Infrastructure.Repositories;
 
 namespace Bison.Infrastructure.Services;
+
 public class ObservationService : IObservationService
 {
     private readonly IPostRepository _repo;
@@ -35,7 +36,7 @@ public class ObservationService : IObservationService
     {
         _repo.StoreObservation(author, message, location, imageUrl, imageLicense);
     }
-        public void DeleteCommentsFromAuthor(string author)
+    public void DeleteCommentsFromAuthor(string author)
     {
         _repo.DeleteCommentsFromAuthor(author);
     }
@@ -55,12 +56,17 @@ public class ObservationService : IObservationService
     {
         return _repo.GetTaxonForObservation(Id);
     }
-    public void StoreProposal(int id,string name)
+    public void StoreProposal(int id, string name)
     {
-        _repo.StoreProposal(id,name);
+        _repo.StoreProposal(id, name);
     }
-    public void StoreComment(string author,string message, int Oid)
+    public void StoreComment(string author, string message, int Oid)
     {
-        _repo.StoreComment(author,message,Oid);
-    } 
+        _repo.StoreComment(author, message, Oid);
+    }
+
+    public void EditComment(string author, string message, int commentId)
+    {
+        _repo.EditComment(author, message, commentId);
+    }
 }
