@@ -4,4 +4,5 @@ public class CommentDTO
 {
     public string Text { get; set; } = string.Empty;
     public int Id { get; set; }
+    public string Author {get;set;} =string.Empty;
 }
