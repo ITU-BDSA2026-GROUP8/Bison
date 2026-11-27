@@ -83,7 +83,9 @@
                 <form method="post">
                     <div class="commentEdit">
                         <div asp-validation-summary="All"></div>
-                        <li>@comment.Text
+                            <li>
+                            <a href="/@comment.Author">@comment.Author</a>
+                            @comment.Text
                         <input type="hidden" name="CommentId" value="@comment.Id" />
                         <input asp-for="CommentEdit" required />
                         <button type="submit">Edit Comment</button>

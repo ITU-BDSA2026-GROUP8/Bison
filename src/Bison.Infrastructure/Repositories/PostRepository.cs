@@ -39,7 +39,6 @@ public class PostRepository : IPostRepository
         .Where(comment => comment.Author.UserName == author);
         foreach (Comment comment in com)
         {
-            Console.WriteLine(comment.Author.UserName.ToString());
             var temp = helper.createCommentDTO(comment.Text, comment.Id,comment.Author.UserName);
             commentDTOs.Add(temp);
         }
@@ -176,7 +175,6 @@ public class PostRepository : IPostRepository
 
         foreach (Comment comment in coms)
         {
-            Console.WriteLine(comment.Text+comment.Id+comment.Author);
             var temp = helper.createCommentDTO(comment.Text, comment.Id,comment.Author.UserName);
             DTOList.Add(temp);
             
