@@ -18,4 +18,5 @@ public interface IObservationService
     public void DeleteObservationsFromAuthor(String Author);
     public void DeleteCommentsFromAuthor(string author);
     public void DeleteAuthor(string author);
+    public void AnonimisizeAuthor(string author);
 }

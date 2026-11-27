@@ -1,4 +1,5 @@
 
+using System.IO.Pipes;
 using Bison.Core.DTOs;
 using Bison.Core.Models;
 using Microsoft.EntityFrameworkCore;
@@ -51,6 +52,44 @@ public class PostRepository : IPostRepository
         if(Author is not null) _context.Remove(Author);
         _context.SaveChanges();
     }
+    public void AnonimisizeAuthor(string author)
+    {
+        var authors=_context.Authors;
+        var obs =_context.Observations
+        .Include(observation => observation.Author)
+        .Where(observation => observation.Author.UserName == author);
+        var coms= _context.Comments            
+        .Include(comment => comment.Author)
+        .Where(comment => comment.Author.UserName == author);
+        Author AnonymousAuthor=new Author();
+    foreach(Author author1 in authors)
+        {
+            if (author1.UserName == "anonymous")
+            {
+                AnonymousAuthor=author1;
+                break;
+            }
+        }
+        if (AnonymousAuthor.UserName== "anonymous")
+        {
+            AnonymousAuthor.UserName="anonymous";
+        }
+        foreach(Observation ob in obs)
+        {
+            if(ob.Author.UserName==author){
+                ob.Author=AnonymousAuthor;
+            }
+        }
+        foreach(Comment com in coms)
+        {
+            if(com.Author.UserName==author){
+                com.Author=AnonymousAuthor;
+            }
+        }
+        _context.SaveChanges();
+    }
+ 
+    
     public PostDTO? GetObservation(int id)
     {
         var obs = _context.Observations
