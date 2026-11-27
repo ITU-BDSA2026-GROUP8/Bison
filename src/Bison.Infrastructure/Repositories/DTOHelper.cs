@@ -18,12 +18,13 @@ public class DTOHelper
         return DTO;
     }
 
-    public CommentDTO createCommentDTO(string text, int Id,string author)
+    public CommentDTO createCommentDTO(string text, int Id,string author,string timeStamp)
     {
         var CDTO = new CommentDTO();
         CDTO.Text = text;
         CDTO.Id = Id;
         CDTO.Author=author;
+        CDTO.TimeStamp=timeStamp;
         return CDTO;
     }
 

@@ -86,6 +86,8 @@
                             <li>
                             <a href="/@comment.Author">@comment.Author</a>
                             @comment.Text
+                            <small>&mdash; @comment.TimeStamp</small>
+
                         <input type="hidden" name="CommentId" value="@comment.Id" />
                         <input asp-for="CommentEdit" required />
                         <button type="submit">Edit Comment</button>
