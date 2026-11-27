@@ -15,6 +15,9 @@ private readonly IObservationService _service;
     private readonly IObservationFilterService _filter;
      private readonly UserManager<IdentityUser> userManager; 
      private readonly SignInManager<IdentityUser> signInManager;
+    [BindProperty]
+    public bool Anonymisize { get; set; }
+ 
    
      public int CurrentPage { get; private set; } = 1;
     public List<PostDTO> Observations { get; set; }
@@ -42,10 +45,16 @@ private readonly IObservationService _service;
     
         if(user!=null)
         {
-            Console.WriteLine(author);
+            Console.WriteLine(Anonymisize);
+            if(!Anonymisize){
             _service.DeleteObservationsFromAuthor(author);
             _service.DeleteCommentsFromAuthor(author);
             _service.DeleteAuthor(author);
+            }
+            else if (Anonymisize)
+            {
+            _service.AnonimisizeAuthor(author);
+            }
 
             var result = await userManager.DeleteAsync(user);
             await signInManager.SignOutAsync();
