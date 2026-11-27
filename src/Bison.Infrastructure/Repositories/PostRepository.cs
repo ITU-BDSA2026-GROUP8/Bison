@@ -5,6 +5,7 @@ using Bison.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bison.Infrastructure.Repositories;
+
 public class PostRepository : IPostRepository
 {
     DTOHelper helper = new DTOHelper();
@@ -24,42 +25,33 @@ public class PostRepository : IPostRepository
 
         foreach (Observation observation in obs)
         {
-            var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id,observation.ImageUrl,observation.ImageLicense);
+            var temp = helper.createPostDTO(observation.Text, observation.Author,
+            observation.Timestamp, observation.Id, observation.ImageUrl, observation.ImageLicense);
             DTOList.Add(temp);
         }
 
         return DTOList;
     }
-        public List<CommentDTO> GetCommentsFromAuthor(string author)
-    {   
+    public List<CommentDTO> GetCommentsFromAuthor(string author)
+    {
         var commentDTOs = new List<CommentDTO>();
-        var com=_context.Comments
-        .Include(comment=>comment.Author)
-        .Where(comment=> comment.Author.UserName ==author);
-        foreach(Comment comment in com)
+        var com = _context.Comments
+        .Include(comment => comment.Author)
+        .Where(comment => comment.Author.UserName == author);
+        foreach (Comment comment in com)
         {
             Console.WriteLine(comment.Author.UserName.ToString());
-            var temp = helper.createCommentDTO(comment.Text,comment.Id);
+            var temp = helper.createCommentDTO(comment.Text, comment.Id);
             commentDTOs.Add(temp);
-            
-            
         }
-        return commentDTOs; 
-        
+        return commentDTOs;
     }
     public void DeleteAuthor(string autho)
     {
-        var auth=_context.Authors;
-   
-        foreach(Author author in auth)
-        {
-            if(author.UserName.ToString()==autho){
-            _context.Remove(author);
-            }
-        }
+        var auth = _context.Authors;
+        var Author = _context.Authors.FirstOrDefault(candidate => candidate.UserName == autho);
+        if(Author is not null) _context.Remove(Author);
         _context.SaveChanges();
-  
     }
     public void AnonimisizeAuthor(string author)
     {
@@ -106,7 +98,7 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == id);
 
         if (obs == null) return null;
-        var temp = helper.createPostDTO(obs.Text,obs.Author,obs.Timestamp,obs.Id,obs.ImageUrl,obs.ImageLicense);
+        var temp = helper.createPostDTO(obs.Text, obs.Author, obs.Timestamp, obs.Id, obs.ImageUrl, obs.ImageLicense);
         return temp;
     }
 
@@ -122,38 +114,31 @@ public class PostRepository : IPostRepository
             .ToList();
         foreach (Observation observation in obs)
         {
-            var temp = helper.createPostDTO(observation.Text,observation.Author,
-            observation.Timestamp,observation.Id,observation.ImageUrl,observation.ImageLicense);
+            var temp = helper.createPostDTO(observation.Text, observation.Author,
+            observation.Timestamp, observation.Id, observation.ImageUrl, observation.ImageLicense);
             DTOList.Add(temp);
         }
         return DTOList;
     }
-public void StoreComment(string author,string message, int Oid)
+    public void StoreComment(string author, string message, int Oid)
     {
-        var postAuthor=_context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
+        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
         if (postAuthor is null)
         {
             postAuthor = new Author { UserName = author, Email = string.Empty };
             _context.Authors.Add(postAuthor);
         }
-        Observation obs=null;
-        foreach(Observation ob in _context.Observations)
+        Observation? observation = _context.Observations.FirstOrDefault(candidate => candidate.Id == Oid);
+        _context.Comments.Add(new Bison.Core.Models.Comment
         {
-            if (ob.Id == Oid)
-            {
-                obs=ob;
-            }
-        }
-        _context.Comments.Add(new Bison.Core.Models.Comment        {
-            Observation=obs,
+            Observation = observation,
             Author = postAuthor,
             Text = message,
-            Timestamp = DateTime.UtcNow}
+            Timestamp = DateTime.UtcNow
+        }
         );
-        if(postAuthor.UserName!=null){
-        
-        _context.SaveChanges();}
-    } 
+        if (postAuthor.UserName != null) _context.SaveChanges();
+    }
     public void StoreObservation(string author, string message, string location, string? imageUrl, string? imageLicense)
     {
 
@@ -177,55 +162,43 @@ public void StoreComment(string author,string message, int Oid)
     }
     public void DeleteCommentsFromAuthor(string author)
     {
-        var coms =_context.Comments
-            .Include(comment=>comment.Author)
-            .Where(comment=>comment.Author.UserName==author);
-            foreach(Comment com in coms)
+        var coms = _context.Comments
+            .Include(comment => comment.Author)
+            .Where(comment => comment.Author.UserName == author);
+        foreach (Comment com in coms)
         {
-            if (com.Author.UserName.ToString() == author)
-            {
-                _context.Remove(com);
-            }
+            if (com.Author.UserName.ToString() == author) _context.Remove(com);
         }
         _context.SaveChanges();
-
     }
     public void DeleteObservationsFromAuthor(string author)
     {
-        var obs =_context.Observations
+        var obs = _context.Observations
             .Include(observation => observation.Author)
             .Where(observation => observation.Author.UserName == author);
-        foreach(Observation ob in obs)
+        foreach (Observation ob in obs)
         {
             if (ob.Author.UserName.ToString() == author)
             {
-
                 _context.Observations.Remove(ob);
             }
         }
         _context.SaveChanges();
     }
-    public void StoreProposal(int id,string danishVernacularName)
+    public void StoreProposal(int id, string danishVernacularName)
     {
-        var obs = _context.Observations;
-        var taxons=_context.taxons;
-        Observation observation=null;
-        foreach(Observation ob in obs)
+        var taxons = _context.taxons;
+        Observation? observation = _context.Observations.FirstOrDefault(candidate => candidate.Id == id);
+        foreach (Taxon tx in taxons)
         {
-            if (ob.Id == id)
+            if (tx.DanishVernacularName.ToLower() == danishVernacularName.ToLower())
             {
-                observation=ob;
+                observation.Taxon = tx;
                 break;
             }
+
         }
-        foreach(Taxon tx in taxons){
-            if(tx.DanishVernacularName==danishVernacularName){
-        observation.Taxon=tx;
-        break;}
-
-       }
         _context.SaveChanges();
-
     }
     public List<CommentDTO> GetCommentsForObservation(int Id)
     {
@@ -238,7 +211,7 @@ public void StoreComment(string author,string message, int Oid)
         if (obs == null) return DTOList;
         foreach (Comment comment in obs.Comments)
         {
-            var temp = helper.createCommentDTO(comment.Text,comment.Id);
+            var temp = helper.createCommentDTO(comment.Text, comment.Id);
             DTOList.Add(temp);
         }
         return DTOList;
@@ -255,5 +228,16 @@ public void StoreComment(string author,string message, int Oid)
         var temp = helper.createTaxonDTO(obs.Taxon.TaxonId,
         obs.Taxon.DanishVernacularName);
         return temp;
+    }
+    public void EditComment(string author, string message, int commentId)
+    {
+        var postAuthor = _context.Authors.FirstOrDefault(candidate => candidate.UserName == author);
+        if (postAuthor is null) return;
+
+        Comment? com = _context.Comments.FirstOrDefault(candidate => candidate.Id == commentId && candidate.Author.UserName == postAuthor.UserName);
+        if (com is null) return;
+
+        com.Text = message;
+        _context.SaveChanges();
     }
 }

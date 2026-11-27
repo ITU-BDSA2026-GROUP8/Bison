@@ -27,29 +27,29 @@
     
     @if (!string.IsNullOrEmpty(Model.Observation.ImageUrl))
     {
-    <img src="@Model.Observation.ImageUrl"
-         alt="Animal picture"
-         style="max-width:500px;height:auto;" />
+        <img src="@Model.Observation.ImageUrl" alt="Animal picture" style="max-width:500px;height:auto;" />
     
-    <p>Image License: @Model.Observation.ImageLicense</p>
+        <p>Image License: @Model.Observation.ImageLicense</p>
     }
 
-@if(Model._Taxon==null){
-    <h4>Taxonomies</h4>
-    @if(User.Identity.IsAuthenticated){
-        <form method="post">
-        <div class="observationbox">    
-        <h3>What did you see, @(User.Identity.Name)?</h3>
-        <div asp-validation-summary="All"></div>
-        <label asp-for="Message"></label>
-        <input asp-for="Message" required/>
-        <button type="submit">Post proposal</button>
-        </div>
-    </form>
+    @if (Model._Taxon == null)
+    {
+        <h4>Taxonomies</h4>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <form method="post">
+                <div class="observationbox">
+                    <h3>What did you see, @(User.Identity.Name)?</h3>
+                    <div asp-validation-summary="All"></div>
+                    <label asp-for="Message"></label>
+                    <input asp-for="Message" required />
+                    <button type="submit">Post proposal</button>
+                </div>
+            </form>
         }
 
     }
-@if (Model._Taxon!=null)
+    @if (Model._Taxon != null)
     {
         <ul>
             <li>
@@ -63,23 +63,33 @@
     }
     
     <h3>Comments</h3>
-    @if(User.Identity.IsAuthenticated){
+    @if (User.Identity.IsAuthenticated)
+    {
         <form method="post">
-        <div class="observationbox">    
-        <h3>What did you see, @(User.Identity.Name)?</h3>
-        <div asp-validation-summary="All"></div>
-        <label asp-for="Comment"></label>
-        <input asp-for="Comment" required/>
-        <button type="submit">Post comment</button>
-        </div>
-    </form>
-        }
+            <div class="observationbox">
+                <h3>What did you see, @(User.Identity.Name)?</h3>
+                <div asp-validation-summary="All"></div>
+                <label asp-for="Comment"></label>
+                <input asp-for="Comment" required />
+                <button type="submit">Post comment</button>
+            </div>
+        </form>
+    }
     @if (Model.Comments.Count > 0)
     {
         <ul>
             @foreach (var comment in Model.Comments)
             {
-                <li>@comment.Text</li>
+                <form method="post">
+                    <div class="commentEdit">
+                        <div asp-validation-summary="All"></div>
+                        <li>@comment.Text
+                        <input type="hidden" name="CommentId" value="@comment.Id" />
+                        <input asp-for="CommentEdit" required />
+                        <button type="submit">Edit Comment</button>
+                        </li>
+                    </div>
+                </form>
             }
         </ul>
     }
