@@ -65,9 +65,9 @@ public class ObservationModel : PageModel
         }
         if (!string.IsNullOrWhiteSpace(Message)) _observationService.StoreProposal(id, Message);
 
-        if (!string.IsNullOrWhiteSpace(Comment)) _observationService.StoreComment(Environment.UserName, Comment, id);
+        if (!string.IsNullOrWhiteSpace(Comment)) _observationService.StoreComment(User.Identity.Name!, Comment, id);
 
-        if (!string.IsNullOrWhiteSpace(CommentEdit)) _observationService.EditComment(Environment.UserName, CommentEdit, CommentId);
+        if (!string.IsNullOrWhiteSpace(CommentEdit)) _observationService.EditComment(User.Identity.Name!, CommentEdit, CommentId);
 
         return RedirectToPage();
     }
