@@ -59,11 +59,16 @@ public class PostUnitTest
         var testDTO = new CommentDTO();
         testDTO.Text = "This is a comment for a test";
         testDTO.Id = 1;
+        testDTO.Author="Test author";
+        testDTO.TimeStamp="27/11/2026";
 
-        var DTOMadeWithMethod = DTOhelper.createCommentDTO("This is a comment for a test",1);
+        var DTOMadeWithMethod = DTOhelper.createCommentDTO("This is a comment for a test",1,"Test author","27/11/2026");
 
         Assert.Equal(testDTO.Text, DTOMadeWithMethod.Text);
         Assert.Equal(testDTO.Id,DTOMadeWithMethod.Id);
+        Assert.Equal(testDTO.Author,DTOMadeWithMethod.Author);
+        Assert.Equal(testDTO.TimeStamp,DTOMadeWithMethod.TimeStamp);
+
     }
     [Fact]
     public async Task TaxonDTOGetMadeCorrectly()

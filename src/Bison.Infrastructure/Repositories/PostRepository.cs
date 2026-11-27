@@ -40,8 +40,7 @@ public class PostRepository : IPostRepository
         .Where(comment => comment.Author.UserName == author);
         foreach (Comment comment in com)
         {
-            Console.WriteLine(comment.Author.UserName.ToString());
-            var temp = helper.createCommentDTO(comment.Text, comment.Id);
+            var temp = helper.createCommentDTO(comment.Text, comment.Id,comment.Author.UserName,comment.Timestamp.ToString());
             commentDTOs.Add(temp);
         }
         return commentDTOs;
@@ -209,10 +208,15 @@ public class PostRepository : IPostRepository
            .FirstOrDefault(observation => observation.Id == Id);
 
         if (obs == null) return DTOList;
-        foreach (Comment comment in obs.Comments)
+        var coms =_context.Comments
+        .Include(Comment=>Comment.Author)
+        .Where(Comment=>Comment.Observation==obs);
+
+        foreach (Comment comment in coms)
         {
-            var temp = helper.createCommentDTO(comment.Text, comment.Id);
+            var temp = helper.createCommentDTO(comment.Text, comment.Id,comment.Author.UserName,comment.Timestamp.ToString());
             DTOList.Add(temp);
+            
         }
         return DTOList;
     }
