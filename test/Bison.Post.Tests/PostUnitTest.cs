@@ -59,6 +59,8 @@ public class PostUnitTest
         var testDTO = new CommentDTO();
         testDTO.Text = "This is a comment for a test";
         testDTO.Id = 1;
+        testDTO.Author="Test author";
+        testDTO.TimeStamp="27/11/2026";
 
         var DTOMadeWithMethod = DTOhelper.createCommentDTO("This is a comment for a test",1,"Test author","27/11/2026");
 
